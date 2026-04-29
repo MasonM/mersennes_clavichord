@@ -23,7 +23,7 @@ innerHeight = caseHeight - wallThickness
 partitionHeight = innerHeight + joinOverlap
 
 soundboardEndX = soundboardLength
-toolboxStartX = soundboardLength + keywellLength
+toolboxStartX = toolboxLength
 keywellDividerY = wallThickness + keywellWidth
 
 cavityPlane = offsetPlane(XY, offset = wallThickness)
@@ -73,46 +73,6 @@ cavityProfile = sketch(on = cavityPlane) {
   verticalDistance([ORIGIN, cavityEdge1.start]) == wallThickness
 }
 
-mainDividerProfile = sketch(on = partitionPlane) {
-  mainDividerEdge1 = line(start = [var 0mm, var 0mm], end = [var 10mm, var 0mm])
-  mainDividerEdge2 = line(start = [var 10mm, var 0mm], end = [var 10mm, var 10mm])
-  mainDividerEdge3 = line(start = [var 10mm, var 10mm], end = [var 0mm, var 10mm])
-  mainDividerEdge4 = line(start = [var 0mm, var 10mm], end = [var 0mm, var 0mm])
-
-  coincident([
-    mainDividerEdge1.end,
-    mainDividerEdge2.start
-  ])
-  coincident([
-    mainDividerEdge2.end,
-    mainDividerEdge3.start
-  ])
-  coincident([
-    mainDividerEdge3.end,
-    mainDividerEdge4.start
-  ])
-  coincident([
-    mainDividerEdge4.end,
-    mainDividerEdge1.start
-  ])
-
-  horizontal(mainDividerEdge1)
-  vertical(mainDividerEdge2)
-  horizontal(mainDividerEdge3)
-  vertical(mainDividerEdge4)
-
-  horizontalDistance([
-    mainDividerEdge1.start,
-    mainDividerEdge1.end
-  ]) == partitionThickness
-  verticalDistance([
-    mainDividerEdge2.start,
-    mainDividerEdge2.end
-  ]) == innerWidth + 2 * joinOverlap
-  horizontalDistance([ORIGIN, mainDividerEdge1.start]) == soundboardEndX - (partitionThickness / 2)
-  verticalDistance([ORIGIN, mainDividerEdge1.start]) == wallThickness - joinOverlap
-}
-
 keywellRailProfile = sketch(on = partitionPlane) {
   keywellRailEdge1 = line(start = [var 0mm, var 0mm], end = [var 10mm, var 0mm])
   keywellRailEdge2 = line(start = [var 10mm, var 0mm], end = [var 10mm, var 10mm])
@@ -144,12 +104,12 @@ keywellRailProfile = sketch(on = partitionPlane) {
   horizontalDistance([
     keywellRailEdge1.start,
     keywellRailEdge1.end
-  ]) == caseLength - wallThickness - soundboardEndX + 2 * joinOverlap
+  ]) == innerLength
   verticalDistance([
     keywellRailEdge2.start,
     keywellRailEdge2.end
   ]) == partitionThickness
-  horizontalDistance([ORIGIN, keywellRailEdge1.start]) == soundboardEndX - joinOverlap
+  horizontalDistance([ORIGIN, keywellRailEdge1.start]) == wallThickness
   verticalDistance([ORIGIN, keywellRailEdge1.start]) == keywellDividerY - (partitionThickness / 2)
 }
 
@@ -206,7 +166,6 @@ cavityTool = extrude(
 )
 caseShell = subtract(outerBlock, tools = cavityTool)
 
-mainDividerBody = extrude(region(point = [soundboardEndX, caseWidth / 2], sketch = mainDividerProfile), length = partitionHeight)
 keywellRailBody = extrude(
   region(
     point = [
@@ -230,21 +189,8 @@ toolboxDividerBody = extrude(
 
 mersenneCase = union([
   caseShell[0],
-  mainDividerBody[0],
   keywellRailBody[0],
   toolboxDividerBody[0]
 ])[0]
-
-hide(outerProfile)
-hide(cavityProfile)
-hide(mainDividerProfile)
-hide(keywellRailProfile)
-hide(toolboxDividerProfile)
-hide(outerBlock[0])
-hide(cavityTool[0])
-hide(caseShell[0])
-hide(mainDividerBody[0])
-hide(keywellRailBody[0])
-hide(toolboxDividerBody[0])
 
 mersenneCase
