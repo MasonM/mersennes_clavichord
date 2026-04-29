@@ -1,0 +1,250 @@
+// Mersenne clavichord case
+// Open-top shell with keywell, soundboard, and toolbox partitions.
+
+pouce = 27.069mm
+
+soundboardLength = 24 * pouce
+keywellLength = 24 * pouce
+toolboxLength = (5 + 1/3) * pouce
+
+caseLength = soundboardLength + keywellLength + toolboxLength
+caseWidth = caseLength / 3
+caseHeight = 8 * pouce
+
+wallThickness = 0.5 * pouce
+bottomThickness = 0.5 * pouce
+partitionThickness = 0.3333 * pouce
+keywellWidth = 6 * pouce
+joinOverlap = 0.5mm
+
+innerLength = caseLength - (2 * wallThickness)
+innerWidth = caseWidth - (2 * wallThickness)
+innerHeight = caseHeight - bottomThickness
+partitionHeight = innerHeight + joinOverlap
+
+soundboardEndX = soundboardLength
+toolboxStartX = soundboardLength + keywellLength
+keywellDividerY = wallThickness + keywellWidth
+
+cavityPlane = offsetPlane(XY, offset = bottomThickness)
+partitionPlane = offsetPlane(XY, offset = bottomThickness - joinOverlap)
+
+outerProfile = sketch(on = XY) {
+  outerEdge1 = line(start = [var 0mm, var 0mm], end = [var 10mm, var 0mm])
+  outerEdge2 = line(start = [var 10mm, var 0mm], end = [var 10mm, var 10mm])
+  outerEdge3 = line(start = [var 10mm, var 10mm], end = [var 0mm, var 10mm])
+  outerEdge4 = line(start = [var 0mm, var 10mm], end = [var 0mm, var 0mm])
+
+  coincident([outerEdge1.end, outerEdge2.start])
+  coincident([outerEdge2.end, outerEdge3.start])
+  coincident([outerEdge3.end, outerEdge4.start])
+  coincident([outerEdge4.end, outerEdge1.start])
+
+  horizontal(outerEdge1)
+  vertical(outerEdge2)
+  horizontal(outerEdge3)
+  vertical(outerEdge4)
+
+  horizontalDistance([outerEdge1.start, outerEdge1.end]) == caseLength
+  verticalDistance([outerEdge2.start, outerEdge2.end]) == caseWidth
+  horizontalDistance([ORIGIN, outerEdge1.start]) == 0mm
+  verticalDistance([ORIGIN, outerEdge1.start]) == 0mm
+}
+
+cavityProfile = sketch(on = cavityPlane) {
+  cavityEdge1 = line(start = [var 0mm, var 0mm], end = [var 10mm, var 0mm])
+  cavityEdge2 = line(start = [var 10mm, var 0mm], end = [var 10mm, var 10mm])
+  cavityEdge3 = line(start = [var 10mm, var 10mm], end = [var 0mm, var 10mm])
+  cavityEdge4 = line(start = [var 0mm, var 10mm], end = [var 0mm, var 0mm])
+
+  coincident([cavityEdge1.end, cavityEdge2.start])
+  coincident([cavityEdge2.end, cavityEdge3.start])
+  coincident([cavityEdge3.end, cavityEdge4.start])
+  coincident([cavityEdge4.end, cavityEdge1.start])
+
+  horizontal(cavityEdge1)
+  vertical(cavityEdge2)
+  horizontal(cavityEdge3)
+  vertical(cavityEdge4)
+
+  horizontalDistance([cavityEdge1.start, cavityEdge1.end]) == innerLength
+  verticalDistance([cavityEdge2.start, cavityEdge2.end]) == innerWidth
+  horizontalDistance([ORIGIN, cavityEdge1.start]) == wallThickness
+  verticalDistance([ORIGIN, cavityEdge1.start]) == wallThickness
+}
+
+mainDividerProfile = sketch(on = partitionPlane) {
+  mainDividerEdge1 = line(start = [var 0mm, var 0mm], end = [var 10mm, var 0mm])
+  mainDividerEdge2 = line(start = [var 10mm, var 0mm], end = [var 10mm, var 10mm])
+  mainDividerEdge3 = line(start = [var 10mm, var 10mm], end = [var 0mm, var 10mm])
+  mainDividerEdge4 = line(start = [var 0mm, var 10mm], end = [var 0mm, var 0mm])
+
+  coincident([
+    mainDividerEdge1.end,
+    mainDividerEdge2.start
+  ])
+  coincident([
+    mainDividerEdge2.end,
+    mainDividerEdge3.start
+  ])
+  coincident([
+    mainDividerEdge3.end,
+    mainDividerEdge4.start
+  ])
+  coincident([
+    mainDividerEdge4.end,
+    mainDividerEdge1.start
+  ])
+
+  horizontal(mainDividerEdge1)
+  vertical(mainDividerEdge2)
+  horizontal(mainDividerEdge3)
+  vertical(mainDividerEdge4)
+
+  horizontalDistance([
+  mainDividerEdge1.start,
+  mainDividerEdge1.end
+]) == partitionThickness
+  verticalDistance([
+  mainDividerEdge2.start,
+  mainDividerEdge2.end
+]) == innerWidth + 2 * joinOverlap
+  horizontalDistance([ORIGIN, mainDividerEdge1.start]) == soundboardEndX - (partitionThickness / 2)
+  verticalDistance([ORIGIN, mainDividerEdge1.start]) == wallThickness - joinOverlap
+}
+
+keywellRailProfile = sketch(on = partitionPlane) {
+  keywellRailEdge1 = line(start = [var 0mm, var 0mm], end = [var 10mm, var 0mm])
+  keywellRailEdge2 = line(start = [var 10mm, var 0mm], end = [var 10mm, var 10mm])
+  keywellRailEdge3 = line(start = [var 10mm, var 10mm], end = [var 0mm, var 10mm])
+  keywellRailEdge4 = line(start = [var 0mm, var 10mm], end = [var 0mm, var 0mm])
+
+  coincident([
+    keywellRailEdge1.end,
+    keywellRailEdge2.start
+  ])
+  coincident([
+    keywellRailEdge2.end,
+    keywellRailEdge3.start
+  ])
+  coincident([
+    keywellRailEdge3.end,
+    keywellRailEdge4.start
+  ])
+  coincident([
+    keywellRailEdge4.end,
+    keywellRailEdge1.start
+  ])
+
+  horizontal(keywellRailEdge1)
+  vertical(keywellRailEdge2)
+  horizontal(keywellRailEdge3)
+  vertical(keywellRailEdge4)
+
+  horizontalDistance([
+  keywellRailEdge1.start,
+  keywellRailEdge1.end
+]) == caseLength - wallThickness - soundboardEndX + 2 * joinOverlap
+  verticalDistance([
+  keywellRailEdge2.start,
+  keywellRailEdge2.end
+]) == partitionThickness
+  horizontalDistance([ORIGIN, keywellRailEdge1.start]) == soundboardEndX - joinOverlap
+  verticalDistance([ORIGIN, keywellRailEdge1.start]) == keywellDividerY - (partitionThickness / 2)
+}
+
+toolboxDividerProfile = sketch(on = partitionPlane) {
+  toolboxDividerEdge1 = line(start = [var 0mm, var 0mm], end = [var 10mm, var 0mm])
+  toolboxDividerEdge2 = line(start = [var 10mm, var 0mm], end = [var 10mm, var 10mm])
+  toolboxDividerEdge3 = line(start = [var 10mm, var 10mm], end = [var 0mm, var 10mm])
+  toolboxDividerEdge4 = line(start = [var 0mm, var 10mm], end = [var 0mm, var 0mm])
+
+  coincident([
+    toolboxDividerEdge1.end,
+    toolboxDividerEdge2.start
+  ])
+  coincident([
+    toolboxDividerEdge2.end,
+    toolboxDividerEdge3.start
+  ])
+  coincident([
+    toolboxDividerEdge3.end,
+    toolboxDividerEdge4.start
+  ])
+  coincident([
+    toolboxDividerEdge4.end,
+    toolboxDividerEdge1.start
+  ])
+
+  horizontal(toolboxDividerEdge1)
+  vertical(toolboxDividerEdge2)
+  horizontal(toolboxDividerEdge3)
+  vertical(toolboxDividerEdge4)
+
+  horizontalDistance([
+  toolboxDividerEdge1.start,
+  toolboxDividerEdge1.end
+]) == partitionThickness
+  verticalDistance([
+  toolboxDividerEdge2.start,
+  toolboxDividerEdge2.end
+]) == keywellWidth + partitionThickness / 2 + 2 * joinOverlap
+  horizontalDistance([ORIGIN, toolboxDividerEdge1.start]) == toolboxStartX - (partitionThickness / 2)
+  verticalDistance([ORIGIN, toolboxDividerEdge1.start]) == wallThickness - joinOverlap
+}
+
+outerBlock = extrude(region(point = [caseLength / 2, caseWidth / 2], sketch = outerProfile), length = caseHeight)
+cavityTool = extrude(
+  region(
+    point = [
+      wallThickness + innerLength / 2,
+      wallThickness + innerWidth / 2
+    ],
+    sketch = cavityProfile,
+  ),
+  length = innerHeight,
+)
+caseShell = subtract(outerBlock, tools = cavityTool)
+
+mainDividerBody = extrude(region(point = [soundboardEndX, caseWidth / 2], sketch = mainDividerProfile), length = partitionHeight)
+keywellRailBody = extrude(
+  region(
+    point = [
+      soundboardEndX + keywellLength / 2,
+      keywellDividerY
+    ],
+    sketch = keywellRailProfile,
+  ),
+  length = partitionHeight,
+)
+toolboxDividerBody = extrude(
+  region(
+    point = [
+      toolboxStartX,
+      wallThickness + keywellWidth / 2
+    ],
+    sketch = toolboxDividerProfile,
+  ),
+  length = partitionHeight,
+)
+
+mersenneCase = union([
+  caseShell[0],
+  mainDividerBody[0],
+  keywellRailBody[0],
+  toolboxDividerBody[0]
+])[0]
+
+hide(outerProfile)
+hide(cavityProfile)
+hide(mainDividerProfile)
+hide(keywellRailProfile)
+hide(toolboxDividerProfile)
+hide(outerBlock[0])
+hide(cavityTool[0])
+hide(caseShell[0])
+hide(mainDividerBody[0])
+hide(keywellRailBody[0])
+hide(toolboxDividerBody[0])
+
+mersenneCase

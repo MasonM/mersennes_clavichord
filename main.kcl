@@ -1,0 +1,6 @@
+@settings(defaultLengthUnit = mm, kclVersion = 1.0)
+
+// Import all parts into assembly file
+import "case.kcl" as case
+
+case
