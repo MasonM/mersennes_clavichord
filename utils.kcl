@@ -1,0 +1,30 @@
+export fn cube(@size) {
+  sketch001 = sketch(on = XY) {
+    line1 = line(start = [var 0mm, var 0mm], end = [var 3.08mm, var 0mm])
+    line2 = line(start = [var 3.08mm, var 0mm], end = [var 3.08mm, var -3.01mm])
+    line3 = line(start = [var 3.08mm, var -3.01mm], end = [var 0mm, var -3.01mm])
+    line4 = line(start = [var 0mm, var -3.01mm], end = [var 0mm, var 0mm])
+    coincident([line1.end, line2.start])
+    coincident([line2.end, line3.start])
+    coincident([line3.end, line4.start])
+    coincident([line4.end, line1.start])
+    parallel([line2, line4])
+    parallel([line3, line1])
+    perpendicular([line1, line2])
+    horizontal(line3)
+    coincident([line1.start, ORIGIN])
+    equalLength([line2, line4])
+    equalLength([line1, line3])
+    fixed([line1.start, ORIGIN])
+    fixed([line4.end, ORIGIN])
+    distance([line1.start, line1.end]) == size[0]
+    distance([line2.start, line2.end]) == size[1]
+  }
+  hide(sketch001)
+  return extrude(sketch001, length = size[2])
+    |> translate(y=size[1])
+}
+
+// https://en.wikipedia.org/wiki/Paris_inch
+export pouce = 27.069mm
+export ligne = (1/12)*pouce
