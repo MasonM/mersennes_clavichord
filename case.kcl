@@ -2,26 +2,12 @@
 // Open-top shell with keywell, soundboard, and toolbox partitions.
 
 import cube, pouce, ligne from "utils.kcl"
-
-soundboardLength = 24 * pouce
-keywellLength = 24 * pouce
-toolboxLength = (5 + 1/3) * pouce
-
-caseLength = soundboardLength + keywellLength + toolboxLength
-caseWidth = caseLength / 3
-caseHeight = 8 * pouce
-
-wallThickness = 4 * ligne
-keywellWidth = 6 * pouce
-innerLength = caseLength - (2 * wallThickness)
-innerHeight = caseHeight - wallThickness
+import caseLength, caseWidth, caseHeight, keywellLength, keywellWidth, toolboxLength, wallThickness, innerLength, innerHeight from "params.kcl"
 
 outerBlock = cube([caseLength, caseWidth, caseHeight])
 keywellCutoutBlock = cube([keywellLength, keywellWidth, 6 * pouce])
   |> translate(x=toolboxLength, z=2*pouce)
 cavityBlock = cube([innerLength, caseWidth - keywellWidth - wallThickness, innerHeight])
   |> translate(x=wallThickness, y=keywellWidth, z=wallThickness)
-// Workaround for "The Zoo engine cannot handle this 3D subtraction yet."
-caseShell = subtract(subtract(outerBlock, tools=[cavityBlock]), tools=keywellCutoutBlock)
-
-caseShell[0]
+  
+outerBlock - cavityBlock - keywellCutoutBlock

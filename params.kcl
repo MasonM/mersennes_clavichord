@@ -1,0 +1,14 @@
+import pouce, ligne from "utils.kcl"
+
+export soundboardLength = 24 * pouce
+export keywellLength = 24 * pouce
+export toolboxLength = (5 + 1/3) * pouce
+
+export caseLength = soundboardLength + keywellLength + toolboxLength
+export caseWidth = caseLength / 3
+export caseHeight = 8 * pouce
+
+export wallThickness = 4 * ligne
+export keywellWidth = 6 * pouce
+export innerLength = caseLength - (2 * wallThickness)
+export innerHeight = caseHeight - wallThickness

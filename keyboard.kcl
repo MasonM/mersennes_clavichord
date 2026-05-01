@@ -1,0 +1,47 @@
+numKeys = 49
+referencePitchA1 = 392
+equalTemperedSemitoneInterval = (2 / (3 - (2 ^ (1 / 2)))) ^ (1 / 4)
+keys = [0..numKeys]
+
+fn keyLever() {
+  keyLever2DSketch = sketch(on = XY) {
+    leftKeyBottomToFirstBend = line(start = [var 0, var 0], end = [var 0, var 20])
+    leftFirstBendToSecondBend = line(start = [var 0, var 20], end = [var -20, var 60])
+    leftSecondBendToTop = line(start = [var -20, var 60], end = [var -20, var 100])
+    leftTopToRightTop = line(start = [var -20, var 100], end = [var -10, var 100])
+    rightTopToSecondBend = line(start = [var -10, var 100], end = [var -10, var 60])
+    rightSecondBendToFirstBend = line(start = [var -10, var 60], end = [var 10, var 20])
+    rightFirstBendToKeyBottom = line(start = [var 10, var 20], end = [var 10, var 0])
+    rightKeyBottomToLeft = line(start = [var 10, var 0], end = [var 0, var 0])
+
+    coincident([leftKeyBottomToFirstBend.end, leftFirstBendToSecondBend.start])
+    coincident([leftFirstBendToSecondBend.end, leftSecondBendToTop.start])
+    coincident([leftSecondBendToTop.end, leftTopToRightTop.start])
+    coincident([leftTopToRightTop.end, rightTopToSecondBend.start])
+    coincident([rightTopToSecondBend.end, rightSecondBendToFirstBend.start])
+    coincident([rightSecondBendToFirstBend.end, rightFirstBendToKeyBottom.start])
+    coincident([rightFirstBendToKeyBottom.end, rightKeyBottomToLeft.start])
+    coincident([rightKeyBottomToLeft.end, leftKeyBottomToFirstBend.start])
+    
+    perpendicular([leftKeyBottomToFirstBend, rightKeyBottomToLeft])
+    perpendicular([leftSecondBendToTop, leftTopToRightTop])
+    perpendicular([leftTopToRightTop, rightTopToSecondBend])
+    perpendicular([rightFirstBendToKeyBottom, rightKeyBottomToLeft])
+    
+    parallel([
+      leftKeyBottomToFirstBend, rightFirstBendToKeyBottom,
+      leftSecondBendToTop, rightTopToSecondBend,
+    ])
+    parallel([rightKeyBottomToLeft, leftTopToRightTop])
+
+    distance([rightKeyBottomToLeft.start, rightKeyBottomToLeft.end]) == 10
+    distance([leftTopToRightTop.start, leftTopToRightTop.end]) == 10
+    equalLength([leftSecondBendToTop, rightSecondBendToFirstBend])
+
+    fixed([leftSecondBendToTop.start, [-20, 60]])
+  }
+  return keyLever2DSketch
+    |> extrude(length = 20)
+}
+
+keyLever()
