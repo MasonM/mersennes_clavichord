@@ -1,17 +1,34 @@
 import pouce, ligne from "utils.kcl"
 
+// All quotes taken from "Reconstructing Mersenne's Clavichord" by Peter Bavington
+// https://www.peter-bavington.co.uk/Mersennepaper.pdf
+
+// "The soundboard front would then also measure 24 pouces, easily marked off along the case front with the beam compass"
 export soundboardLength = 24 * pouce
+export soundboardHeight = 6 * ligne
+// "It turned out that a keywell measurement of 24 pouces (rather than 25) produces an octave-span for the instrument of just under 157 mm: a typical French octave-span, and almost exactly that of the La Brèche harpsichord."
 export keywellLength = 24 * pouce
-export toolboxLength = (5 + 1/3) * pouce
+// "As mentioned, the toolbox at the left-hand end takes up one-tenth of the complete length: the maker would therefore have to divide this 48-pouce distance into nine parts, with compass and ruler or with dividers, to find the toolbox width, which would then be added at the left end."
+export toolboxLength = (soundboardLength + keywellLength) / 9
+
+// "the depth of the case was exactly 1½ times the width of the box; and 1½ × 5⅓ is exactly 8, so the case would be 8 pouces high"
+export caseHeight = 1.5 * toolboxLength
+
+// "The depth of the keyboard opening is half the height"
+export keywellHeight = caseHeight / 2
 
 export caseLength = soundboardLength + keywellLength + toolboxLength
+// "It is clear from the engraving that the overall proportion of length to width is exactly 3:1"
 export caseWidth = caseLength / 3
-export caseHeight = 8 * pouce
 
+// "I estimated the thickness of the sides in the same way as 4 lignes"
 export wallThickness = 4 * ligne
 export keywellWidth = 6 * pouce
 export innerLength = caseLength - (2 * wallThickness)
 export innerHeight = caseHeight - wallThickness
-export innerWidth = caseWidth - (2 * wallThickness)
+//export innerWidth = caseWidth - keywellWidth - wallThickness
 
-export soundboardStart = [keywellLength + toolboxLength, keywellWidth + wallThickness, caseHeight - 2 * pouce]
+export soundboardStart = [keywellLength + toolboxLength, keywellWidth + wallThickness, caseHeight - 3 * pouce]
+
+// "For the design pitch, I chose a1 = 392 Hz; this, or something close to it, is likely to have been the organ pitch or ton de chapelle of Mersenne's time."
+export referencePitchA1 = 392

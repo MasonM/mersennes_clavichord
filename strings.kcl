@@ -1,0 +1,23 @@
+import * from "utils.kcl"
+import * from "params.kcl"
+
+// Return y position for given string.
+// Group strings in groups of 2
+export fn stringY(stringIdx) {
+    return caseWidth - wallThickness - 1
+    - (stringIdx*0.5)
+    - floor(stringIdx/2) * 1.5
+}
+
+// Return x position for the tuning pin connected to the given string
+export fn tuningPinX(stringIdx) {
+    caseLength - wallThickness
+    - 6
+    - (stringIdx % 3) * 5
+  }
+
+// Return x position for the hitch pin connected to the given string
+export fn hitchPinX(stringIdx) {
+    return wallThickness + 2 + (stringIdx % 2 ? 3 : 0)
+}
+

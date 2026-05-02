@@ -1,0 +1,8 @@
+import * from "params.kcl"
+import * from "utils.kcl"
+
+soundboard = cube([soundboardLength, innerWidth, soundboardHeight])
+  |> translate(xyz=soundboardStart)
+
+bellyRail = cube([30, innerWidth, soundboardStart[2]])
+  |> translate(x=soundboardStart[0], y=soundboardStart[1])

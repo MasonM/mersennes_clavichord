@@ -1,3 +1,7 @@
+// https://en.wikipedia.org/wiki/Paris_inch
+export pouce = 27.069mm
+export ligne = (1/12)*pouce
+
 export fn cube(@size) {
   sketch001 = sketch(on = XY) {
     line1 = line(start = [var 0mm, var 0mm], end = [var 3.08mm, var 0mm])
@@ -21,10 +25,18 @@ export fn cube(@size) {
     distance([line2.start, line2.end]) == size[1]
   }
   hide(sketch001)
-  return extrude(sketch001, length = size[2])
+  return region(sketch = sketch001, point = [0.4, -0.4])
+    |> extrude(length = size[2])
     |> translate(y=size[1])
 }
 
-// https://en.wikipedia.org/wiki/Paris_inch
-export pouce = 27.069mm
-export ligne = (1/12)*pouce
+export fn cylinder(d, h) {
+  sketch001 = sketch(on = XY) {
+    circle1 = circle(center = ORIGIN, diameter = d)
+    fixed(circle1.center)
+    distance([circle1.center, circle1.start]) == d/2
+  }
+  hide(sketch001)
+  return region(sketch = sketch001, point = [0.4, -0.4])
+    |> extrude(length = h)
+}

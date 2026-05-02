@@ -2,5 +2,12 @@
 
 // Import all parts into assembly file
 import "case.kcl" as case
+import "soundbox.kcl" as soundbox
+import "strings.kcl" as strings
 
 case
+soundbox
+strings
+
+import * from "utils.kcl"
+import * from "params.kcl"
