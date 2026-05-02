@@ -14,29 +14,74 @@ fn keyLever() {
     rightFirstBendToKeyBottom = line(start = [var 10, var 20], end = [var 10, var 0])
     rightKeyBottomToLeft = line(start = [var 10, var 0], end = [var 0, var 0])
 
-    coincident([leftKeyBottomToFirstBend.end, leftFirstBendToSecondBend.start])
-    coincident([leftFirstBendToSecondBend.end, leftSecondBendToTop.start])
-    coincident([leftSecondBendToTop.end, leftTopToRightTop.start])
-    coincident([leftTopToRightTop.end, rightTopToSecondBend.start])
-    coincident([rightTopToSecondBend.end, rightSecondBendToFirstBend.start])
-    coincident([rightSecondBendToFirstBend.end, rightFirstBendToKeyBottom.start])
-    coincident([rightFirstBendToKeyBottom.end, rightKeyBottomToLeft.start])
-    coincident([rightKeyBottomToLeft.end, leftKeyBottomToFirstBend.start])
-    
-    perpendicular([leftKeyBottomToFirstBend, rightKeyBottomToLeft])
-    perpendicular([leftSecondBendToTop, leftTopToRightTop])
-    perpendicular([leftTopToRightTop, rightTopToSecondBend])
-    perpendicular([rightFirstBendToKeyBottom, rightKeyBottomToLeft])
-    
-    parallel([
-      leftKeyBottomToFirstBend, rightFirstBendToKeyBottom,
-      leftSecondBendToTop, rightTopToSecondBend,
+    coincident([
+      leftKeyBottomToFirstBend.end,
+      leftFirstBendToSecondBend.start
     ])
-    parallel([rightKeyBottomToLeft, leftTopToRightTop])
+    coincident([
+      leftFirstBendToSecondBend.end,
+      leftSecondBendToTop.start
+    ])
+    coincident([
+      leftSecondBendToTop.end,
+      leftTopToRightTop.start
+    ])
+    coincident([
+      leftTopToRightTop.end,
+      rightTopToSecondBend.start
+    ])
+    coincident([
+      rightTopToSecondBend.end,
+      rightSecondBendToFirstBend.start
+    ])
+    coincident([
+      rightSecondBendToFirstBend.end,
+      rightFirstBendToKeyBottom.start
+    ])
+    coincident([
+      rightFirstBendToKeyBottom.end,
+      rightKeyBottomToLeft.start
+    ])
+    coincident([
+      rightKeyBottomToLeft.end,
+      leftKeyBottomToFirstBend.start
+    ])
+    perpendicular([
+      leftKeyBottomToFirstBend,
+      rightKeyBottomToLeft
+    ])
+    perpendicular([leftSecondBendToTop, leftTopToRightTop])
+    perpendicular([
+      leftTopToRightTop,
+      rightTopToSecondBend
+    ])
+    perpendicular([
+      rightFirstBendToKeyBottom,
+      rightKeyBottomToLeft
+    ])
+    parallel([
+      leftKeyBottomToFirstBend,
+      rightFirstBendToKeyBottom,
+      leftSecondBendToTop,
+      rightTopToSecondBend
+    ])
+    parallel([
+      rightKeyBottomToLeft,
+      leftTopToRightTop
+    ])
 
-    distance([rightKeyBottomToLeft.start, rightKeyBottomToLeft.end]) == 10
-    distance([leftTopToRightTop.start, leftTopToRightTop.end]) == 10
-    equalLength([leftSecondBendToTop, rightSecondBendToFirstBend])
+    distance([
+  rightKeyBottomToLeft.start,
+  rightKeyBottomToLeft.end
+]) == 10
+    distance([
+  leftTopToRightTop.start,
+  leftTopToRightTop.end
+]) == 10
+    equalLength([
+      leftSecondBendToTop,
+      rightSecondBendToFirstBend
+    ])
 
     fixed([leftSecondBendToTop.start, [-20, 60]])
   }
@@ -44,4 +89,4 @@ fn keyLever() {
     |> extrude(length = 20)
 }
 
-keyLever()
+// keyLever()

@@ -12,3 +12,6 @@ export wallThickness = 4 * ligne
 export keywellWidth = 6 * pouce
 export innerLength = caseLength - (2 * wallThickness)
 export innerHeight = caseHeight - wallThickness
+export innerWidth = caseWidth - (2 * wallThickness)
+
+export soundboardStart = [keywellLength + toolboxLength, keywellWidth + wallThickness, caseHeight - 2 * pouce]
