@@ -4,9 +4,12 @@
 
 // Import all parts into assembly file
 import "case.kcl" as case
+import "toolbox.kcl" as toolbox
 import "soundbox.kcl" as soundbox
-import "strings.kcl" as strings
+// import "strings.kcl" as strings
+
 
 case
+toolbox
 soundbox
-strings
+// strings
