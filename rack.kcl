@@ -1,51 +1,100 @@
 import * from "params.kcl"
+import * from "temperament.kcl"
+
+rackHeight = soundboardStart[2] + soundboardHeight
+rackBackY = caseWidth - wallThickness
+rackTongueCutoutWidth = 5.5mm
+rackTongueCutoutDepth = 5mm
+rackTongueCutoutCutHeight = rackHeight + 4mm
+rackTongueCutoutBassY = keywellWidth + 145mm
+rackTongueCutoutTrebleY = rackBackY - 4mm
+rackKeyIndices = [0..<numKeys]
+rackTongueCutoutPitchX = rackCutoutXSpan / (numKeys - 1)
+
+// Rack slot X follows the physical key order across the keywell.
+fn rackTongueCutoutXForKey(@keyIdx) {
+  return rackBassCutoutX + keyIdx * rackTongueCutoutPitchX
+}
+
+// Rack slot Y is driven by the calculated sounding length for this key:
+// low/long-sounding notes sit lower/frontward on the rack, while the short
+// treble lengths climb toward the back edge.
+fn rackTongueCutoutYForKey(@keyIdx) {
+  return rackTongueCutoutBassY + soundingLengthProgressForKey(keyIdx) * (rackTongueCutoutTrebleY - rackTongueCutoutBassY)
+}
 
 rackProfile = sketch(on = XY) {
-  leftToTop = line(
-    start = [wallThickness, keywellWidth],
-    end = [
-      wallThickness,
-      caseWidth - wallThickness
-    ],
-  )
-  topToSoundboard = line(
-    start = [
-      wallThickness,
-      caseWidth - wallThickness
-    ],
-    end = [
-      soundboardStart[0],
-      caseWidth - wallThickness
-    ],
-  )
+  leftToTop = line(start = [wallThickness, keywellWidth], end = [wallThickness, rackBackY])
+  topToSoundboard = line(start = [wallThickness, rackBackY], end = [soundboardStart[0], rackBackY])
   soundboardToMiddle = line(
-    start = [
-      soundboardStart[0],
-      caseWidth - wallThickness
-    ],
+    start = [soundboardStart[0], rackBackY],
     end = [
       soundboardStart[0] / 2,
-      caseWidth - wallThickness - 60
+      rackBackY - 60mm
     ],
   )
   middleToRightEdge = line(
     start = [
       soundboardStart[0] / 2,
-      caseWidth - wallThickness - 60
+      rackBackY - 60mm
     ],
     end = [
-      wallThickness + 100,
-      keywellWidth + 100
+      wallThickness + 100mm,
+      keywellWidth + 100mm
     ],
   )
   middleToBottom = line(
     start = [
-      wallThickness + 100,
-      keywellWidth + 100
+      wallThickness + 100mm,
+      keywellWidth + 100mm
     ],
-    end = [wallThickness + 100, keywellWidth],
+    end = [wallThickness + 100mm, keywellWidth],
   )
-  bottomToLeft = line(start = [wallThickness + 100, keywellWidth], end = [wallThickness, keywellWidth])
+  bottomToLeft = line(start = [wallThickness + 100mm, keywellWidth], end = [wallThickness, keywellWidth])
 }
 
-extrude(rackProfile, length = soundboardStart[2] + soundboardHeight)
+rackBlank = extrude(region(point = [20mm, keywellWidth + 20mm], sketch = rackProfile), length = rackHeight, method = NEW)
+  |> appearance(color = "#7a4b24", roughness = 80, metalness = 0)
+hiddenRackProfile = hide(rackProfile)
+
+rackTongueCutoutProfile = sketch(on = XY) {
+  cutoutFront = line(start = [var 0mm, var 0mm], end = [var 6mm, var 0mm])
+  cutoutRight = line(start = [var 6mm, var 0mm], end = [var 6mm, var 5mm])
+  cutoutBack = line(start = [var 6mm, var 5mm], end = [var 0mm, var 5mm])
+  cutoutLeft = line(start = [var 0mm, var 5mm], end = [var 0mm, var 0mm])
+
+  coincident([cutoutFront.end, cutoutRight.start])
+  coincident([cutoutRight.end, cutoutBack.start])
+  coincident([cutoutBack.end, cutoutLeft.start])
+  coincident([cutoutLeft.end, cutoutFront.start])
+  coincident([cutoutFront.start, ORIGIN])
+  horizontal(cutoutFront)
+  vertical(cutoutRight)
+  horizontal(cutoutBack)
+  vertical(cutoutLeft)
+  distance([cutoutFront.start, cutoutFront.end]) == rackTongueCutoutWidth
+  distance([cutoutRight.start, cutoutRight.end]) == rackTongueCutoutDepth
+}
+
+rackTongueCutoutRegion = region(point = [1mm, 1mm], sketch = rackTongueCutoutProfile)
+prototypeRackTongueCutout = extrude(rackTongueCutoutRegion, length = rackTongueCutoutCutHeight, method = NEW)
+
+fn makeRackTongueCutout(@keyIdx) {
+  return clone(prototypeRackTongueCutout)
+    |> translate(
+         x = rackTongueCutoutXForKey(keyIdx) - (rackTongueCutoutWidth / 2),
+         y = rackTongueCutoutYForKey(keyIdx) - (rackTongueCutoutDepth / 2),
+         z = -2mm,
+         global = true,
+       )
+}
+
+rackTongueCutouts = map(rackKeyIndices, f = makeRackTongueCutout)
+
+rack = subtract([rackBlank], tools = rackTongueCutouts)
+  |> appearance(color = "#7a4b24", roughness = 80, metalness = 0)
+
+hiddenRackTongueCutoutProfile = hide(rackTongueCutoutProfile)
+hiddenPrototypeRackTongueCutout = hide([prototypeRackTongueCutout])
+hiddenRackTongueCutouts = hide(rackTongueCutouts)
+hiddenRackBlank = hide([rackBlank])
