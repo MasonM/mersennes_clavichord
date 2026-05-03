@@ -29,28 +29,18 @@ lidBottomZ = lidBaseTopZ - lidBaseThickness
 
 step1Inset = 0mm
 step2Inset = terraceStepWidth
-step3Inset = 2 * terraceStepWidth
-step4Inset = 3 * terraceStepWidth
 
 step1TopZ = terraceOuterTopZ
 step2TopZ = terraceOuterTopZ - terraceStepDrop
-step3TopZ = terraceOuterTopZ - (2 * terraceStepDrop)
-step4TopZ = terraceOuterTopZ - (3 * terraceStepDrop)
 
 step1Height = step1TopZ - lidBaseTopZ
 step2Height = step2TopZ - lidBaseTopZ
-step3Height = step3TopZ - lidBaseTopZ
-step4Height = step4TopZ - lidBaseTopZ
 
 step1LongLength = lidLength - (2 * step1Inset)
 step2LongLength = lidLength - (2 * step2Inset)
-step3LongLength = lidLength - (2 * step3Inset)
-step4LongLength = lidLength - (2 * step4Inset)
 
 step1SideLength = lidWidth - (2 * step1Inset) - (2 * terraceStepWidth)
 step2SideLength = lidWidth - (2 * step2Inset) - (2 * terraceStepWidth)
-step3SideLength = lidWidth - (2 * step3Inset) - (2 * terraceStepWidth)
-step4SideLength = lidWidth - (2 * step4Inset) - (2 * terraceStepWidth)
 
 handleX = lidX + lidLength / 2
 handleY = lidY + lidWidth / 2
@@ -374,190 +364,6 @@ step2Left = extrude(region(point = [2mm, 5mm], sketch = step2SideProfile), lengt
 step2Right = clone(step2Left)
   |> translate(x = lidLength - (2 * step2Inset) - terraceStepWidth, global = true)
 hiddenStep2SideProfile = hide(step2SideProfile)
-
-step3LongProfile = sketch(on = XY) {
-  step3LongFront = line(start = [var 0mm, var 0mm], end = [var 90mm, var 0mm])
-  step3LongRight = line(start = [var 90mm, var 0mm], end = [var 90mm, var 7mm])
-  step3LongBack = line(start = [var 90mm, var 7mm], end = [var 0mm, var 7mm])
-  step3LongLeft = line(start = [var 0mm, var 7mm], end = [var 0mm, var 0mm])
-
-  coincident([
-    step3LongFront.end,
-    step3LongRight.start
-  ])
-  coincident([
-    step3LongRight.end,
-    step3LongBack.start
-  ])
-  coincident([step3LongBack.end, step3LongLeft.start])
-  coincident([
-    step3LongLeft.end,
-    step3LongFront.start
-  ])
-  coincident([step3LongFront.start, ORIGIN])
-  horizontal(step3LongFront)
-  vertical(step3LongRight)
-  horizontal(step3LongBack)
-  vertical(step3LongLeft)
-  distance([
-  step3LongFront.start,
-  step3LongFront.end
-]) == step3LongLength
-  distance([
-  step3LongRight.start,
-  step3LongRight.end
-]) == terraceStepWidth
-}
-
-step3Front = extrude(region(point = [5mm, 2mm], sketch = step3LongProfile), length = step3Height, method = NEW)
-  |> translate(
-       x = lidX + step3Inset,
-       y = lidY + step3Inset,
-       z = lidBaseTopZ,
-       global = true,
-     )
-  |> appearance(color = "#985a2d", roughness = 80, metalness = 0)
-step3Back = clone(step3Front)
-  |> translate(y = lidWidth - (2 * step3Inset) - terraceStepWidth, global = true)
-hiddenStep3LongProfile = hide(step3LongProfile)
-
-step3SideProfile = sketch(on = XY) {
-  step3SideFront = line(start = [var 0mm, var 0mm], end = [var 7mm, var 0mm])
-  step3SideRight = line(start = [var 7mm, var 0mm], end = [var 7mm, var 90mm])
-  step3SideBack = line(start = [var 7mm, var 90mm], end = [var 0mm, var 90mm])
-  step3SideLeft = line(start = [var 0mm, var 90mm], end = [var 0mm, var 0mm])
-
-  coincident([
-    step3SideFront.end,
-    step3SideRight.start
-  ])
-  coincident([
-    step3SideRight.end,
-    step3SideBack.start
-  ])
-  coincident([step3SideBack.end, step3SideLeft.start])
-  coincident([
-    step3SideLeft.end,
-    step3SideFront.start
-  ])
-  coincident([step3SideFront.start, ORIGIN])
-  horizontal(step3SideFront)
-  vertical(step3SideRight)
-  horizontal(step3SideBack)
-  vertical(step3SideLeft)
-  distance([
-  step3SideFront.start,
-  step3SideFront.end
-]) == terraceStepWidth
-  distance([
-  step3SideRight.start,
-  step3SideRight.end
-]) == step3SideLength
-}
-
-step3Left = extrude(region(point = [2mm, 5mm], sketch = step3SideProfile), length = step3Height, method = NEW)
-  |> translate(
-       x = lidX + step3Inset,
-       y = lidY + step3Inset + terraceStepWidth,
-       z = lidBaseTopZ,
-       global = true,
-     )
-  |> appearance(color = "#985a2d", roughness = 80, metalness = 0)
-step3Right = clone(step3Left)
-  |> translate(x = lidLength - (2 * step3Inset) - terraceStepWidth, global = true)
-hiddenStep3SideProfile = hide(step3SideProfile)
-
-step4LongProfile = sketch(on = XY) {
-  step4LongFront = line(start = [var 0mm, var 0mm], end = [var 80mm, var 0mm])
-  step4LongRight = line(start = [var 80mm, var 0mm], end = [var 80mm, var 7mm])
-  step4LongBack = line(start = [var 80mm, var 7mm], end = [var 0mm, var 7mm])
-  step4LongLeft = line(start = [var 0mm, var 7mm], end = [var 0mm, var 0mm])
-
-  coincident([
-    step4LongFront.end,
-    step4LongRight.start
-  ])
-  coincident([
-    step4LongRight.end,
-    step4LongBack.start
-  ])
-  coincident([step4LongBack.end, step4LongLeft.start])
-  coincident([
-    step4LongLeft.end,
-    step4LongFront.start
-  ])
-  coincident([step4LongFront.start, ORIGIN])
-  horizontal(step4LongFront)
-  vertical(step4LongRight)
-  horizontal(step4LongBack)
-  vertical(step4LongLeft)
-  distance([
-  step4LongFront.start,
-  step4LongFront.end
-]) == step4LongLength
-  distance([
-  step4LongRight.start,
-  step4LongRight.end
-]) == terraceStepWidth
-}
-
-step4Front = extrude(region(point = [5mm, 2mm], sketch = step4LongProfile), length = step4Height, method = NEW)
-  |> translate(
-       x = lidX + step4Inset,
-       y = lidY + step4Inset,
-       z = lidBaseTopZ,
-       global = true,
-     )
-  |> appearance(color = "#81481f", roughness = 82, metalness = 0)
-step4Back = clone(step4Front)
-  |> translate(y = lidWidth - (2 * step4Inset) - terraceStepWidth, global = true)
-hiddenStep4LongProfile = hide(step4LongProfile)
-
-step4SideProfile = sketch(on = XY) {
-  step4SideFront = line(start = [var 0mm, var 0mm], end = [var 7mm, var 0mm])
-  step4SideRight = line(start = [var 7mm, var 0mm], end = [var 7mm, var 80mm])
-  step4SideBack = line(start = [var 7mm, var 80mm], end = [var 0mm, var 80mm])
-  step4SideLeft = line(start = [var 0mm, var 80mm], end = [var 0mm, var 0mm])
-
-  coincident([
-    step4SideFront.end,
-    step4SideRight.start
-  ])
-  coincident([
-    step4SideRight.end,
-    step4SideBack.start
-  ])
-  coincident([step4SideBack.end, step4SideLeft.start])
-  coincident([
-    step4SideLeft.end,
-    step4SideFront.start
-  ])
-  coincident([step4SideFront.start, ORIGIN])
-  horizontal(step4SideFront)
-  vertical(step4SideRight)
-  horizontal(step4SideBack)
-  vertical(step4SideLeft)
-  distance([
-  step4SideFront.start,
-  step4SideFront.end
-]) == terraceStepWidth
-  distance([
-  step4SideRight.start,
-  step4SideRight.end
-]) == step4SideLength
-}
-
-step4Left = extrude(region(point = [2mm, 5mm], sketch = step4SideProfile), length = step4Height, method = NEW)
-  |> translate(
-       x = lidX + step4Inset,
-       y = lidY + step4Inset + terraceStepWidth,
-       z = lidBaseTopZ,
-       global = true,
-     )
-  |> appearance(color = "#81481f", roughness = 82, metalness = 0)
-step4Right = clone(step4Left)
-  |> translate(x = lidLength - (2 * step4Inset) - terraceStepWidth, global = true)
-hiddenStep4SideProfile = hide(step4SideProfile)
 
 handleBaseProfile = sketch(on = XY) {
   handleBaseGuide = line(start = [var 0mm, var 0mm], end = [var 9mm, var 0mm], construction = true)
