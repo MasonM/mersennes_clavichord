@@ -118,7 +118,74 @@ bellyRailProfile = sketch(on = XY) {
 ]) == innerWidth
 }
 
-bellyRail = extrude(region(point = [5mm, 10mm], sketch = bellyRailProfile), length = soundboardStart[2], method = NEW)
+bellyRailBlank = extrude(region(point = [5mm, 10mm], sketch = bellyRailProfile), length = soundboardStart[2], method = NEW)
   |> translate(x = soundboardStart[0], y = soundboardStart[1], global = true)
-  |> appearance(color = "#7a4b24", roughness = 78, metalness = 0)
 hiddenBellyRailProfile = hide(bellyRailProfile)
+
+bellyRailCutoutCount = 7
+bellyRailCutoutGapY = innerWidth / (2 * bellyRailCutoutCount + 1)
+bellyRailCutoutWidthY = bellyRailCutoutGapY
+bellyRailCutoutCutX = bellyRailLength + 4mm
+bellyRailCutoutHeight = 15mm
+bellyRailCutoutBottomZ = soundboardStart[2] - bellyRailCutoutHeight - 10mm
+bellyRailCutoutStartX = soundboardStart[0] - 2mm
+bellyRailCutoutStartY01 = soundboardStart[1] + bellyRailCutoutGapY
+bellyRailCutoutPitchY = bellyRailCutoutWidthY + bellyRailCutoutGapY
+
+bellyRailCutoutProfile = sketch(on = XY) {
+  cutoutFront = line(start = [var 0mm, var 0mm], end = [var 32mm, var 0mm])
+  cutoutRight = line(start = [var 32mm, var 0mm], end = [var 32mm, var 20mm])
+  cutoutBack = line(start = [var 32mm, var 20mm], end = [var 0mm, var 20mm])
+  cutoutLeft = line(start = [var 0mm, var 20mm], end = [var 0mm, var 0mm])
+
+  coincident([cutoutFront.end, cutoutRight.start])
+  coincident([cutoutRight.end, cutoutBack.start])
+  coincident([cutoutBack.end, cutoutLeft.start])
+  coincident([cutoutLeft.end, cutoutFront.start])
+  coincident([cutoutFront.start, ORIGIN])
+  horizontal(cutoutFront)
+  vertical(cutoutRight)
+  horizontal(cutoutBack)
+  vertical(cutoutLeft)
+  distance([cutoutFront.start, cutoutFront.end]) == bellyRailCutoutCutX
+  distance([cutoutRight.start, cutoutRight.end]) == bellyRailCutoutWidthY
+}
+
+prototypeBellyRailCutout = extrude(region(point = [1mm, 1mm], sketch = bellyRailCutoutProfile), length = bellyRailCutoutHeight, method = NEW)
+hiddenBellyRailCutoutProfile = hide(bellyRailCutoutProfile)
+
+bellyRailCutout01 = clone(prototypeBellyRailCutout)
+  |> translate(
+       x = bellyRailCutoutStartX,
+       y = bellyRailCutoutStartY01,
+       z = bellyRailCutoutBottomZ,
+       global = true,
+     )
+bellyRailCutout02 = clone(bellyRailCutout01)
+  |> translate(y = bellyRailCutoutPitchY, global = true)
+bellyRailCutout03 = clone(bellyRailCutout02)
+  |> translate(y = bellyRailCutoutPitchY, global = true)
+bellyRailCutout04 = clone(bellyRailCutout03)
+  |> translate(y = bellyRailCutoutPitchY, global = true)
+bellyRailCutout05 = clone(bellyRailCutout04)
+  |> translate(y = bellyRailCutoutPitchY, global = true)
+bellyRailCutout06 = clone(bellyRailCutout05)
+  |> translate(y = bellyRailCutoutPitchY, global = true)
+bellyRailCutout07 = clone(bellyRailCutout06)
+  |> translate(y = bellyRailCutoutPitchY, global = true)
+
+bellyRailCutouts = [
+  bellyRailCutout01,
+  bellyRailCutout02,
+  bellyRailCutout03,
+  bellyRailCutout04,
+  bellyRailCutout05,
+  bellyRailCutout06,
+  bellyRailCutout07
+]
+
+bellyRail = subtract([bellyRailBlank], tools = bellyRailCutouts)
+  |> appearance(color = "#7a4b24", roughness = 78, metalness = 0)
+hiddenPrototypeBellyRailCutout = hide([prototypeBellyRailCutout])
+hiddenBellyRailCutouts = hide(bellyRailCutouts)
+hiddenBellyRailBlank = hide([bellyRailBlank])
