@@ -100,7 +100,7 @@ frontSideBoardProfile = sketch(on = frontSideBoardPlane) {
 
   distance([frontBottom.start, frontBottom.end]) == caseLength
   distance([frontRight.start, frontRight.end]) == caseBoardHeight
-  distance([frontTopRight.start, frontTopRight.end]) == soundboardLength
+  distance([frontTopRight.start, frontTopRight.end]) == soundboardFrontLength
   distance([
   frontNotchRight.start,
   frontNotchRight.end

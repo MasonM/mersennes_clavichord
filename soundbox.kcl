@@ -1,12 +1,124 @@
 import * from "params.kcl"
-import * from "utils.kcl"
 
-soundboard = cube([
-  soundboardLength,
-  innerWidth,
-  soundboardHeight
-])
+soundboardProfile = sketch(on = XY) {
+  soundboardFront = line(start = [var 0mm, var 0mm], end = [var 500mm, var 0mm])
+  soundboardRight = line(start = [var 500mm, var 0mm], end = [var 500mm, var 300mm])
+  soundboardBack = line(start = [var 500mm, var 300mm], end = [var 0mm, var 300mm])
+  soundboardLeft = line(start = [var 0mm, var 300mm], end = [var 0mm, var 0mm])
+
+  coincident([
+    soundboardFront.end,
+    soundboardRight.start
+  ])
+  coincident([
+    soundboardRight.end,
+    soundboardBack.start
+  ])
+  coincident([
+    soundboardBack.end,
+    soundboardLeft.start
+  ])
+  coincident([
+    soundboardLeft.end,
+    soundboardFront.start
+  ])
+  coincident([soundboardFront.start, ORIGIN])
+  horizontal(soundboardFront)
+  vertical(soundboardRight)
+  horizontal(soundboardBack)
+  vertical(soundboardLeft)
+  distance([
+  soundboardFront.start,
+  soundboardFront.end
+]) == soundboardLength
+  distance([
+  soundboardRight.start,
+  soundboardRight.end
+]) == innerWidth
+}
+
+soundboard = extrude(region(point = [10mm, 10mm], sketch = soundboardProfile), length = soundboardHeight, method = NEW)
   |> translate(xyz = soundboardStart)
+  |> appearance(color = "#d0a566", roughness = 82, metalness = 0)
+hiddenSoundboardProfile = hide(soundboardProfile)
 
-bellyRail = cube([30, innerWidth, soundboardStart[2]])
-  |> translate(x = soundboardStart[0], y = soundboardStart[1])
+wrestplankProfile = sketch(on = XY) {
+  wrestplankFront = line(start = [var 0mm, var 0mm], end = [var 100mm, var 0mm])
+  wrestplankRight = line(start = [var 100mm, var 0mm], end = [var 100mm, var 300mm])
+  wrestplankBack = line(start = [var 100mm, var 300mm], end = [var 0mm, var 300mm])
+  wrestplankLeft = line(start = [var 0mm, var 300mm], end = [var 0mm, var 0mm])
+
+  coincident([
+    wrestplankFront.end,
+    wrestplankRight.start
+  ])
+  coincident([
+    wrestplankRight.end,
+    wrestplankBack.start
+  ])
+  coincident([
+    wrestplankBack.end,
+    wrestplankLeft.start
+  ])
+  coincident([
+    wrestplankLeft.end,
+    wrestplankFront.start
+  ])
+  coincident([wrestplankFront.start, ORIGIN])
+  horizontal(wrestplankFront)
+  vertical(wrestplankRight)
+  horizontal(wrestplankBack)
+  vertical(wrestplankLeft)
+  distance([
+  wrestplankFront.start,
+  wrestplankFront.end
+]) == wrestplankLength
+  distance([
+  wrestplankRight.start,
+  wrestplankRight.end
+]) == innerWidth
+}
+
+wrestplank = extrude(region(point = [10mm, 10mm], sketch = wrestplankProfile), length = wrestplankThickness, method = NEW)
+  |> translate(xyz = wrestplankStart)
+  |> appearance(color = "#6f4321", roughness = 76, metalness = 0)
+hiddenWrestplankProfile = hide(wrestplankProfile)
+
+bellyRailProfile = sketch(on = XY) {
+  bellyRailFront = line(start = [var 0mm, var 0mm], end = [var 30mm, var 0mm])
+  bellyRailRight = line(start = [var 30mm, var 0mm], end = [var 30mm, var 300mm])
+  bellyRailBack = line(start = [var 30mm, var 300mm], end = [var 0mm, var 300mm])
+  bellyRailLeft = line(start = [var 0mm, var 300mm], end = [var 0mm, var 0mm])
+
+  coincident([
+    bellyRailFront.end,
+    bellyRailRight.start
+  ])
+  coincident([
+    bellyRailRight.end,
+    bellyRailBack.start
+  ])
+  coincident([bellyRailBack.end, bellyRailLeft.start])
+  coincident([
+    bellyRailLeft.end,
+    bellyRailFront.start
+  ])
+  coincident([bellyRailFront.start, ORIGIN])
+  horizontal(bellyRailFront)
+  vertical(bellyRailRight)
+  horizontal(bellyRailBack)
+  vertical(bellyRailLeft)
+  distance([
+  bellyRailFront.start,
+  bellyRailFront.end
+]) == bellyRailLength
+  distance([
+  bellyRailRight.start,
+  bellyRailRight.end
+]) == innerWidth
+}
+
+bellyRail = extrude(region(point = [5mm, 10mm], sketch = bellyRailProfile), length = soundboardStart[2], method = NEW)
+  |> translate(x = soundboardStart[0], y = soundboardStart[1], global = true)
+  |> appearance(color = "#7a4b24", roughness = 78, metalness = 0)
+hiddenBellyRailProfile = hide(bellyRailProfile)
