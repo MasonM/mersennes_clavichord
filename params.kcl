@@ -67,4 +67,3 @@ export hitchPinDiameter = 2mm
 export hitchPinHeight = 14mm
 
 export numKeys = 49
-export equalTemperedSemitoneInterval = (2 / (3 - (2 ^ (1 / 2)))) ^ (1 / 4)
