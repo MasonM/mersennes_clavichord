@@ -3,9 +3,9 @@ import * from "temperament.kcl"
 
 rackHeight = soundboardStart[2] + soundboardHeight
 rackBackY = caseWidth - wallThickness
-rackTongueCutoutWidth = 5.5mm
-rackTongueCutoutDepth = 5mm
-rackTongueCutoutCutHeight = rackHeight + 4mm
+rackTongueCutoutWidth = 3mm
+rackTongueCutoutDepth = 50mm
+rackTongueCutoutCutHeight = rackHeight + 14mm
 rackTongueCutoutBassY = keywellWidth + 145mm
 rackTongueCutoutTrebleY = rackBackY - 4mm
 rackKeyIndices = [0..<numKeys]
@@ -83,7 +83,7 @@ fn makeRackTongueCutout(@keyIdx) {
   return clone(prototypeRackTongueCutout)
     |> translate(
          x = rackTongueCutoutXForKey(keyIdx) - (rackTongueCutoutWidth / 2),
-         y = rackTongueCutoutYForKey(keyIdx) - (rackTongueCutoutDepth / 2),
+         y = rackTongueCutoutYForKey(keyIdx) - (rackTongueCutoutDepth),
          z = -2mm,
          global = true,
        )
