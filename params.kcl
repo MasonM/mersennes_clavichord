@@ -5,7 +5,7 @@ import pouce, ligne from "utils.kcl"
 
 // "The soundboard front would then also measure 24 pouces, easily marked off along the case front with the beam compass"
 export soundboardFrontLength = 24 * pouce
-export wrestplankLength = 2 * pouce
+export wrestplankLength = 1 * pouce
 export soundboardLength = soundboardFrontLength - wrestplankLength
 export soundboardHeight = 6 * ligne
 export bellyRailLength = 1 * pouce

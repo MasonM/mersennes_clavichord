@@ -8,7 +8,6 @@ firstStringY = caseWidth / 2
 lastStringY = caseWidth - 10mm
 coursePitch = (lastStringY - firstStringY - stringPairGap) / (numCourses - 1)
 
-stringLength = caseLength - (2 * wallThickness) - 24mm
 stringHeight = soundboardStart[2] + soundboardHeight + 8mm
 stringIndices = [0..<numStrings]
 
@@ -16,6 +15,17 @@ hitchPinRadius = hitchPinDiameter / 2
 hitchPinX = wallThickness + 6mm
 hitchPinStaggerX = 3mm
 hitchPinBaseZ = soundboardStart[2] + soundboardHeight
+
+tuningPinDiameter = 3mm
+tuningPinRadius = tuningPinDiameter / 2
+tuningPinHeight = 22mm
+tuningPinRows = 4
+tuningPinFrontMargin = 8mm
+tuningPinBackMargin = 8mm
+tuningPinRowPitch = (wrestplankLength - tuningPinFrontMargin - tuningPinBackMargin) / (tuningPinRows - 1)
+tuningPinBaseX = wrestplankStart[0] + tuningPinFrontMargin
+tuningPinBaseZ = wrestplankTopZ
+prototypeStringLength = tuningPinBaseX + (tuningPinRows - 1) * tuningPinRowPitch - tuningPinRadius - hitchPinX - hitchPinRadius
 
 // Return the Y position for a zero-based string index.
 // Even/odd adjacent indices form a two-string course.
@@ -28,6 +38,20 @@ fn stringY(@stringIdx) {
 // Return the staggered X position for the hitchpin attached to a string.
 fn hitchPinXForString(@stringIdx) {
   return hitchPinX + stringIdx % 2 * hitchPinStaggerX
+}
+
+// Return the X position for the tuning pin attached to a string.
+// Adjacent strings step through four rows across the wrestplank, avoiding overlap.
+fn tuningPinXForString(@stringIdx) {
+  tuningPinRow = stringIdx % tuningPinRows
+  return tuningPinBaseX + tuningPinRow * tuningPinRowPitch
+}
+
+// Return the string segment length from the hitchpin tangent to the tuning pin tangent.
+fn stringLengthForString(@stringIdx) {
+  stringStartX = hitchPinXForString(stringIdx) + hitchPinRadius
+  stringEndX = tuningPinXForString(stringIdx) - tuningPinRadius
+  return stringEndX - stringStartX
 }
 
 stringProfile = sketch(on = XY) {
@@ -44,11 +68,12 @@ stringProfile = sketch(on = XY) {
 stringRegion = region(point = [0.1mm, 0mm], sketch = stringProfile)
 hiddenStringProfile = hide(stringProfile)
 
-prototypeString = extrude(stringRegion, length = stringLength)
+prototypeString = extrude(stringRegion, length = prototypeStringLength)
   |> rotate(axis = Y, angle = 90deg)
 
 fn makeString(@stringIdx) {
   return clone(prototypeString)
+    |> scale(x = stringLengthForString(stringIdx) / prototypeStringLength, global = true)
     |> translate(
          x = hitchPinXForString(stringIdx) + hitchPinRadius,
          y = stringY(stringIdx),
@@ -110,4 +135,49 @@ ironHitchPins = appearance(
   color = "#3b3f42",
   metalness = 90,
   roughness = 35,
+)
+
+tuningPinProfile = sketch(on = XY) {
+  tuningPinRadiusGuide = line(start = [var 0mm, var 0mm], end = [var 1.5mm, var 0mm], construction = true)
+  tuningPinCircle = circle(start = [var 1.5mm, var 0mm], center = [var 0mm, var 0mm])
+
+  coincident([tuningPinRadiusGuide.start, ORIGIN])
+  coincident([
+    tuningPinRadiusGuide.start,
+    tuningPinCircle.center
+  ])
+  coincident([
+    tuningPinRadiusGuide.end,
+    tuningPinCircle.start
+  ])
+  horizontal(tuningPinRadiusGuide)
+  horizontalDistance([
+  tuningPinRadiusGuide.start,
+  tuningPinRadiusGuide.end
+]) == tuningPinRadius
+}
+
+tuningPinRegion = region(point = [0.5mm, 0mm], sketch = tuningPinProfile)
+hiddenTuningPinProfile = hide(tuningPinProfile)
+
+prototypeTuningPin = extrude(tuningPinRegion, length = tuningPinHeight)
+
+fn makeTuningPin(@stringIdx) {
+  return clone(prototypeTuningPin)
+    |> translate(
+         x = tuningPinXForString(stringIdx),
+         y = stringY(stringIdx),
+         z = tuningPinBaseZ,
+         global = true,
+       )
+}
+
+tuningPins = map(stringIndices, f = makeTuningPin)
+hiddenPrototypeTuningPin = hide([prototypeTuningPin])
+
+ironTuningPins = appearance(
+  tuningPins,
+  color = "#2f3336",
+  metalness = 92,
+  roughness = 32,
 )
