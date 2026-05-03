@@ -1,6 +1,5 @@
-numKeys = 49
-referencePitchA1 = 392
-equalTemperedSemitoneInterval = (2 / (3 - (2 ^ (1 / 2)))) ^ (1 / 4)
+import * from "params.kcl"
+
 keys = [0..numKeys]
 
 fn keyLever() {
@@ -89,4 +88,4 @@ fn keyLever() {
     |> extrude(length = 20)
 }
 
-// keyLever()
+ keyLever()

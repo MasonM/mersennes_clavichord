@@ -65,3 +65,6 @@ export stringDiameter = 0.70mm
 export stringPairGap = 1.25mm
 export hitchPinDiameter = 2mm
 export hitchPinHeight = 14mm
+
+export numKeys = 49
+export equalTemperedSemitoneInterval = (2 / (3 - (2 ^ (1 / 2)))) ^ (1 / 4)
