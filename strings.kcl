@@ -2,11 +2,8 @@ import * from "params.kcl"
 
 // 70 brass clavichord strings arranged as 35 courses of two.
 // Plan-view convention: strings run along X; Y increases toward the top/back edge of the case.
-numStrings = 70
 numCourses = numStrings / 2
-stringDiameter = 0.70mm
 stringRadius = stringDiameter / 2
-stringPairGap = 1.25mm
 firstStringY = caseWidth / 2
 lastStringY = caseWidth - 10mm
 coursePitch = (lastStringY - firstStringY - stringPairGap) / (numCourses - 1)
@@ -15,6 +12,11 @@ stringStartX = wallThickness + 12mm
 stringLength = caseLength - (2 * wallThickness) - 24mm
 stringHeight = soundboardStart[2] + soundboardHeight + 8mm
 stringIndices = [0..<numStrings]
+
+hitchPinRadius = hitchPinDiameter / 2
+hitchPinX = wallThickness + 6mm
+hitchPinStaggerX = 3mm
+hitchPinBaseZ = soundboardStart[2] + soundboardHeight
 
 // Return the Y position for a zero-based string index.
 // Even/odd adjacent indices form a two-string course.
@@ -60,4 +62,50 @@ brassStrings = appearance(
   color = "#c59a3d",
   metalness = 85,
   roughness = 22,
+)
+
+hitchPinProfile = sketch(on = XY) {
+  hitchPinRadiusGuide = line(start = [var 0mm, var 0mm], end = [var 1mm, var 0mm], construction = true)
+  hitchPinCircle = circle(start = [var 1mm, var 0mm], center = [var 0mm, var 0mm])
+
+  coincident([hitchPinRadiusGuide.start, ORIGIN])
+  coincident([
+    hitchPinRadiusGuide.start,
+    hitchPinCircle.center
+  ])
+  coincident([
+    hitchPinRadiusGuide.end,
+    hitchPinCircle.start
+  ])
+  horizontal(hitchPinRadiusGuide)
+  horizontalDistance([
+  hitchPinRadiusGuide.start,
+  hitchPinRadiusGuide.end
+]) == hitchPinRadius
+}
+
+hitchPinRegion = region(point = [0.25mm, 0mm], sketch = hitchPinProfile)
+hiddenHitchPinProfile = hide(hitchPinProfile)
+
+prototypeHitchPin = extrude(hitchPinRegion, length = hitchPinHeight)
+  |> translate(
+       x = hitchPinX,
+       y = firstStringY,
+       z = hitchPinBaseZ,
+       global = true,
+     )
+
+fn makeHitchPin(@stringIdx) {
+  return clone(prototypeHitchPin)
+    |> translate(x = stringIdx % 2 * hitchPinStaggerX, y = stringY(stringIdx) - firstStringY, global = true)
+}
+
+hitchPins = map(stringIndices, f = makeHitchPin)
+hiddenPrototypeHitchPin = hide([prototypeHitchPin])
+
+ironHitchPins = appearance(
+  hitchPins,
+  color = "#3b3f42",
+  metalness = 90,
+  roughness = 35,
 )

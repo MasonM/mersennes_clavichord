@@ -36,3 +36,10 @@ export soundboardStart = [
 
 // "For the design pitch, I chose a1 = 392 Hz; this, or something close to it, is likely to have been the organ pitch or ton de chapelle of Mersenne's time."
 export referencePitchA1 = 392
+
+// export numStrings = 70
+export numStrings = 70
+export stringDiameter = 0.70mm
+export stringPairGap = 1.25mm
+export hitchPinDiameter = 2mm
+export hitchPinHeight = 14mm
