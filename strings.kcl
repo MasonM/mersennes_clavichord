@@ -3,7 +3,7 @@ import * from "params.kcl"
 // 70 brass clavichord strings arranged as 35 courses of two.
 // Plan-view convention: strings run along X; Y increases toward the top/back edge of the case.
 numStrings = 70
-numCourses = 35
+numCourses = numStrings / 2
 stringDiameter = 0.70mm
 stringRadius = stringDiameter / 2
 stringPairGap = 1.25mm
@@ -14,6 +14,15 @@ coursePitch = (lastStringY - firstStringY - stringPairGap) / (numCourses - 1)
 stringStartX = wallThickness + 12mm
 stringLength = caseLength - (2 * wallThickness) - 24mm
 stringHeight = soundboardStart[2] + soundboardHeight + 8mm
+stringIndices = [0..<numStrings]
+
+// Return the Y position for a zero-based string index.
+// Even/odd adjacent indices form a two-string course.
+fn stringY(@stringIdx) {
+  courseIdx = floor(stringIdx / 2)
+  stringInCourse = stringIdx % 2
+  return firstStringY + courseIdx * coursePitch + stringInCourse * stringPairGap
+}
 
 stringProfile = sketch(on = XY) {
   radiusGuide = line(start = [var 0mm, var 0mm], end = [var 0.35mm, var 0mm], construction = true)
@@ -29,148 +38,26 @@ stringProfile = sketch(on = XY) {
 stringRegion = region(point = [0.1mm, 0mm], sketch = stringProfile)
 hiddenStringProfile = hide(stringProfile)
 
-string01 = extrude(stringRegion, length = stringLength)
+prototypeString = extrude(stringRegion, length = stringLength)
   |> rotate(axis = Y, angle = 90deg)
-  |> translate(x = stringStartX, y = firstStringY, z = stringHeight, global = true)
-string02 = clone(string01) |> translate(y = stringPairGap, global = true)
-string03 = clone(string01) |> translate(y = coursePitch, global = true)
-string04 = clone(string01) |> translate(y = coursePitch + stringPairGap, global = true)
-string05 = clone(string01) |> translate(y = 2 * coursePitch, global = true)
-string06 = clone(string01) |> translate(y = 2 * coursePitch + stringPairGap, global = true)
-string07 = clone(string01) |> translate(y = 3 * coursePitch, global = true)
-string08 = clone(string01) |> translate(y = 3 * coursePitch + stringPairGap, global = true)
-string09 = clone(string01) |> translate(y = 4 * coursePitch, global = true)
-string10 = clone(string01) |> translate(y = 4 * coursePitch + stringPairGap, global = true)
-string11 = clone(string01) |> translate(y = 5 * coursePitch, global = true)
-string12 = clone(string01) |> translate(y = 5 * coursePitch + stringPairGap, global = true)
-string13 = clone(string01) |> translate(y = 6 * coursePitch, global = true)
-string14 = clone(string01) |> translate(y = 6 * coursePitch + stringPairGap, global = true)
-string15 = clone(string01) |> translate(y = 7 * coursePitch, global = true)
-string16 = clone(string01) |> translate(y = 7 * coursePitch + stringPairGap, global = true)
-string17 = clone(string01) |> translate(y = 8 * coursePitch, global = true)
-string18 = clone(string01) |> translate(y = 8 * coursePitch + stringPairGap, global = true)
-string19 = clone(string01) |> translate(y = 9 * coursePitch, global = true)
-string20 = clone(string01) |> translate(y = 9 * coursePitch + stringPairGap, global = true)
-string21 = clone(string01) |> translate(y = 10 * coursePitch, global = true)
-string22 = clone(string01) |> translate(y = 10 * coursePitch + stringPairGap, global = true)
-string23 = clone(string01) |> translate(y = 11 * coursePitch, global = true)
-string24 = clone(string01) |> translate(y = 11 * coursePitch + stringPairGap, global = true)
-string25 = clone(string01) |> translate(y = 12 * coursePitch, global = true)
-string26 = clone(string01) |> translate(y = 12 * coursePitch + stringPairGap, global = true)
-string27 = clone(string01) |> translate(y = 13 * coursePitch, global = true)
-string28 = clone(string01) |> translate(y = 13 * coursePitch + stringPairGap, global = true)
-string29 = clone(string01) |> translate(y = 14 * coursePitch, global = true)
-string30 = clone(string01) |> translate(y = 14 * coursePitch + stringPairGap, global = true)
-string31 = clone(string01) |> translate(y = 15 * coursePitch, global = true)
-string32 = clone(string01) |> translate(y = 15 * coursePitch + stringPairGap, global = true)
-string33 = clone(string01) |> translate(y = 16 * coursePitch, global = true)
-string34 = clone(string01) |> translate(y = 16 * coursePitch + stringPairGap, global = true)
-string35 = clone(string01) |> translate(y = 17 * coursePitch, global = true)
-string36 = clone(string01) |> translate(y = 17 * coursePitch + stringPairGap, global = true)
-string37 = clone(string01) |> translate(y = 18 * coursePitch, global = true)
-string38 = clone(string01) |> translate(y = 18 * coursePitch + stringPairGap, global = true)
-string39 = clone(string01) |> translate(y = 19 * coursePitch, global = true)
-string40 = clone(string01) |> translate(y = 19 * coursePitch + stringPairGap, global = true)
-string41 = clone(string01) |> translate(y = 20 * coursePitch, global = true)
-string42 = clone(string01) |> translate(y = 20 * coursePitch + stringPairGap, global = true)
-string43 = clone(string01) |> translate(y = 21 * coursePitch, global = true)
-string44 = clone(string01) |> translate(y = 21 * coursePitch + stringPairGap, global = true)
-string45 = clone(string01) |> translate(y = 22 * coursePitch, global = true)
-string46 = clone(string01) |> translate(y = 22 * coursePitch + stringPairGap, global = true)
-string47 = clone(string01) |> translate(y = 23 * coursePitch, global = true)
-string48 = clone(string01) |> translate(y = 23 * coursePitch + stringPairGap, global = true)
-string49 = clone(string01) |> translate(y = 24 * coursePitch, global = true)
-string50 = clone(string01) |> translate(y = 24 * coursePitch + stringPairGap, global = true)
-string51 = clone(string01) |> translate(y = 25 * coursePitch, global = true)
-string52 = clone(string01) |> translate(y = 25 * coursePitch + stringPairGap, global = true)
-string53 = clone(string01) |> translate(y = 26 * coursePitch, global = true)
-string54 = clone(string01) |> translate(y = 26 * coursePitch + stringPairGap, global = true)
-string55 = clone(string01) |> translate(y = 27 * coursePitch, global = true)
-string56 = clone(string01) |> translate(y = 27 * coursePitch + stringPairGap, global = true)
-string57 = clone(string01) |> translate(y = 28 * coursePitch, global = true)
-string58 = clone(string01) |> translate(y = 28 * coursePitch + stringPairGap, global = true)
-string59 = clone(string01) |> translate(y = 29 * coursePitch, global = true)
-string60 = clone(string01) |> translate(y = 29 * coursePitch + stringPairGap, global = true)
-string61 = clone(string01) |> translate(y = 30 * coursePitch, global = true)
-string62 = clone(string01) |> translate(y = 30 * coursePitch + stringPairGap, global = true)
-string63 = clone(string01) |> translate(y = 31 * coursePitch, global = true)
-string64 = clone(string01) |> translate(y = 31 * coursePitch + stringPairGap, global = true)
-string65 = clone(string01) |> translate(y = 32 * coursePitch, global = true)
-string66 = clone(string01) |> translate(y = 32 * coursePitch + stringPairGap, global = true)
-string67 = clone(string01) |> translate(y = 33 * coursePitch, global = true)
-string68 = clone(string01) |> translate(y = 33 * coursePitch + stringPairGap, global = true)
-string69 = clone(string01) |> translate(y = 34 * coursePitch, global = true)
-string70 = clone(string01) |> translate(y = 34 * coursePitch + stringPairGap, global = true)
+  |> translate(
+       x = stringStartX,
+       y = firstStringY,
+       z = stringHeight,
+       global = true,
+     )
 
-brassStrings = appearance([
-  string01,
-  string02,
-  string03,
-  string04,
-  string05,
-  string06,
-  string07,
-  string08,
-  string09,
-  string10,
-  string11,
-  string12,
-  string13,
-  string14,
-  string15,
-  string16,
-  string17,
-  string18,
-  string19,
-  string20,
-  string21,
-  string22,
-  string23,
-  string24,
-  string25,
-  string26,
-  string27,
-  string28,
-  string29,
-  string30,
-  string31,
-  string32,
-  string33,
-  string34,
-  string35,
-  string36,
-  string37,
-  string38,
-  string39,
-  string40,
-  string41,
-  string42,
-  string43,
-  string44,
-  string45,
-  string46,
-  string47,
-  string48,
-  string49,
-  string50,
-  string51,
-  string52,
-  string53,
-  string54,
-  string55,
-  string56,
-  string57,
-  string58,
-  string59,
-  string60,
-  string61,
-  string62,
-  string63,
-  string64,
-  string65,
-  string66,
-  string67,
-  string68,
-  string69,
-  string70,
-], color = "#c59a3d", metalness = 85, roughness = 22)
+fn makeString(@stringIdx) {
+  return clone(prototypeString)
+    |> translate(y = stringY(stringIdx) - firstStringY, global = true)
+}
+
+strings = map(stringIndices, f = makeString)
+hiddenPrototypeString = hide([prototypeString])
+
+brassStrings = appearance(
+  strings,
+  color = "#c59a3d",
+  metalness = 85,
+  roughness = 22,
+)

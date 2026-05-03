@@ -6,21 +6,64 @@ import * from "params.kcl"
 
 outerBlock = cube([caseLength, caseWidth, caseHeight])
 keywellCutoutBlock = cube([keywellLength, keywellWidth, 6 * pouce])
-  |> translate(x=toolboxLength, z=keywellHeight)
-cavityBlock = cube([innerLength, caseWidth - keywellWidth - wallThickness, innerHeight])
-  |> translate(x=wallThickness, y=keywellWidth, z=wallThickness)
+  |> translate(x = toolboxLength, z = keywellHeight)
+cavityBlock = cube([
+  innerLength,
+  caseWidth - keywellWidth - wallThickness,
+  innerHeight
+])
+  |> translate(x = wallThickness, y = keywellWidth, z = wallThickness)
 
 fn rack() {
   rackProfile = sketch(on = XY) {
-    leftToTop = line(start=[wallThickness, keywellWidth], end=[wallThickness, caseWidth - wallThickness])
-    topToSoundboard = line(start=[wallThickness, caseWidth - wallThickness], end=[soundboardStart[0], caseWidth - wallThickness])
-    soundboardToMiddle = line(start=[soundboardStart[0], caseWidth - wallThickness], end=[soundboardStart[0] / 2, caseWidth - wallThickness - 60])
-    middleToRightEdge = line(start=[soundboardStart[0] / 2, caseWidth - wallThickness - 60], end=[wallThickness + 100, keywellWidth + 100])
-    middleToBottom = line(start=[wallThickness + 100, keywellWidth + 100], end=[wallThickness + 100, keywellWidth])
-    bottomToLeft = line(start=[wallThickness + 100, keywellWidth], end=[wallThickness, keywellWidth]) 
+    leftToTop = line(
+      start = [wallThickness, keywellWidth],
+      end = [
+        wallThickness,
+        caseWidth - wallThickness
+      ],
+    )
+    topToSoundboard = line(
+      start = [
+        wallThickness,
+        caseWidth - wallThickness
+      ],
+      end = [
+        soundboardStart[0],
+        caseWidth - wallThickness
+      ],
+    )
+    soundboardToMiddle = line(
+      start = [
+        soundboardStart[0],
+        caseWidth - wallThickness
+      ],
+      end = [
+        soundboardStart[0] / 2,
+        caseWidth - wallThickness - 60
+      ],
+    )
+    middleToRightEdge = line(
+      start = [
+        soundboardStart[0] / 2,
+        caseWidth - wallThickness - 60
+      ],
+      end = [
+        wallThickness + 100,
+        keywellWidth + 100
+      ],
+    )
+    middleToBottom = line(
+      start = [
+        wallThickness + 100,
+        keywellWidth + 100
+      ],
+      end = [wallThickness + 100, keywellWidth],
+    )
+    bottomToLeft = line(start = [wallThickness + 100, keywellWidth], end = [wallThickness, keywellWidth])
   }
   hide(rackProfile)
-  return extrude(rackProfile, length=soundboardStart[2] + soundboardHeight)
+  return extrude(rackProfile, length = soundboardStart[2] + soundboardHeight)
 }
 
 outerBlock - (cavityBlock - rack()) - keywellCutoutBlock
