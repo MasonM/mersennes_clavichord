@@ -35,7 +35,7 @@ export innerWidth = caseWidth - keywellWidth - wallThickness
 export wrestplankTopZ = caseHeight - (3 * pouce) + soundboardHeight
 
 export soundboardStart = [
-  caseLength - soundboardFrontLength - wallThickness,
+  caseLength - soundboardFrontLength,
   keywellWidth + wallThickness,
   caseHeight - (3 * pouce)
 ]
