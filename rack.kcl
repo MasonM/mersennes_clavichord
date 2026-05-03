@@ -83,7 +83,7 @@ fn makeRackTongueCutout(@keyIdx) {
   return clone(prototypeRackTongueCutout)
     |> translate(
          x = rackTongueCutoutXForKey(keyIdx) - (rackTongueCutoutWidth / 2),
-         y = rackTongueCutoutYForKey(keyIdx) - (rackTongueCutoutDepth),
+         y = rackTongueCutoutYForKey(keyIdx) - rackTongueCutoutDepth,
          z = -2mm,
          global = true,
        )

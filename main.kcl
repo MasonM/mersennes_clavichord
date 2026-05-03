@@ -6,6 +6,6 @@ import "case.kcl" as case
 import "rack.kcl" as rack
 import "right_compartment.kcl" as rightCompartment
 import "toolbox.kcl" as toolbox
-//import "keyboard.kcl" as keyboard
+import "keyboard.kcl" as keyboard
 import "soundbox.kcl" as soundbox
 // import "strings.kcl" as strings

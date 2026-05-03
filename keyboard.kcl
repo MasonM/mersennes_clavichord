@@ -1,0 +1,510 @@
+import * from "params.kcl"
+
+// 49-key chromatic compass C..c3, no short octave.
+// Key index convention: 0 = C, 1 = C#/Db, ... 48 = c3.
+keyGap = 0.35mm
+keyPitch = keywellLength / numKeys
+keyWidth = keyPitch - keyGap
+keyLength = keywellWidth
+keyStartX = toolboxLength + keyGap / 2
+keyStartY = 0mm
+accidentalKeyStartY = keyStartY + keyLength / 3
+accidentalKeyLength = keyLength - (accidentalKeyStartY - keyStartY)
+keyBaseZ = wallThickness
+naturalKeyHeight = 10mm
+accidentalKeyHeight = 14mm
+
+naturalKeyFootprintProfile = sketch(on = XY) {
+  naturalKeyFront = line(start = [var 0mm, var 0mm], end = [var 12mm, var 0mm])
+  naturalKeyRight = line(start = [var 12mm, var 0mm], end = [var 12mm, var 160mm])
+  naturalKeyBack = line(start = [var 12mm, var 160mm], end = [var 0mm, var 160mm])
+  naturalKeyLeft = line(start = [var 0mm, var 160mm], end = [var 0mm, var 0mm])
+
+  coincident([
+    naturalKeyFront.end,
+    naturalKeyRight.start
+  ])
+  coincident([
+    naturalKeyRight.end,
+    naturalKeyBack.start
+  ])
+  coincident([
+    naturalKeyBack.end,
+    naturalKeyLeft.start
+  ])
+  coincident([
+    naturalKeyLeft.end,
+    naturalKeyFront.start
+  ])
+  coincident([naturalKeyFront.start, ORIGIN])
+  horizontal(naturalKeyFront)
+  vertical(naturalKeyRight)
+  horizontal(naturalKeyBack)
+  vertical(naturalKeyLeft)
+  distance([
+  naturalKeyFront.start,
+  naturalKeyFront.end
+]) == keyWidth
+  distance([
+  naturalKeyRight.start,
+  naturalKeyRight.end
+]) == keyLength
+}
+
+accidentalKeyFootprintProfile = sketch(on = XY) {
+  accidentalKeyFront = line(start = [var 0mm, var 0mm], end = [var 12mm, var 0mm])
+  accidentalKeyRight = line(start = [var 12mm, var 0mm], end = [var 12mm, var 110mm])
+  accidentalKeyBack = line(start = [var 12mm, var 110mm], end = [var 0mm, var 110mm])
+  accidentalKeyLeft = line(start = [var 0mm, var 110mm], end = [var 0mm, var 0mm])
+
+  coincident([
+    accidentalKeyFront.end,
+    accidentalKeyRight.start
+  ])
+  coincident([
+    accidentalKeyRight.end,
+    accidentalKeyBack.start
+  ])
+  coincident([
+    accidentalKeyBack.end,
+    accidentalKeyLeft.start
+  ])
+  coincident([
+    accidentalKeyLeft.end,
+    accidentalKeyFront.start
+  ])
+  coincident([accidentalKeyFront.start, ORIGIN])
+  horizontal(accidentalKeyFront)
+  vertical(accidentalKeyRight)
+  horizontal(accidentalKeyBack)
+  vertical(accidentalKeyLeft)
+  distance([
+  accidentalKeyFront.start,
+  accidentalKeyFront.end
+]) == keyWidth
+  distance([
+  accidentalKeyRight.start,
+  accidentalKeyRight.end
+]) == accidentalKeyLength
+}
+
+prototypeNaturalKey = extrude(region(point = [1mm, 1mm], sketch = naturalKeyFootprintProfile), length = naturalKeyHeight, method = NEW)
+prototypeAccidentalKey = extrude(region(point = [1mm, 1mm], sketch = accidentalKeyFootprintProfile), length = accidentalKeyHeight, method = NEW)
+hiddenNaturalKeyFootprintProfile = hide(naturalKeyFootprintProfile)
+hiddenAccidentalKeyFootprintProfile = hide(accidentalKeyFootprintProfile)
+
+key00 = clone(prototypeNaturalKey)
+  |> translate(
+       x = keyStartX + 0 * keyPitch,
+       y = keyStartY,
+       z = keyBaseZ,
+       global = true,
+     )
+key01 = clone(prototypeAccidentalKey)
+  |> translate(
+       x = keyStartX + 1 * keyPitch,
+       y = accidentalKeyStartY,
+       z = keyBaseZ,
+       global = true,
+     )
+key02 = clone(prototypeNaturalKey)
+  |> translate(
+       x = keyStartX + 2 * keyPitch,
+       y = keyStartY,
+       z = keyBaseZ,
+       global = true,
+     )
+key03 = clone(prototypeAccidentalKey)
+  |> translate(
+       x = keyStartX + 3 * keyPitch,
+       y = accidentalKeyStartY,
+       z = keyBaseZ,
+       global = true,
+     )
+key04 = clone(prototypeNaturalKey)
+  |> translate(
+       x = keyStartX + 4 * keyPitch,
+       y = keyStartY,
+       z = keyBaseZ,
+       global = true,
+     )
+key05 = clone(prototypeNaturalKey)
+  |> translate(
+       x = keyStartX + 5 * keyPitch,
+       y = keyStartY,
+       z = keyBaseZ,
+       global = true,
+     )
+key06 = clone(prototypeAccidentalKey)
+  |> translate(
+       x = keyStartX + 6 * keyPitch,
+       y = accidentalKeyStartY,
+       z = keyBaseZ,
+       global = true,
+     )
+key07 = clone(prototypeNaturalKey)
+  |> translate(
+       x = keyStartX + 7 * keyPitch,
+       y = keyStartY,
+       z = keyBaseZ,
+       global = true,
+     )
+key08 = clone(prototypeAccidentalKey)
+  |> translate(
+       x = keyStartX + 8 * keyPitch,
+       y = accidentalKeyStartY,
+       z = keyBaseZ,
+       global = true,
+     )
+key09 = clone(prototypeNaturalKey)
+  |> translate(
+       x = keyStartX + 9 * keyPitch,
+       y = keyStartY,
+       z = keyBaseZ,
+       global = true,
+     )
+key10 = clone(prototypeAccidentalKey)
+  |> translate(
+       x = keyStartX + 10 * keyPitch,
+       y = accidentalKeyStartY,
+       z = keyBaseZ,
+       global = true,
+     )
+key11 = clone(prototypeNaturalKey)
+  |> translate(
+       x = keyStartX + 11 * keyPitch,
+       y = keyStartY,
+       z = keyBaseZ,
+       global = true,
+     )
+key12 = clone(prototypeNaturalKey)
+  |> translate(
+       x = keyStartX + 12 * keyPitch,
+       y = keyStartY,
+       z = keyBaseZ,
+       global = true,
+     )
+key13 = clone(prototypeAccidentalKey)
+  |> translate(
+       x = keyStartX + 13 * keyPitch,
+       y = accidentalKeyStartY,
+       z = keyBaseZ,
+       global = true,
+     )
+key14 = clone(prototypeNaturalKey)
+  |> translate(
+       x = keyStartX + 14 * keyPitch,
+       y = keyStartY,
+       z = keyBaseZ,
+       global = true,
+     )
+key15 = clone(prototypeAccidentalKey)
+  |> translate(
+       x = keyStartX + 15 * keyPitch,
+       y = accidentalKeyStartY,
+       z = keyBaseZ,
+       global = true,
+     )
+key16 = clone(prototypeNaturalKey)
+  |> translate(
+       x = keyStartX + 16 * keyPitch,
+       y = keyStartY,
+       z = keyBaseZ,
+       global = true,
+     )
+key17 = clone(prototypeNaturalKey)
+  |> translate(
+       x = keyStartX + 17 * keyPitch,
+       y = keyStartY,
+       z = keyBaseZ,
+       global = true,
+     )
+key18 = clone(prototypeAccidentalKey)
+  |> translate(
+       x = keyStartX + 18 * keyPitch,
+       y = accidentalKeyStartY,
+       z = keyBaseZ,
+       global = true,
+     )
+key19 = clone(prototypeNaturalKey)
+  |> translate(
+       x = keyStartX + 19 * keyPitch,
+       y = keyStartY,
+       z = keyBaseZ,
+       global = true,
+     )
+key20 = clone(prototypeAccidentalKey)
+  |> translate(
+       x = keyStartX + 20 * keyPitch,
+       y = accidentalKeyStartY,
+       z = keyBaseZ,
+       global = true,
+     )
+key21 = clone(prototypeNaturalKey)
+  |> translate(
+       x = keyStartX + 21 * keyPitch,
+       y = keyStartY,
+       z = keyBaseZ,
+       global = true,
+     )
+key22 = clone(prototypeAccidentalKey)
+  |> translate(
+       x = keyStartX + 22 * keyPitch,
+       y = accidentalKeyStartY,
+       z = keyBaseZ,
+       global = true,
+     )
+key23 = clone(prototypeNaturalKey)
+  |> translate(
+       x = keyStartX + 23 * keyPitch,
+       y = keyStartY,
+       z = keyBaseZ,
+       global = true,
+     )
+key24 = clone(prototypeNaturalKey)
+  |> translate(
+       x = keyStartX + 24 * keyPitch,
+       y = keyStartY,
+       z = keyBaseZ,
+       global = true,
+     )
+key25 = clone(prototypeAccidentalKey)
+  |> translate(
+       x = keyStartX + 25 * keyPitch,
+       y = accidentalKeyStartY,
+       z = keyBaseZ,
+       global = true,
+     )
+key26 = clone(prototypeNaturalKey)
+  |> translate(
+       x = keyStartX + 26 * keyPitch,
+       y = keyStartY,
+       z = keyBaseZ,
+       global = true,
+     )
+key27 = clone(prototypeAccidentalKey)
+  |> translate(
+       x = keyStartX + 27 * keyPitch,
+       y = accidentalKeyStartY,
+       z = keyBaseZ,
+       global = true,
+     )
+key28 = clone(prototypeNaturalKey)
+  |> translate(
+       x = keyStartX + 28 * keyPitch,
+       y = keyStartY,
+       z = keyBaseZ,
+       global = true,
+     )
+key29 = clone(prototypeNaturalKey)
+  |> translate(
+       x = keyStartX + 29 * keyPitch,
+       y = keyStartY,
+       z = keyBaseZ,
+       global = true,
+     )
+key30 = clone(prototypeAccidentalKey)
+  |> translate(
+       x = keyStartX + 30 * keyPitch,
+       y = accidentalKeyStartY,
+       z = keyBaseZ,
+       global = true,
+     )
+key31 = clone(prototypeNaturalKey)
+  |> translate(
+       x = keyStartX + 31 * keyPitch,
+       y = keyStartY,
+       z = keyBaseZ,
+       global = true,
+     )
+key32 = clone(prototypeAccidentalKey)
+  |> translate(
+       x = keyStartX + 32 * keyPitch,
+       y = accidentalKeyStartY,
+       z = keyBaseZ,
+       global = true,
+     )
+key33 = clone(prototypeNaturalKey)
+  |> translate(
+       x = keyStartX + 33 * keyPitch,
+       y = keyStartY,
+       z = keyBaseZ,
+       global = true,
+     )
+key34 = clone(prototypeAccidentalKey)
+  |> translate(
+       x = keyStartX + 34 * keyPitch,
+       y = accidentalKeyStartY,
+       z = keyBaseZ,
+       global = true,
+     )
+key35 = clone(prototypeNaturalKey)
+  |> translate(
+       x = keyStartX + 35 * keyPitch,
+       y = keyStartY,
+       z = keyBaseZ,
+       global = true,
+     )
+key36 = clone(prototypeNaturalKey)
+  |> translate(
+       x = keyStartX + 36 * keyPitch,
+       y = keyStartY,
+       z = keyBaseZ,
+       global = true,
+     )
+key37 = clone(prototypeAccidentalKey)
+  |> translate(
+       x = keyStartX + 37 * keyPitch,
+       y = accidentalKeyStartY,
+       z = keyBaseZ,
+       global = true,
+     )
+key38 = clone(prototypeNaturalKey)
+  |> translate(
+       x = keyStartX + 38 * keyPitch,
+       y = keyStartY,
+       z = keyBaseZ,
+       global = true,
+     )
+key39 = clone(prototypeAccidentalKey)
+  |> translate(
+       x = keyStartX + 39 * keyPitch,
+       y = accidentalKeyStartY,
+       z = keyBaseZ,
+       global = true,
+     )
+key40 = clone(prototypeNaturalKey)
+  |> translate(
+       x = keyStartX + 40 * keyPitch,
+       y = keyStartY,
+       z = keyBaseZ,
+       global = true,
+     )
+key41 = clone(prototypeNaturalKey)
+  |> translate(
+       x = keyStartX + 41 * keyPitch,
+       y = keyStartY,
+       z = keyBaseZ,
+       global = true,
+     )
+key42 = clone(prototypeAccidentalKey)
+  |> translate(
+       x = keyStartX + 42 * keyPitch,
+       y = accidentalKeyStartY,
+       z = keyBaseZ,
+       global = true,
+     )
+key43 = clone(prototypeNaturalKey)
+  |> translate(
+       x = keyStartX + 43 * keyPitch,
+       y = keyStartY,
+       z = keyBaseZ,
+       global = true,
+     )
+key44 = clone(prototypeAccidentalKey)
+  |> translate(
+       x = keyStartX + 44 * keyPitch,
+       y = accidentalKeyStartY,
+       z = keyBaseZ,
+       global = true,
+     )
+key45 = clone(prototypeNaturalKey)
+  |> translate(
+       x = keyStartX + 45 * keyPitch,
+       y = keyStartY,
+       z = keyBaseZ,
+       global = true,
+     )
+key46 = clone(prototypeAccidentalKey)
+  |> translate(
+       x = keyStartX + 46 * keyPitch,
+       y = accidentalKeyStartY,
+       z = keyBaseZ,
+       global = true,
+     )
+key47 = clone(prototypeNaturalKey)
+  |> translate(
+       x = keyStartX + 47 * keyPitch,
+       y = keyStartY,
+       z = keyBaseZ,
+       global = true,
+     )
+key48 = clone(prototypeNaturalKey)
+  |> translate(
+       x = keyStartX + 48 * keyPitch,
+       y = keyStartY,
+       z = keyBaseZ,
+       global = true,
+     )
+
+naturalKeys = [
+  key00,
+  key02,
+  key04,
+  key05,
+  key07,
+  key09,
+  key11,
+  key12,
+  key14,
+  key16,
+  key17,
+  key19,
+  key21,
+  key23,
+  key24,
+  key26,
+  key28,
+  key29,
+  key31,
+  key33,
+  key35,
+  key36,
+  key38,
+  key40,
+  key41,
+  key43,
+  key45,
+  key47,
+  key48
+]
+
+accidentalKeys = [
+  key01,
+  key03,
+  key06,
+  key08,
+  key10,
+  key13,
+  key15,
+  key18,
+  key20,
+  key22,
+  key25,
+  key27,
+  key30,
+  key32,
+  key34,
+  key37,
+  key39,
+  key42,
+  key44,
+  key46
+]
+
+whiteNaturalKeys = appearance(
+  naturalKeys,
+  color = "#f2eee3",
+  roughness = 62,
+  metalness = 0,
+)
+blackAccidentalKeys = appearance(
+  accidentalKeys,
+  color = "#050505",
+  roughness = 48,
+  metalness = 0,
+)
+hiddenPrototypeKeys = hide([
+  prototypeNaturalKey,
+  prototypeAccidentalKey
+])
