@@ -46,6 +46,17 @@ export wrestplankStart = [
   wrestplankTopZ - wrestplankThickness
 ]
 
+// Hollow front-right compartment between the case front and the soundboard.
+export rightCompartmentStartX = soundboardStart[0]
+export rightCompartmentLength = caseLength - wallThickness - rightCompartmentStartX
+export rightCompartmentFrontY = 0mm
+export rightCompartmentBackY = soundboardStart[1] - wallThickness
+export rightCompartmentInteriorY = wallThickness
+export rightCompartmentInteriorWidth = rightCompartmentBackY - rightCompartmentInteriorY
+export rightCompartmentFloorZ = wallThickness
+export rightCompartmentWallZ = 2 * wallThickness
+export rightCompartmentWallHeight = caseHeight - rightCompartmentWallZ
+
 // "For the design pitch, I chose a1 = 392 Hz; this, or something close to it, is likely to have been the organ pitch or ton de chapelle of Mersenne's time."
 export referencePitchA1 = 392
 
