@@ -8,6 +8,3 @@ import "strings.kcl" as strings
 case
 soundbox
 strings
-
-import * from "utils.kcl"
-import * from "params.kcl"
