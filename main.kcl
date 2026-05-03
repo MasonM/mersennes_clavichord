@@ -1,14 +1,9 @@
 // The dimensions of the clavichord are described in Paris inches (aka pouces), but "in" in Zoo refers to English inches.
-// Using an English unit of measure for a work bearing the title of a 17th century Frenchmen is perhaps not the best of ideas, so let's use mm and convert it ourselves.
 @settings(defaultLengthUnit = mm, kclVersion = 1.0)
 
 // Import all parts into assembly file
 import "case.kcl" as case
+import "rack.kcl" as rack
 import "toolbox.kcl" as toolbox
 import "soundbox.kcl" as soundbox
 //import "strings.kcl" as strings
-
-case
-toolbox
-soundbox
-//strings
