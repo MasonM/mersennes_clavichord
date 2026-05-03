@@ -8,7 +8,6 @@ firstStringY = caseWidth / 2
 lastStringY = caseWidth - 10mm
 coursePitch = (lastStringY - firstStringY - stringPairGap) / (numCourses - 1)
 
-stringStartX = wallThickness + 12mm
 stringLength = caseLength - (2 * wallThickness) - 24mm
 stringHeight = soundboardStart[2] + soundboardHeight + 8mm
 stringIndices = [0..<numStrings]
@@ -24,6 +23,11 @@ fn stringY(@stringIdx) {
   courseIdx = floor(stringIdx / 2)
   stringInCourse = stringIdx % 2
   return firstStringY + courseIdx * coursePitch + stringInCourse * stringPairGap
+}
+
+// Return the staggered X position for the hitchpin attached to a string.
+fn hitchPinXForString(@stringIdx) {
+  return hitchPinX + stringIdx % 2 * hitchPinStaggerX
 }
 
 stringProfile = sketch(on = XY) {
@@ -42,16 +46,15 @@ hiddenStringProfile = hide(stringProfile)
 
 prototypeString = extrude(stringRegion, length = stringLength)
   |> rotate(axis = Y, angle = 90deg)
-  |> translate(
-       x = stringStartX,
-       y = firstStringY,
-       z = stringHeight,
-       global = true,
-     )
 
 fn makeString(@stringIdx) {
   return clone(prototypeString)
-    |> translate(y = stringY(stringIdx) - firstStringY, global = true)
+    |> translate(
+         x = hitchPinXForString(stringIdx) + hitchPinRadius,
+         y = stringY(stringIdx),
+         z = stringHeight,
+         global = true,
+       )
 }
 
 strings = map(stringIndices, f = makeString)
@@ -88,16 +91,15 @@ hitchPinRegion = region(point = [0.25mm, 0mm], sketch = hitchPinProfile)
 hiddenHitchPinProfile = hide(hitchPinProfile)
 
 prototypeHitchPin = extrude(hitchPinRegion, length = hitchPinHeight)
-  |> translate(
-       x = hitchPinX,
-       y = firstStringY,
-       z = hitchPinBaseZ,
-       global = true,
-     )
 
 fn makeHitchPin(@stringIdx) {
   return clone(prototypeHitchPin)
-    |> translate(x = stringIdx % 2 * hitchPinStaggerX, y = stringY(stringIdx) - firstStringY, global = true)
+    |> translate(
+         x = hitchPinXForString(stringIdx),
+         y = stringY(stringIdx),
+         z = hitchPinBaseZ,
+         global = true,
+       )
 }
 
 hitchPins = map(stringIndices, f = makeHitchPin)
