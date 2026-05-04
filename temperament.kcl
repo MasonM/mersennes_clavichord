@@ -53,18 +53,18 @@ export fn soundingLengthProgressForKey(@keyIdx) {
 }
 
 export rackBackY = caseWidth - wallThickness
-export rackTongueCutoutPitchX = rackCutoutXSpan / (numKeys - 1)
-export rackTongueCutoutBassY = keywellWidth + 145mm
-export rackTongueCutoutTrebleY = rackBackY - 4mm
+export slotPitchX = rackCutoutXSpan / (numKeys - 1)
+export slotBassY = keywellWidth + 145mm
+export slotTrebleY = rackBackY - 4mm
 
 // Rack slot X follows the physical key order across the keywell.
-export fn rackTongueCutoutXForKey(@keyIdx) {
-  return rackBassCutoutX + keyIdx * rackTongueCutoutPitchX
+export fn slotXForKey(@keyIdx) {
+  return rackBassCutoutX + keyIdx * slotPitchX
 }
 
 // Rack slot Y is driven by the calculated sounding length for this key:
 // low/long-sounding notes sit lower/frontward on the rack, while the short
 // treble lengths climb toward the back edge.
-export fn rackTongueCutoutYForKey(@keyIdx) {
-  return rackTongueCutoutBassY + soundingLengthProgressForKey(keyIdx) * (rackTongueCutoutTrebleY - rackTongueCutoutBassY)
+export fn slotYForKey(@keyIdx) {
+  return slotBassY + soundingLengthProgressForKey(keyIdx) * (slotTrebleY - slotBassY)
 }

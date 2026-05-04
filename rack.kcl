@@ -2,9 +2,9 @@ import * from "params.kcl"
 import * from "temperament.kcl"
 
 rackHeight = soundboardStart[2] + soundboardHeight
-rackTongueCutoutWidth = 3mm
-rackTongueCutoutDepth = 50mm
-rackTongueCutoutCutHeight = rackHeight + 14mm
+slotWidth = 3mm
+slotDepth = 50mm
+slotCutHeight = rackHeight + 14mm
 rackKeyIndices = [0..<numKeys]
 
 rackProfile = sketch(on = XY) {
@@ -41,7 +41,7 @@ rackBlank = extrude(region(point = [20mm, keywellWidth + 20mm], sketch = rackPro
   |> appearance(color = "#7a4b24", roughness = 80, metalness = 0)
 hiddenRackProfile = hide(rackProfile)
 
-rackTongueCutoutProfile = sketch(on = XY) {
+slotProfile = sketch(on = XY) {
   cutoutFront = line(start = [var 0mm, var 0mm], end = [var 6mm, var 0mm])
   cutoutRight = line(start = [var 6mm, var 0mm], end = [var 6mm, var 5mm])
   cutoutBack = line(start = [var 6mm, var 5mm], end = [var 0mm, var 5mm])
@@ -56,29 +56,29 @@ rackTongueCutoutProfile = sketch(on = XY) {
   vertical(cutoutRight)
   horizontal(cutoutBack)
   vertical(cutoutLeft)
-  distance([cutoutFront.start, cutoutFront.end]) == rackTongueCutoutWidth
-  distance([cutoutRight.start, cutoutRight.end]) == rackTongueCutoutDepth
+  distance([cutoutFront.start, cutoutFront.end]) == slotWidth
+  distance([cutoutRight.start, cutoutRight.end]) == slotDepth
 }
 
-rackTongueCutoutRegion = region(point = [1mm, 1mm], sketch = rackTongueCutoutProfile)
-prototypeRackTongueCutout = extrude(rackTongueCutoutRegion, length = rackTongueCutoutCutHeight, method = NEW)
+slotRegion = region(point = [1mm, 1mm], sketch = slotProfile)
+prototypeslot = extrude(slotRegion, length = slotCutHeight, method = NEW)
 
-fn makeRackTongueCutout(@keyIdx) {
-  return clone(prototypeRackTongueCutout)
+fn makeslot(@keyIdx) {
+  return clone(prototypeslot)
     |> translate(
-         x = rackTongueCutoutXForKey(keyIdx) - (rackTongueCutoutWidth / 2),
-         y = rackTongueCutoutYForKey(keyIdx) - rackTongueCutoutDepth,
+         x = slotXForKey(keyIdx) - (slotWidth / 2),
+         y = slotYForKey(keyIdx) - slotDepth,
          z = -2mm,
          global = true,
        )
 }
 
-rackTongueCutouts = map(rackKeyIndices, f = makeRackTongueCutout)
+slots = map(rackKeyIndices, f = makeslot)
 
-rack = subtract([rackBlank], tools = rackTongueCutouts)
+rack = subtract([rackBlank], tools = slots)
   |> appearance(color = "#7a4b24", roughness = 80, metalness = 0)
 
-hiddenRackTongueCutoutProfile = hide(rackTongueCutoutProfile)
-hiddenPrototypeRackTongueCutout = hide([prototypeRackTongueCutout])
-hiddenRackTongueCutouts = hide(rackTongueCutouts)
+hiddenslotProfile = hide(slotProfile)
+hiddenPrototypeslot = hide([prototypeslot])
+hiddenslots = hide(slots)
 hiddenRackBlank = hide([rackBlank])
