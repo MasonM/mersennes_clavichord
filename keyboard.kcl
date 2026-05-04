@@ -159,22 +159,27 @@ hiddenPrototypeKeys = hide([
   prototypeAccidentalKey
 ])
 
-// Key levers begin at the rear end of each key. Their lower edge is the full
-// width of the matching key, then the lever tapers to a narrower rear tongue so
-// neighboring levers stay clear as they fan to their matching rack/tangent slots.
+// Key levers are all coplanar: every lever starts at the natural key base Z and
+// extrudes to naturalKeyHeight. Their key-end bases remain full key width, then
+// taper in plan to the widest safe tongue before bending to the tangent slots.
 keyLeverIndices = [0..<numKeys]
-keyLeverRearWidth = 8.5mm
+keyLeverHeight = naturalKeyHeight
+keyLeverZ = keyBaseZ
 keyLeverMinimumWidth = 5mm
-keyLeverHeight = 4mm
+keyLeverClearance = 1mm
+keyLeverNaturalRearWidth = naturalKeyWidth - accidentalKeyWidth - keyLeverClearance
+keyLeverAccidentalRearWidth = accidentalKeyWidth - keyLeverClearance
 keyLeverStartY = keyStartY + naturalKeyLength
-keyLeverBendRun = 18mm
-keyLeverBendY = keyLeverStartY + keyLeverBendRun
-keyLeverZ = keyBaseZ + naturalKeyHeight - keyLeverHeight
-keyLeverLayerRise = keyLeverHeight + 1mm
+keyLeverNaturalTaperRun = 16mm
+keyLeverAccidentalStartYOffset = keyLeverNaturalTaperRun + 2mm
+keyLeverAccidentalTaperRun = 16mm
+keyLeverAllNarrowY = keyLeverStartY + keyLeverAccidentalStartYOffset + keyLeverAccidentalTaperRun + 2mm
+keyLeverBendRun = 20mm
+keyLeverBendY = keyLeverAllNarrowY + keyLeverBendRun
 keyLeverColor = "#8b5a2b"
 
 // Chromatic key center offsets measured in natural-key widths. This keeps lever
-// starts centered on both natural and accidental keys at their rear ends.
+// starts centered on both natural and accidental keys at their key-end bases.
 keyLeverStartOffsets = [
   0.5,
   1,
@@ -227,8 +232,7 @@ keyLeverStartOffsets = [
   28.5
 ]
 
-// Full key-width at the lower joint: natural levers use 1 natural-key width,
-// accidental levers use the same 0.58 scale as the accidental key tops.
+// Natural keys use width factor 1; accidentals use the black-key width factor.
 keyLeverBottomWidthFactors = [
   1,
   0.58,
@@ -281,10 +285,7 @@ keyLeverBottomWidthFactors = [
   1
 ]
 
-// Accidental lever starts are lifted one layer above natural lever starts. This
-// keeps the full-width lower joints from physically intersecting while the
-// levers taper to a common rear width before the rack slots.
-keyLeverUpperLayerFactors = [
+keyLeverAccidentalFlags = [
   0,
   1,
   0,
@@ -344,85 +345,130 @@ fn keyLeverBottomWidthForKey(@keyIdx) {
   return keyLeverBottomWidthFactors[keyIdx] * naturalKeyWidth
 }
 
-fn keyLeverZForKey(@keyIdx) {
-  return keyLeverZ + keyLeverUpperLayerFactors[keyIdx] * keyLeverLayerRise
+fn keyLeverBottomYForKey(@keyIdx) {
+  return keyLeverStartY + keyLeverAccidentalFlags[keyIdx] * keyLeverAccidentalStartYOffset
+}
+
+fn keyLeverTaperYForKey(@keyIdx) {
+  return keyLeverBottomYForKey(keyIdx) + keyLeverNaturalTaperRun + keyLeverAccidentalFlags[keyIdx] * (keyLeverAccidentalTaperRun - keyLeverNaturalTaperRun)
+}
+
+fn keyLeverRearWidthForKey(@keyIdx) {
+  return keyLeverNaturalRearWidth + keyLeverAccidentalFlags[keyIdx] * (keyLeverAccidentalRearWidth - keyLeverNaturalRearWidth)
 }
 
 fn makeKeyLever(@keyIdx) {
   keyLeverFootprint = sketch(on = XY) {
     startFace = line(start = [var 0mm, var 0mm], end = [var 22mm, var 0mm])
-    rightTaperSide = line(start = [var 22mm, var 0mm], end = [var 8.5mm, var 18mm])
-    rightStraightSide = line(start = [var 8.5mm, var 18mm], end = [var 8.5mm, var 140mm])
-    endFace = line(start = [var 8.5mm, var 140mm], end = [var 0mm, var 140mm])
-    leftStraightSide = line(start = [var 0mm, var 140mm], end = [var 0mm, var 18mm])
-    leftTaperSide = line(start = [var 0mm, var 18mm], end = [var 0mm, var 0mm])
+    rightTaperSide = line(start = [var 22mm, var 0mm], end = [var 8mm, var 16mm])
+    rightHoldSide = line(start = [var 8mm, var 16mm], end = [var 8mm, var 36mm])
+    rightBendSide = line(start = [var 8mm, var 36mm], end = [var 12mm, var 56mm])
+    rightStraightSide = line(start = [var 12mm, var 56mm], end = [var 12mm, var 140mm])
+    endFace = line(start = [var 12mm, var 140mm], end = [var 0mm, var 140mm])
+    leftStraightSide = line(start = [var 0mm, var 140mm], end = [var 0mm, var 56mm])
+    leftBendSide = line(start = [var 0mm, var 56mm], end = [var 0mm, var 36mm])
+    leftHoldSide = line(start = [var 0mm, var 36mm], end = [var 0mm, var 16mm])
+    leftTaperSide = line(start = [var 0mm, var 16mm], end = [var 0mm, var 0mm])
 
     coincident([startFace.end, rightTaperSide.start])
     coincident([
       rightTaperSide.end,
+      rightHoldSide.start
+    ])
+    coincident([rightHoldSide.end, rightBendSide.start])
+    coincident([
+      rightBendSide.end,
       rightStraightSide.start
     ])
     coincident([rightStraightSide.end, endFace.start])
     coincident([endFace.end, leftStraightSide.start])
     coincident([
       leftStraightSide.end,
-      leftTaperSide.start
+      leftBendSide.start
     ])
+    coincident([leftBendSide.end, leftHoldSide.start])
+    coincident([leftHoldSide.end, leftTaperSide.start])
     coincident([leftTaperSide.end, startFace.start])
 
     coincident([
       startFace.start,
       [
         keyLeverStartXForKey(keyIdx) - (keyLeverBottomWidthForKey(keyIdx) / 2),
-        keyLeverStartY
+        keyLeverBottomYForKey(keyIdx)
       ]
     ])
     coincident([
       startFace.end,
       [
         keyLeverStartXForKey(keyIdx) + keyLeverBottomWidthForKey(keyIdx) / 2,
-        keyLeverStartY
+        keyLeverBottomYForKey(keyIdx)
       ]
     ])
     coincident([
       rightTaperSide.end,
       [
-        slotXForKey(keyIdx) + keyLeverRearWidth / 2,
+        keyLeverStartXForKey(keyIdx) + keyLeverRearWidthForKey(keyIdx) / 2,
+        keyLeverTaperYForKey(keyIdx)
+      ]
+    ])
+    coincident([
+      rightHoldSide.end,
+      [
+        keyLeverStartXForKey(keyIdx) + keyLeverRearWidthForKey(keyIdx) / 2,
+        keyLeverAllNarrowY
+      ]
+    ])
+    coincident([
+      rightBendSide.end,
+      [
+        slotXForKey(keyIdx) + keyLeverRearWidthForKey(keyIdx) / 2,
         keyLeverBendY
       ]
     ])
     coincident([
       rightStraightSide.end,
       [
-        slotXForKey(keyIdx) + keyLeverRearWidth / 2,
+        slotXForKey(keyIdx) + keyLeverRearWidthForKey(keyIdx) / 2,
         slotYForKey(keyIdx)
       ]
     ])
     coincident([
       endFace.end,
       [
-        slotXForKey(keyIdx) - (keyLeverRearWidth / 2),
+        slotXForKey(keyIdx) - (keyLeverRearWidthForKey(keyIdx) / 2),
         slotYForKey(keyIdx)
       ]
     ])
     coincident([
       leftStraightSide.end,
       [
-        slotXForKey(keyIdx) - (keyLeverRearWidth / 2),
+        slotXForKey(keyIdx) - (keyLeverRearWidthForKey(keyIdx) / 2),
         keyLeverBendY
+      ]
+    ])
+    coincident([
+      leftBendSide.end,
+      [
+        keyLeverStartXForKey(keyIdx) - (keyLeverRearWidthForKey(keyIdx) / 2),
+        keyLeverAllNarrowY
+      ]
+    ])
+    coincident([
+      leftHoldSide.end,
+      [
+        keyLeverStartXForKey(keyIdx) - (keyLeverRearWidthForKey(keyIdx) / 2),
+        keyLeverTaperYForKey(keyIdx)
       ]
     ])
 
     horizontal(startFace)
     horizontal(endFace)
+    vertical(rightHoldSide)
     vertical(rightStraightSide)
     vertical(leftStraightSide)
+    vertical(leftHoldSide)
     distance([startFace.start, startFace.end]) == keyLeverBottomWidthForKey(keyIdx)
-    distance([endFace.start, endFace.end]) == keyLeverRearWidth
-    distance([
-  rightStraightSide.start,
-  leftStraightSide.end
-]) == keyLeverRearWidth
+    distance([endFace.start, endFace.end]) == keyLeverRearWidthForKey(keyIdx)
   }
 
   hiddenKeyLeverFootprint = hide(keyLeverFootprint)
@@ -430,21 +476,21 @@ fn makeKeyLever(@keyIdx) {
   return extrude(
     region(
       point = [
-        slotXForKey(keyIdx),
-        keyLeverBendY + 1mm
+        keyLeverStartXForKey(keyIdx),
+        keyLeverTaperYForKey(keyIdx) + 1mm
       ],
       sketch = keyLeverFootprint,
     ),
     length = keyLeverHeight,
     method = NEW,
   )
-    |> translate(z = keyLeverZForKey(keyIdx), global = true)
+    |> translate(z = keyLeverZ, global = true)
 }
 
 keyLevers = map(keyLeverIndices, f = makeKeyLever)
 woodKeyLevers = appearance(
   keyLevers,
-  color = "#d0a566",
+  color = keyLeverColor,
   roughness = 76,
   metalness = 0,
 )
