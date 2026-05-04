@@ -54,7 +54,7 @@ export rightCompartmentBackY = soundboardStart[1] - wallThickness
 export rightCompartmentInteriorY = wallThickness
 export rightCompartmentInteriorWidth = rightCompartmentBackY - rightCompartmentInteriorY
 export rightCompartmentFloorZ = wallThickness
-export rightCompartmentWallZ = 2 * wallThickness
+export rightCompartmentWallZ = wallThickness
 export rightCompartmentWallHeight = caseHeight - rightCompartmentWallZ
 
 // "For the design pitch, I chose a1 = 392 Hz; this, or something close to it, is likely to have been the organ pitch or ton de chapelle of Mersenne's time."

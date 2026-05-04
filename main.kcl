@@ -6,8 +6,10 @@ import "case.kcl" as case
 import "right_compartment.kcl" as rightCompartment
 import "toolbox.kcl" as toolbox
 import "bridges.kcl" as bridges
-import "keyboard.kcl" as keyboard
 import "frontboard.kcl" as frontboard
-import "rack.kcl" as rack
 import "soundbox.kcl" as soundbox
-import "strings.kcl" as strings
+
+// The following are really slow to render. Comment them out when iterating on other modules.
+//import "strings.kcl" as strings
+//import "keyboard.kcl" as keyboard
+//import "rack.kcl" as rack
