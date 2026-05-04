@@ -7,6 +7,7 @@ import "right_compartment.kcl" as rightCompartment
 import "toolbox.kcl" as toolbox
 import "bridges.kcl" as bridges
 import "keyboard.kcl" as keyboard
+import "frontboard.kcl" as frontboard
 import "rack.kcl" as rack
 import "soundbox.kcl" as soundbox
 import "strings.kcl" as strings
