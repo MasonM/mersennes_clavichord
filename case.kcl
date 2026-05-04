@@ -5,7 +5,7 @@ import * from "params.kcl"
 
 caseBoardHeight = caseHeight - wallThickness
 frontUpperHeight = caseHeight - keywellHeight
-endBoardWidth = caseWidth - (2 * wallThickness)
+endBoardWidth = caseWidth
 caseWoodColor = "#8b552b"
 boxJointEndGrainColor = "#5f361a"
 
@@ -158,7 +158,7 @@ endBoardProfile = sketch(on = XY) {
 }
 
 leftEndBoardBlank = extrude(region(point = [1mm, 10mm], sketch = endBoardProfile), length = caseBoardHeight, method = NEW)
-  |> translate(y = wallThickness, z = wallThickness, global = true)
+  |> translate(z = wallThickness, global = true)
 rightEndBoardBlank = clone(leftEndBoardBlank)
   |> translate(x = caseLength - wallThickness, global = true)
 hiddenEndBoardProfile = hide(endBoardProfile)
