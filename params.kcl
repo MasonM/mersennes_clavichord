@@ -49,7 +49,6 @@ export wrestplankStart = [
 // Hollow front-right compartment between the case front and the soundboard.
 export rightCompartmentStartX = soundboardStart[0]
 export rightCompartmentLength = caseLength - wallThickness - rightCompartmentStartX
-export rightCompartmentFrontY = 0mm
 export rightCompartmentBackY = soundboardStart[1] - wallThickness
 export rightCompartmentInteriorY = wallThickness
 export rightCompartmentInteriorWidth = rightCompartmentBackY - rightCompartmentInteriorY
