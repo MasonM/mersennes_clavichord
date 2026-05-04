@@ -16,7 +16,6 @@ accidentalBaseNaturalOffsets = [0, 1, 3, 4, 5]
 
 naturalKeyWidth = keywellLength / numNaturalKeys
 naturalKeyLength = keywellWidth
-naturalKeyHeight = 10mm
 
 accidentalKeyWidth = naturalKeyWidth * 0.58
 accidentalKeyStartY = keyStartY + naturalKeyLength / 3

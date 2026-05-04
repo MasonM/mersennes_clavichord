@@ -80,3 +80,5 @@ export fn stringY(@stringIdx) {
 export numKeys = 49
 
 export keyBaseZ = keywellHeight + 5mm
+
+export naturalKeyHeight = 10mm
