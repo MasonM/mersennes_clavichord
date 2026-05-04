@@ -5,7 +5,6 @@ import * from "temperament.kcl"
 // The front of the keyboard is the low-Y side of the keywell.
 keyStartX = toolboxLength
 keyStartY = 0mm
-keyBaseZ = keywellHeight + 5mm
 
 numOctaves = floor((numKeys - 1) / 12)
 numNaturalKeys = numOctaves * 7 + 1

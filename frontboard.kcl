@@ -6,8 +6,8 @@ import * from "params.kcl"
 // center so the central lever field remains visually open.
 frontboardThickness = wallThickness
 frontboardLength = keywellLength
-frontboardLowHeight = caseHeight / 2 - wallThickness
-frontboardFullHeight = caseHeight - wallThickness
+frontboardFullHeight = caseHeight - keyBaseZ
+frontboardLowHeight = frontboardFullHeight / 2
 frontboardSlopeRun = frontboardLength / 4
 frontboardBackY = keywellWidth + frontboardThickness
 frontboardWoodColor = "#7a4b24"
@@ -16,7 +16,7 @@ frontboardPlane = {
   origin = [
     toolboxLength,
     frontboardBackY,
-    wallThickness
+    keyBaseZ
   ],
   xAxis = [1, 0, 0],
   yAxis = [0, 0, 1]

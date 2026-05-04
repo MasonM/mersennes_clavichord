@@ -3,7 +3,7 @@ import * from "params.kcl"
 // Separate hollow toolbox block plus a recessed, stepped-terrace lid.
 toolboxWallThickness = wallThickness
 toolboxOuterLength = toolboxLength - wallThickness
-toolboxOuterWidth = keywellWidth - wallThickness
+toolboxOuterWidth = keywellWidth
 toolboxOuterHeight = caseHeight - wallThickness
 toolboxInnerLength = toolboxOuterLength - (2 * toolboxWallThickness)
 toolboxInnerWidth = toolboxOuterWidth - (2 * toolboxWallThickness)
