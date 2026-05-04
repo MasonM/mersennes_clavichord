@@ -1,25 +1,70 @@
 import * from "params.kcl"
 
-// Tangent-slot layout shared by the rack and keyboard levers.
-// X is fanned slightly wider than the visible key fronts so end keys bend outward,
-// while middle keys stay close to their corresponding slot columns.
+// Strict quarter-comma meantone pitch model for the 49-key compass C..c3.
+// Key indices are chromatic: 0 = C, 9 = A in the lowest octave, 33 = a1.
+// The black keys are interpreted as C#, Eb, F#, G#, and Bb, which is the
+// usual practical quarter-comma meantone spelling for this compass.
+export referenceA1KeyIdx = 33
+export referenceA1PitchClassIdx = 9
+export referenceA1OctaveIdx = 2
+export quarterCommaFifth = 5 ^ (1 / 4)
+export meantonePitchClassRatios = [
+  1,
+  5 ^ (7 / 4) / 16,
+  5 ^ (1 / 2) / 2,
+  4 / (5 ^ (3 / 4)),
+  5 / 4,
+  2 / (5 ^ (1 / 4)),
+  5 ^ (3 / 2) / 8,
+  5 ^ (1 / 4),
+  25 / 16,
+  5 ^ (3 / 4) / 2,
+  4 / (5 ^ (1 / 2)),
+  5 * 5 ^ (1 / 4) / 4
+]
+export referenceA1PitchRatio = 5 ^ (3 / 4) / 2 * 2 ^ referenceA1OctaveIdx
+
+export fn meantonePitchRatioForKey(@keyIdx) {
+  octaveIdx = floor(keyIdx / 12)
+  pitchClassIdx = keyIdx % 12
+  return meantonePitchClassRatios[pitchClassIdx] * 2 ^ octaveIdx
+}
+
+export fn meantoneFrequencyForKey(@keyIdx) {
+  return referencePitchA1 * meantonePitchRatioForKey(keyIdx) / referenceA1PitchRatio
+}
+
+// Fit the sounding-length layout to the existing rack: the lowest C uses the
+// deepest/bass part of the rack and c3 uses the shallow treble end. Because the
+// compass spans four octaves, c3 is 1/16 the sounding length of low C.
+export rackBassCutoutX = toolboxLength + wallThickness + 18mm
+export rackTrebleCutoutX = soundboardStart[0] - 54mm
+export rackCutoutXSpan = rackTrebleCutoutX - rackBassCutoutX
+export lowCSoundingLength = rackCutoutXSpan * 16 / 15
+export c3SoundingLength = lowCSoundingLength / 16
+export referenceA1SoundingLength = lowCSoundingLength / referenceA1PitchRatio
+
+export fn soundingLengthForKey(@keyIdx) {
+  return referenceA1SoundingLength * referencePitchA1 / meantoneFrequencyForKey(keyIdx)
+}
+
+export fn soundingLengthProgressForKey(@keyIdx) {
+  return (lowCSoundingLength - soundingLengthForKey(keyIdx)) / (lowCSoundingLength - c3SoundingLength)
+}
+
 export rackBackY = caseWidth - wallThickness
-export slotLeftX = wallThickness + 106mm
-export slotRightX = soundboardStart[0] - 6mm
-export slotSpanX = slotRightX - slotLeftX
-export slotInsetY = 10mm
+export slotPitchX = rackCutoutXSpan / (numKeys - 1)
+export slotBassY = keywellWidth + 145mm
+export slotTrebleY = rackBackY - 4mm
 
-// Use the course centerline for each tangent slot. 49 keys share 35 courses,
-// so neighboring fretted keys may use the same course Y but a distinct X.
-export fn slotCourseForKey(@keyIdx) {
-  return floor(keyIdx * (numCourses - 1) / (numKeys - 1))
-}
-
+// Rack slot X follows the physical key order across the keywell.
 export fn slotXForKey(@keyIdx) {
-  return slotLeftX + keyIdx * slotSpanX / (numKeys - 1)
+  return rackBassCutoutX + keyIdx * slotPitchX
 }
 
+// Rack slot Y is driven by the calculated sounding length for this key:
+// low/long-sounding notes sit lower/frontward on the rack, while the short
+// treble lengths climb toward the back edge.
 export fn slotYForKey(@keyIdx) {
-  courseIdx = slotCourseForKey(keyIdx)
-  return stringY(courseIdx * 2) + stringPairGap / 2
+  return slotBassY + soundingLengthProgressForKey(keyIdx) * (slotTrebleY - slotBassY)
 }
