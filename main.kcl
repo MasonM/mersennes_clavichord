@@ -8,6 +8,6 @@ import "toolbox.kcl" as toolbox
 
 // Following are slow. Comment out when iterating on other modules.
 //import "keyboard.kcl" as keyboard
-//import "soundbox.kcl" as soundbox
-//import "strings.kcl" as strings
+import "soundbox.kcl" as soundbox
+import "strings.kcl" as strings
 //import "rack.kcl" as rack

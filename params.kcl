@@ -11,7 +11,7 @@ export soundboardHeight = 6 * ligne
 export bellyRailLength = 1 * pouce
 export wrestplankThickness = 1 * pouce
 
-// "It turned out that a keywell measurement of 24 pouces (rather than 25) produces an octave-span for the instrument of just under 157 mm: a typical French octave-span, and almost exactly that of the La Brèche harpsichord."
+// "It turned out that a keywell measurement of 24 (rather than 25) pouces produces an octave-span for the instrument of just under 157 mm: a typical French octave-span, and almost exactly that of the La Brèche harpsichord."
 export keywellLength = 24 * pouce
 // "As mentioned, the toolbox at the left-hand end takes up one-tenth of the complete length: the maker would therefore have to divide this 48-pouce distance into nine parts, with compass and ruler or with dividers, to find the toolbox width, which would then be added at the left end."
 export toolboxLength = (soundboardFrontLength + keywellLength) / 9
@@ -49,6 +49,7 @@ export wrestplankStart = [
 // Hollow front-right compartment between the case front and the soundboard.
 export rightCompartmentStartX = soundboardStart[0]
 export rightCompartmentLength = caseLength - wallThickness - rightCompartmentStartX
+export rightCompartmentFrontY = 0mm
 export rightCompartmentBackY = soundboardStart[1] - wallThickness
 export rightCompartmentInteriorY = wallThickness
 export rightCompartmentInteriorWidth = rightCompartmentBackY - rightCompartmentInteriorY
@@ -64,5 +65,16 @@ export stringDiameter = 0.70mm
 export stringPairGap = 1.25mm
 export hitchPinDiameter = 2mm
 export hitchPinHeight = 14mm
+
+// Shared string layout. Even/odd adjacent indices form a two-string course.
+export numCourses = numStrings / 2
+export firstStringY = caseWidth / 2
+export lastStringY = caseWidth - 10mm
+export coursePitch = (lastStringY - firstStringY - stringPairGap) / (numCourses - 1)
+export fn stringY(@stringIdx) {
+  courseIdx = floor(stringIdx / 2)
+  stringInCourse = stringIdx % 2
+  return firstStringY + courseIdx * coursePitch + stringInCourse * stringPairGap
+}
 
 export numKeys = 49

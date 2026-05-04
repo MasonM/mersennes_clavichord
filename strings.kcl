@@ -1,14 +1,10 @@
 import * from "params.kcl"
+import * from "utils.kcl"
 
 // 70 brass clavichord strings arranged as 35 courses of two.
 // Plan-view convention: strings run along X; Y increases toward the top/back edge of the case.
-numCourses = numStrings / 2
 stringRadius = stringDiameter / 2
-firstStringY = caseWidth / 2
-lastStringY = caseWidth - 10mm
-coursePitch = (lastStringY - firstStringY - stringPairGap) / (numCourses - 1)
-
-stringHeight = soundboardStart[2] + soundboardHeight + 8mm
+stringHeight = soundboardStart[2] + soundboardHeight + 20mm
 stringIndices = [0..<numStrings]
 
 hitchPinRadius = hitchPinDiameter / 2
@@ -26,14 +22,6 @@ tuningPinRowPitch = (wrestplankLength - tuningPinFrontMargin - tuningPinBackMarg
 tuningPinBaseX = wrestplankStart[0] + tuningPinFrontMargin
 tuningPinBaseZ = wrestplankTopZ
 prototypeStringLength = tuningPinBaseX + (tuningPinRows - 1) * tuningPinRowPitch - tuningPinRadius - hitchPinX - hitchPinRadius
-
-// Return the Y position for a zero-based string index.
-// Even/odd adjacent indices form a two-string course.
-fn stringY(@stringIdx) {
-  courseIdx = floor(stringIdx / 2)
-  stringInCourse = stringIdx % 2
-  return firstStringY + courseIdx * coursePitch + stringInCourse * stringPairGap
-}
 
 // Return the staggered X position for the hitchpin attached to a string.
 fn hitchPinXForString(@stringIdx) {
