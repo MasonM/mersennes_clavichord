@@ -5,6 +5,7 @@
 import "case.kcl" as case
 import "right_compartment.kcl" as rightCompartment
 import "toolbox.kcl" as toolbox
+import "bridges.kcl" as bridges
 
 // Following are slow. Comment out when iterating on other modules.
 // import "keyboard.kcl" as keyboard

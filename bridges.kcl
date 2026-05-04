@@ -1,0 +1,70 @@
+import * from "params.kcl"
+
+// Treble bridge: first bridge from the top/back side of the clavichord.
+// It spans the upper six two-string courses, i.e. the top 12 strings.
+trebleBridgeFirstString = numStrings - 12
+trebleBridgeLastString = numStrings - 1
+trebleBridgeStringMarginY = 5mm
+
+trebleBridgeCenterX = caseLength - (caseLength / 3)
+trebleBridgeBaseWidth = 12mm
+trebleBridgeTopWidth = 4mm
+trebleBridgeTopInset = (trebleBridgeBaseWidth - trebleBridgeTopWidth) / 2
+trebleBridgeHeight = 8mm - (stringDiameter / 2)
+trebleBridgeY = stringY(trebleBridgeFirstString) - trebleBridgeStringMarginY
+trebleBridgeLength = stringY(trebleBridgeLastString) - stringY(trebleBridgeFirstString) + 2 * trebleBridgeStringMarginY
+trebleBridgeZ = soundboardStart[2] + soundboardHeight
+
+// Cross-section is extruded along Y. The arced flanks make a broad foot with a
+// narrow string-bearing crown.
+trebleBridgeProfile = sketch(on = XZ) {
+  trebleBridgeBottom = line(start = [var 0mm, var 0mm], end = [var 12mm, var 0mm])
+  trebleBridgeRightSlope = arc(start = [var 12mm, var 0mm], end = [var 8mm, var 7.65mm], center = [var 6mm, var 1.73mm])
+  trebleBridgeTop = line(start = [var 8mm, var 7.65mm], end = [var 4mm, var 7.65mm])
+  trebleBridgeLeftSlope = arc(start = [var 4mm, var 7.65mm], end = [var 0mm, var 0mm], center = [var 6mm, var 1.73mm])
+
+  coincident([
+    trebleBridgeBottom.end,
+    trebleBridgeRightSlope.start
+  ])
+  coincident([
+    trebleBridgeRightSlope.end,
+    trebleBridgeTop.start
+  ])
+  coincident([
+    trebleBridgeTop.end,
+    trebleBridgeLeftSlope.start
+  ])
+  coincident([
+    trebleBridgeLeftSlope.end,
+    trebleBridgeBottom.start
+  ])
+  horizontal(trebleBridgeBottom)
+  horizontal(trebleBridgeTop)
+  distance([
+  trebleBridgeBottom.start,
+  trebleBridgeBottom.end
+]) == trebleBridgeBaseWidth
+  distance([
+  trebleBridgeTop.start,
+  trebleBridgeTop.end
+]) == trebleBridgeTopWidth
+  horizontalDistance([
+  trebleBridgeBottom.start,
+  trebleBridgeTop.end
+]) == trebleBridgeTopInset
+  verticalDistance([
+  trebleBridgeBottom.start,
+  trebleBridgeTop.end
+]) == trebleBridgeHeight
+}
+
+trebleBridge = extrude(region(point = [6mm, 3mm], sketch = trebleBridgeProfile), length = trebleBridgeLength, method = NEW)
+  |> translate(
+       x = trebleBridgeCenterX - (trebleBridgeBaseWidth / 2),
+       y = trebleBridgeY,
+       z = trebleBridgeZ,
+       global = true,
+     )
+  |> appearance(color = "#6f3f1d", roughness = 74, metalness = 0)
+hiddenTrebleBridgeProfile = hide(trebleBridgeProfile)
