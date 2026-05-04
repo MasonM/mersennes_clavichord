@@ -2,26 +2,10 @@ import * from "params.kcl"
 import * from "temperament.kcl"
 
 rackHeight = soundboardStart[2] + soundboardHeight
-rackBackY = caseWidth - wallThickness
 rackTongueCutoutWidth = 3mm
 rackTongueCutoutDepth = 50mm
 rackTongueCutoutCutHeight = rackHeight + 14mm
-rackTongueCutoutBassY = keywellWidth + 145mm
-rackTongueCutoutTrebleY = rackBackY - 4mm
 rackKeyIndices = [0..<numKeys]
-rackTongueCutoutPitchX = rackCutoutXSpan / (numKeys - 1)
-
-// Rack slot X follows the physical key order across the keywell.
-fn rackTongueCutoutXForKey(@keyIdx) {
-  return rackBassCutoutX + keyIdx * rackTongueCutoutPitchX
-}
-
-// Rack slot Y is driven by the calculated sounding length for this key:
-// low/long-sounding notes sit lower/frontward on the rack, while the short
-// treble lengths climb toward the back edge.
-fn rackTongueCutoutYForKey(@keyIdx) {
-  return rackTongueCutoutBassY + soundingLengthProgressForKey(keyIdx) * (rackTongueCutoutTrebleY - rackTongueCutoutBassY)
-}
 
 rackProfile = sketch(on = XY) {
   leftToTop = line(start = [wallThickness, keywellWidth], end = [wallThickness, rackBackY])
