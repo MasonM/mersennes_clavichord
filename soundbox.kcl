@@ -202,7 +202,7 @@ trebleBridgeTopWidth = 4mm
 trebleBridgeTopInset = (trebleBridgeBaseWidth - trebleBridgeTopWidth) / 2
 trebleBridgeHeight = 8mm - (stringDiameter / 2)
 trebleBridgeY = stringY(trebleBridgeFirstString) - trebleBridgeStringMarginY
-trebleBridgeLength = stringY(trebleBridgeLastString) - stringY(trebleBridgeFirstString) + (2 * trebleBridgeStringMarginY)
+trebleBridgeLength = stringY(trebleBridgeLastString) - stringY(trebleBridgeFirstString) + 2 * trebleBridgeStringMarginY
 trebleBridgeZ = soundboardStart[2] + soundboardHeight
 
 // Cross-section is extruded along Y. The arced flanks make a broad foot with a
@@ -213,16 +213,40 @@ trebleBridgeProfile = sketch(on = XZ) {
   trebleBridgeTop = line(start = [var 8mm, var 7.65mm], end = [var 4mm, var 7.65mm])
   trebleBridgeLeftSlope = arc(start = [var 4mm, var 7.65mm], end = [var 0mm, var 0mm], center = [var 6mm, var 1.73mm])
 
-  coincident([trebleBridgeBottom.end, trebleBridgeRightSlope.start])
-  coincident([trebleBridgeRightSlope.end, trebleBridgeTop.start])
-  coincident([trebleBridgeTop.end, trebleBridgeLeftSlope.start])
-  coincident([trebleBridgeLeftSlope.end, trebleBridgeBottom.start])
+  coincident([
+    trebleBridgeBottom.end,
+    trebleBridgeRightSlope.start
+  ])
+  coincident([
+    trebleBridgeRightSlope.end,
+    trebleBridgeTop.start
+  ])
+  coincident([
+    trebleBridgeTop.end,
+    trebleBridgeLeftSlope.start
+  ])
+  coincident([
+    trebleBridgeLeftSlope.end,
+    trebleBridgeBottom.start
+  ])
   horizontal(trebleBridgeBottom)
   horizontal(trebleBridgeTop)
-  distance([trebleBridgeBottom.start, trebleBridgeBottom.end]) == trebleBridgeBaseWidth
-  distance([trebleBridgeTop.start, trebleBridgeTop.end]) == trebleBridgeTopWidth
-  horizontalDistance([trebleBridgeBottom.start, trebleBridgeTop.end]) == trebleBridgeTopInset
-  verticalDistance([trebleBridgeBottom.start, trebleBridgeTop.end]) == trebleBridgeHeight
+  distance([
+  trebleBridgeBottom.start,
+  trebleBridgeBottom.end
+]) == trebleBridgeBaseWidth
+  distance([
+  trebleBridgeTop.start,
+  trebleBridgeTop.end
+]) == trebleBridgeTopWidth
+  horizontalDistance([
+  trebleBridgeBottom.start,
+  trebleBridgeTop.end
+]) == trebleBridgeTopInset
+  verticalDistance([
+  trebleBridgeBottom.start,
+  trebleBridgeTop.end
+]) == trebleBridgeHeight
 }
 
 trebleBridge = extrude(region(point = [6mm, 3mm], sketch = trebleBridgeProfile), length = trebleBridgeLength, method = NEW)

@@ -64,7 +64,7 @@ export numStrings = 70
 export stringDiameter = 0.70mm
 export stringPairGap = 1.25mm
 export hitchPinDiameter = 2mm
-export hitchPinHeight = 14mm
+export hitchPinHeight = 24mm
 
 // Shared string layout. Even/odd adjacent indices form a two-string course.
 export numCourses = numStrings / 2

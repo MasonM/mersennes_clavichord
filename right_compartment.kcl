@@ -98,7 +98,6 @@ rightCompartmentRightBoard = clone(rightCompartmentLeftBoard)
   |> translate(x = rightCompartmentLength - wallThickness, global = true)
 hiddenRightCompartmentEndBoardProfile = hide(rightCompartmentEndBoardProfile)
 
-
 rightCompartmentLidBaseProfile = sketch(on = XY) {
   compLidBaseFront = line(start = [var 0mm, var 0mm], end = [var 580mm, var 0mm])
   compLidBaseRight = line(start = [var 580mm, var 0mm], end = [var 580mm, var 135mm])
