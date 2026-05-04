@@ -295,36 +295,6 @@ leftEndBoard = leftEndBoardBlank
 rightEndBoard = rightEndBoardBlank
   |> appearance(color = caseWoodColor, roughness = 74, metalness = 0)
 
-caseBoxJoints = [
-  leftFrontBoxJoint01,
-  leftFrontBoxJoint02,
-  leftFrontBoxJoint03,
-  leftFrontBoxJoint04,
-  leftFrontBoxJoint05,
-  leftFrontBoxJoint06,
-  leftFrontBoxJoint07,
-  leftBackBoxJoint01,
-  leftBackBoxJoint02,
-  leftBackBoxJoint03,
-  leftBackBoxJoint04,
-  leftBackBoxJoint05,
-  leftBackBoxJoint06,
-  leftBackBoxJoint07,
-  rightFrontBoxJoint01,
-  rightFrontBoxJoint02,
-  rightFrontBoxJoint03,
-  rightFrontBoxJoint04,
-  rightFrontBoxJoint05,
-  rightFrontBoxJoint06,
-  rightFrontBoxJoint07,
-  rightBackBoxJoint01,
-  rightBackBoxJoint02,
-  rightBackBoxJoint03,
-  rightBackBoxJoint04,
-  rightBackBoxJoint05,
-  rightBackBoxJoint06,
-  rightBackBoxJoint07
-]
 hiddenPrototypeBoxJointFinger = hide([prototypeBoxJointFinger])
 hiddenLongBoardBlanks = hide([
   frontSideBoardBlank,
