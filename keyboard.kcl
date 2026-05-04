@@ -1,4 +1,5 @@
 import * from "params.kcl"
+import * from "temperament.kcl"
 
 // 49-key chromatic compass C..c3, no short octave.
 // The front of the keyboard is the low-Y side of the keywell.
@@ -157,3 +158,170 @@ hiddenPrototypeKeys = hide([
   prototypeNaturalKey,
   prototypeAccidentalKey
 ])
+
+// Key levers begin at the rear end of each key and jog sideways only long enough
+// to reach the x coordinate of the matching rack/tangent slot. Each then runs
+// straight toward the back/top of the case to slotYForKey().
+keyLeverIndices = [0..<numKeys]
+keyLeverWidth = 5.5mm
+keyLeverHeight = 6mm
+keyLeverStartY = keyStartY + naturalKeyLength
+keyLeverBendRun = 24mm
+keyLeverBendY = keyLeverStartY + keyLeverBendRun
+keyLeverZ = keyBaseZ + naturalKeyHeight - keyLeverHeight
+keyLeverColor = "#8b5a2b"
+
+// Chromatic key center offsets measured in natural-key widths. This keeps lever
+// starts centered on both natural and accidental keys at their rear ends.
+keyLeverStartOffsets = [
+  0.5,
+  1,
+  1.5,
+  2,
+  2.5,
+  3.5,
+  4,
+  4.5,
+  5,
+  5.5,
+  6,
+  6.5,
+  7.5,
+  8,
+  8.5,
+  9,
+  9.5,
+  10.5,
+  11,
+  11.5,
+  12,
+  12.5,
+  13,
+  13.5,
+  14.5,
+  15,
+  15.5,
+  16,
+  16.5,
+  17.5,
+  18,
+  18.5,
+  19,
+  19.5,
+  20,
+  20.5,
+  21.5,
+  22,
+  22.5,
+  23,
+  23.5,
+  24.5,
+  25,
+  25.5,
+  26,
+  26.5,
+  27,
+  27.5,
+  28.5
+]
+
+fn keyLeverStartXForKey(@keyIdx) {
+  return keyStartX + keyLeverStartOffsets[keyIdx] * naturalKeyWidth
+}
+
+fn makeKeyLever(@keyIdx) {
+  keyLeverFootprint = sketch(on = XY) {
+    startFace = line(start = [var 0mm, var 0mm], end = [var 5.5mm, var 0mm])
+    rightBendSide = line(start = [var 5.5mm, var 0mm], end = [var 12mm, var 24mm])
+    rightStraightSide = line(start = [var 12mm, var 24mm], end = [var 12mm, var 140mm])
+    endFace = line(start = [var 12mm, var 140mm], end = [var 6.5mm, var 140mm])
+    leftStraightSide = line(start = [var 6.5mm, var 140mm], end = [var 6.5mm, var 24mm])
+    leftBendSide = line(start = [var 6.5mm, var 24mm], end = [var 0mm, var 0mm])
+
+    coincident([startFace.end, rightBendSide.start])
+    coincident([
+      rightBendSide.end,
+      rightStraightSide.start
+    ])
+    coincident([rightStraightSide.end, endFace.start])
+    coincident([endFace.end, leftStraightSide.start])
+    coincident([
+      leftStraightSide.end,
+      leftBendSide.start
+    ])
+    coincident([leftBendSide.end, startFace.start])
+
+    coincident([
+      startFace.start,
+      [
+        keyLeverStartXForKey(keyIdx) - (keyLeverWidth / 2),
+        keyLeverStartY
+      ]
+    ])
+    coincident([
+      startFace.end,
+      [
+        keyLeverStartXForKey(keyIdx) + keyLeverWidth / 2,
+        keyLeverStartY
+      ]
+    ])
+    coincident([
+      rightBendSide.end,
+      [
+        slotXForKey(keyIdx) + keyLeverWidth / 2,
+        keyLeverBendY
+      ]
+    ])
+    coincident([
+      rightStraightSide.end,
+      [
+        slotXForKey(keyIdx) + keyLeverWidth / 2,
+        slotYForKey(keyIdx)
+      ]
+    ])
+    coincident([
+      endFace.end,
+      [
+        slotXForKey(keyIdx) - (keyLeverWidth / 2),
+        slotYForKey(keyIdx)
+      ]
+    ])
+    coincident([
+      leftStraightSide.end,
+      [
+        slotXForKey(keyIdx) - (keyLeverWidth / 2),
+        keyLeverBendY
+      ]
+    ])
+
+    horizontal(startFace)
+    horizontal(endFace)
+    vertical(rightStraightSide)
+    vertical(leftStraightSide)
+    distance([startFace.start, startFace.end]) == keyLeverWidth
+    distance([endFace.start, endFace.end]) == keyLeverWidth
+  }
+
+  hiddenKeyLeverFootprint = hide(keyLeverFootprint)
+
+  return extrude(
+    region(
+      point = [
+        slotXForKey(keyIdx),
+        keyLeverBendY + 1mm
+      ],
+      sketch = keyLeverFootprint,
+    ),
+    length = keyLeverHeight,
+    method = NEW,
+  )
+    |> translate(z = keyLeverZ, global = true)
+}
+
+keyLevers = map(keyLeverIndices, f = makeKeyLever)
+woodKeyLevers = appearance(
+  keyLevers,
+  color = keyLeverColor,
+  roughness = 76,
+  metalness = 0,
+)

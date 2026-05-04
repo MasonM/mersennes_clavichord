@@ -1,110 +1,165 @@
 import * from "params.kcl"
 
-// Treble bridge: first bridge from the top/back side of the clavichord.
-// It spans the upper six two-string courses, i.e. the top 12 strings.
-trebleBridgeFirstString = numStrings - 12
+// Treble bridge for the top 6 courses / 12 strings.
+trebleBridgeStringCount = 12
+trebleBridgeFirstString = numStrings - trebleBridgeStringCount
 trebleBridgeLastString = numStrings - 1
-trebleBridgeStringMarginY = 5mm
-
+trebleBridgeMarginY = 5mm
 trebleBridgeCenterX = caseLength - (caseLength / 3)
-trebleBridgeBaseWidth = 12mm
-trebleBridgeTopWidth = 5mm
-trebleBridgeHeight = 18mm - (stringDiameter / 2)
-trebleBridgeY = stringY(trebleBridgeFirstString) - trebleBridgeStringMarginY
-trebleBridgeLength = stringY(trebleBridgeLastString) - stringY(trebleBridgeFirstString) + 2 * trebleBridgeStringMarginY
-trebleBridgeZ = soundboardStart[2] + soundboardHeight
+trebleBridgeYMin = stringY(trebleBridgeFirstString) - trebleBridgeMarginY
+trebleBridgeYMax = stringY(trebleBridgeLastString) + trebleBridgeMarginY
+trebleBridgeYMid = (trebleBridgeYMin + trebleBridgeYMax) / 2
+trebleBridgeBaseHalfWidth = 8mm
+trebleBridgeTopHalfWidth = 4.5mm
+trebleBridgeCurveRadius = 42mm
+trebleBridgeHeight = 8mm
+trebleBridgeBaseZ = soundboardStart[2] + soundboardHeight
 
-// Large outside arc centers make the long Y-running sides bow gently inward.
-// The short end faces remain flat/straight along X. The top footprint is
-// narrower than the base footprint, giving the bridge a thin crowned form.
-trebleBridgeBaseCurveOffset = 130mm
-trebleBridgeTopCurveOffset = 420mm
+baseBridgePlane = {
+  origin = [0mm, 0mm, trebleBridgeBaseZ],
+  xAxis = [1, 0, 0],
+  yAxis = [0, 1, 0]
+}
 
-trebleBridgeBasePlane = {
+topBridgePlane = {
   origin = [
-    trebleBridgeCenterX - (trebleBridgeBaseWidth / 2),
-    trebleBridgeY,
-    trebleBridgeZ
+    0mm,
+    0mm,
+    trebleBridgeBaseZ + trebleBridgeHeight
   ],
   xAxis = [1, 0, 0],
   yAxis = [0, 1, 0]
 }
 
-trebleBridgeTopPlane = {
-  origin = [
-    trebleBridgeCenterX - (trebleBridgeTopWidth / 2),
-    trebleBridgeY,
-    trebleBridgeZ + trebleBridgeHeight
-  ],
-  xAxis = [1, 0, 0],
-  yAxis = [0, 1, 0]
+trebleBridgeBaseProfile = sketch(on = baseBridgePlane) {
+  baseLowerEnd = line(start = [var -8mm, var -36mm], end = [var 8mm, var -36mm])
+  baseRightSide = arc(start = [var 8mm, var 36mm], end = [var 8mm, var -36mm], center = [var 50mm, var 0mm])
+  baseUpperEnd = line(start = [var 8mm, var 36mm], end = [var -8mm, var 36mm])
+  baseLeftSide = arc(start = [var -8mm, var -36mm], end = [var -8mm, var 36mm], center = [var -50mm, var 0mm])
+
+  coincident([baseLowerEnd.end, baseRightSide.end])
+  coincident([
+    baseRightSide.start,
+    baseUpperEnd.start
+  ])
+  coincident([baseUpperEnd.end, baseLeftSide.end])
+  coincident([baseLeftSide.start, baseLowerEnd.start])
+
+  coincident([
+    baseLowerEnd.start,
+    [
+      trebleBridgeCenterX - trebleBridgeBaseHalfWidth,
+      trebleBridgeYMin
+    ]
+  ])
+  coincident([
+    baseLowerEnd.end,
+    [
+      trebleBridgeCenterX + trebleBridgeBaseHalfWidth,
+      trebleBridgeYMin
+    ]
+  ])
+  coincident([
+    baseUpperEnd.start,
+    [
+      trebleBridgeCenterX + trebleBridgeBaseHalfWidth,
+      trebleBridgeYMax
+    ]
+  ])
+  coincident([
+    baseUpperEnd.end,
+    [
+      trebleBridgeCenterX - trebleBridgeBaseHalfWidth,
+      trebleBridgeYMax
+    ]
+  ])
+  coincident([
+    baseRightSide.center,
+    [
+      trebleBridgeCenterX + trebleBridgeBaseHalfWidth + trebleBridgeCurveRadius,
+      trebleBridgeYMid
+    ]
+  ])
+  coincident([
+    baseLeftSide.center,
+    [
+      trebleBridgeCenterX - trebleBridgeBaseHalfWidth - trebleBridgeCurveRadius,
+      trebleBridgeYMid
+    ]
+  ])
+
+  horizontal(baseLowerEnd)
+  horizontal(baseUpperEnd)
 }
 
-trebleBridgeBaseProfile = sketch(on = trebleBridgeBasePlane) {
-  baseLeftSide = arc(start = [var 0mm, var 0mm], end = [var 0mm, var 45mm], center = [var -130mm, var 22.5mm])
-  baseFarEnd = line(start = [var 0mm, var 45mm], end = [var 12mm, var 45mm])
-  baseRightSide = arc(start = [var 12mm, var 45mm], end = [var 12mm, var 0mm], center = [var 142mm, var 22.5mm])
-  baseNearEnd = line(start = [var 12mm, var 0mm], end = [var 0mm, var 0mm])
+trebleBridgeTopProfile = sketch(on = topBridgePlane) {
+  topLowerEnd = line(start = [var -4.5mm, var -36mm], end = [var 4.5mm, var -36mm])
+  topRightSide = arc(start = [var 4.5mm, var 36mm], end = [var 4.5mm, var -36mm], center = [var 46.5mm, var 0mm])
+  topUpperEnd = line(start = [var 4.5mm, var 36mm], end = [var -4.5mm, var 36mm])
+  topLeftSide = arc(start = [var -4.5mm, var -36mm], end = [var -4.5mm, var 36mm], center = [var -46.5mm, var 0mm])
 
-  coincident([baseLeftSide.end, baseFarEnd.start])
-  coincident([baseFarEnd.end, baseRightSide.start])
-  coincident([baseRightSide.end, baseNearEnd.start])
-  coincident([baseNearEnd.end, baseLeftSide.start])
-  coincident([baseLeftSide.start, ORIGIN])
+  coincident([topLowerEnd.end, topRightSide.end])
+  coincident([topRightSide.start, topUpperEnd.start])
+  coincident([topUpperEnd.end, topLeftSide.end])
+  coincident([topLeftSide.start, topLowerEnd.start])
 
-  horizontal(baseNearEnd)
-  horizontal(baseFarEnd)
-  distance([baseNearEnd.start, baseNearEnd.end]) == trebleBridgeBaseWidth
-  horizontalDistance([baseLeftSide.start, baseNearEnd.start]) == trebleBridgeBaseWidth
-  verticalDistance([baseLeftSide.start, baseFarEnd.start]) == trebleBridgeLength
-  horizontalDistance([
-  baseRightSide.end,
-  baseRightSide.center
-]) == trebleBridgeBaseCurveOffset
-  verticalDistance([
-  baseRightSide.end,
-  baseRightSide.center
-]) == trebleBridgeLength / 2
-  horizontalDistance([
-  baseLeftSide.center,
-  baseLeftSide.start
-]) == trebleBridgeBaseCurveOffset
-  verticalDistance([
-  baseLeftSide.start,
-  baseLeftSide.center
-]) == trebleBridgeLength / 2
+  coincident([
+    topLowerEnd.start,
+    [
+      trebleBridgeCenterX - trebleBridgeTopHalfWidth,
+      trebleBridgeYMin
+    ]
+  ])
+  coincident([
+    topLowerEnd.end,
+    [
+      trebleBridgeCenterX + trebleBridgeTopHalfWidth,
+      trebleBridgeYMin
+    ]
+  ])
+  coincident([
+    topUpperEnd.start,
+    [
+      trebleBridgeCenterX + trebleBridgeTopHalfWidth,
+      trebleBridgeYMax
+    ]
+  ])
+  coincident([
+    topUpperEnd.end,
+    [
+      trebleBridgeCenterX - trebleBridgeTopHalfWidth,
+      trebleBridgeYMax
+    ]
+  ])
+  coincident([
+    topRightSide.center,
+    [
+      trebleBridgeCenterX + trebleBridgeTopHalfWidth + trebleBridgeCurveRadius,
+      trebleBridgeYMid
+    ]
+  ])
+  coincident([
+    topLeftSide.center,
+    [
+      trebleBridgeCenterX - trebleBridgeTopHalfWidth - trebleBridgeCurveRadius,
+      trebleBridgeYMid
+    ]
+  ])
+
+  horizontal(topLowerEnd)
+  horizontal(topUpperEnd)
 }
 
-trebleBridgeTopProfile = sketch(on = trebleBridgeTopPlane) {
-  topLeftSide = arc(start = [var 0mm, var 0mm], end = [var 0mm, var 45mm], center = [var -420mm, var 22.5mm])
-  topFarEnd = line(start = [var 0mm, var 45mm], end = [var 5mm, var 45mm])
-  topRightSide = arc(start = [var 5mm, var 45mm], end = [var 5mm, var 0mm], center = [var 425mm, var 22.5mm])
-  topNearEnd = line(start = [var 5mm, var 0mm], end = [var 0mm, var 0mm])
-
-  coincident([topLeftSide.end, topFarEnd.start])
-  coincident([topFarEnd.end, topRightSide.start])
-  coincident([topRightSide.end, topNearEnd.start])
-  coincident([topNearEnd.end, topLeftSide.start])
-  coincident([topLeftSide.start, ORIGIN])
-
-  horizontal(topNearEnd)
-  horizontal(topFarEnd)
-  distance([topNearEnd.start, topNearEnd.end]) == trebleBridgeTopWidth
-  horizontalDistance([topLeftSide.start, topNearEnd.start]) == trebleBridgeTopWidth
-  verticalDistance([topLeftSide.start, topFarEnd.start]) == trebleBridgeLength
-  horizontalDistance([topRightSide.end, topRightSide.center]) == trebleBridgeTopCurveOffset
-  verticalDistance([topRightSide.end, topRightSide.center]) == trebleBridgeLength / 2
-  horizontalDistance([topLeftSide.center, topLeftSide.start]) == trebleBridgeTopCurveOffset
-  verticalDistance([topLeftSide.start, topLeftSide.center]) == trebleBridgeLength / 2
-}
-
-trebleBridgeBaseRegion = region(point = [6mm, 22mm], sketch = trebleBridgeBaseProfile)
-trebleBridgeTopRegion = region(point = [2mm, 22mm], sketch = trebleBridgeTopProfile)
+trebleBridgeBaseRegion = region(point = [trebleBridgeCenterX, trebleBridgeYMid], sketch = trebleBridgeBaseProfile)
+trebleBridgeTopRegion = region(point = [trebleBridgeCenterX, trebleBridgeYMid], sketch = trebleBridgeTopProfile)
 
 trebleBridge = loft([
   trebleBridgeBaseRegion,
   trebleBridgeTopRegion
 ])
-  |> appearance(color = "#6f3f1d", roughness = 74, metalness = 0)
-hiddenTrebleBridgeBaseProfile = hide(trebleBridgeBaseProfile)
-hiddenTrebleBridgeTopProfile = hide(trebleBridgeTopProfile)
+  |> appearance(color = "#8b552b", roughness = 78, metalness = 0)
+
+hiddenTrebleBridgeProfiles = hide([
+  trebleBridgeBaseProfile,
+  trebleBridgeTopProfile
+])
