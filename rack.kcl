@@ -4,7 +4,7 @@ import * from "temperament.kcl"
 rackHeight = soundboardStart[2] + soundboardHeight
 slotWidth = 3mm
 slotDepth = 50mm
-slotCutHeight = rackHeight + 14mm
+slotCutHeight = 50mm
 rackKeyIndices = [0..<numKeys]
 
 rackProfile = sketch(on = XY) {
@@ -68,7 +68,7 @@ fn makeslot(@keyIdx) {
     |> translate(
          x = slotXForKey(keyIdx) - (slotWidth / 2),
          y = slotYForKey(keyIdx) - slotDepth,
-         z = -2mm,
+         z = rackHeight - slotCutHeight,
          global = true,
        )
 }
