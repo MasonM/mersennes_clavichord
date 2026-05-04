@@ -64,7 +64,7 @@ backSideBoardProfile = sketch(on = XY) {
 }
 
 backSideBoard = extrude(region(point = [10mm, 1mm], sketch = backSideBoardProfile), length = caseBoardHeight, method = NEW)
-  |> translate(y = caseWidth - boxJointFingerLength, z = wallThickness, global = true)
+  |> translate(y = caseWidth - wallThickness, z = wallThickness, global = true)
   |> appearance(color = caseWoodColor, roughness = 74, metalness = 0)
 hiddenBackSideBoardProfile = hide(backSideBoardProfile)
 
