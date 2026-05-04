@@ -2,6 +2,40 @@ import * from "params.kcl"
 
 // Front-right hollow compartment: an open-top board-built well filling the gap
 // between the front case side/keywell and the soundboard bay.
+rightCompartmentInteriorLength = rightCompartmentLength - (2 * wallThickness)
+rightCompartmentTopZ = rightCompartmentWallZ + rightCompartmentWallHeight
+
+// Recessed compartment lid, styled after the toolbox lid but without a knob.
+rightCompartmentLidClearance = 2mm
+rightCompartmentLidRimRecess = 9mm
+rightCompartmentLidBaseThickness = 5mm
+rightCompartmentTerraceStepWidth = 7mm
+rightCompartmentTerraceStepDrop = 1.8mm
+
+rightCompartmentLidLength = rightCompartmentInteriorLength - (2 * rightCompartmentLidClearance)
+rightCompartmentLidWidth = rightCompartmentInteriorWidth - (2 * rightCompartmentLidClearance)
+rightCompartmentLidX = rightCompartmentStartX + wallThickness + rightCompartmentLidClearance
+rightCompartmentLidY = rightCompartmentInteriorY + rightCompartmentLidClearance
+
+rightCompartmentTerraceOuterTopZ = rightCompartmentTopZ - rightCompartmentLidRimRecess
+rightCompartmentLidBaseTopZ = rightCompartmentTerraceOuterTopZ - (4 * rightCompartmentTerraceStepDrop)
+rightCompartmentLidBottomZ = rightCompartmentLidBaseTopZ - rightCompartmentLidBaseThickness
+
+rightCompartmentStep1Inset = 0mm
+rightCompartmentStep2Inset = rightCompartmentTerraceStepWidth
+
+rightCompartmentStep1TopZ = rightCompartmentTerraceOuterTopZ
+rightCompartmentStep2TopZ = rightCompartmentTerraceOuterTopZ - rightCompartmentTerraceStepDrop
+
+rightCompartmentStep1Height = rightCompartmentStep1TopZ - rightCompartmentLidBaseTopZ
+rightCompartmentStep2Height = rightCompartmentStep2TopZ - rightCompartmentLidBaseTopZ
+
+rightCompartmentStep1LongLength = rightCompartmentLidLength - (2 * rightCompartmentStep1Inset)
+rightCompartmentStep2LongLength = rightCompartmentLidLength - (2 * rightCompartmentStep2Inset)
+
+rightCompartmentStep1SideLength = rightCompartmentLidWidth - (2 * rightCompartmentStep1Inset) - (2 * rightCompartmentTerraceStepWidth)
+rightCompartmentStep2SideLength = rightCompartmentLidWidth - (2 * rightCompartmentStep2Inset) - (2 * rightCompartmentTerraceStepWidth)
+
 rightCompartmentLongBoardProfile = sketch(on = XY) {
   compLongFront = line(start = [var 0mm, var 0mm], end = [var 600mm, var 0mm])
   compLongRight = line(start = [var 600mm, var 0mm], end = [var 600mm, var 10mm])
@@ -109,3 +143,247 @@ rightCompartmentFloorBoard = extrude(region(point = [10mm, 10mm], sketch = right
      )
   |> appearance(color = "#9a6333", roughness = 80, metalness = 0)
 hiddenRightCompartmentFloorProfile = hide(rightCompartmentFloorProfile)
+
+rightCompartmentLidBaseProfile = sketch(on = XY) {
+  compLidBaseFront = line(start = [var 0mm, var 0mm], end = [var 580mm, var 0mm])
+  compLidBaseRight = line(start = [var 580mm, var 0mm], end = [var 580mm, var 135mm])
+  compLidBaseBack = line(start = [var 580mm, var 135mm], end = [var 0mm, var 135mm])
+  compLidBaseLeft = line(start = [var 0mm, var 135mm], end = [var 0mm, var 0mm])
+
+  coincident([
+    compLidBaseFront.end,
+    compLidBaseRight.start
+  ])
+  coincident([
+    compLidBaseRight.end,
+    compLidBaseBack.start
+  ])
+  coincident([
+    compLidBaseBack.end,
+    compLidBaseLeft.start
+  ])
+  coincident([
+    compLidBaseLeft.end,
+    compLidBaseFront.start
+  ])
+  coincident([compLidBaseFront.start, ORIGIN])
+  horizontal(compLidBaseFront)
+  vertical(compLidBaseRight)
+  horizontal(compLidBaseBack)
+  vertical(compLidBaseLeft)
+  distance([
+  compLidBaseFront.start,
+  compLidBaseFront.end
+]) == rightCompartmentLidLength
+  distance([
+  compLidBaseRight.start,
+  compLidBaseRight.end
+]) == rightCompartmentLidWidth
+}
+
+rightCompartmentLidBasePanel = extrude(region(point = [10mm, 10mm], sketch = rightCompartmentLidBaseProfile), length = rightCompartmentLidBaseThickness, method = NEW)
+  |> translate(
+       x = rightCompartmentLidX,
+       y = rightCompartmentLidY,
+       z = rightCompartmentLidBottomZ,
+       global = true,
+     )
+  |> appearance(color = "#9a6333", roughness = 78, metalness = 0)
+hiddenRightCompartmentLidBaseProfile = hide(rightCompartmentLidBaseProfile)
+
+// Stepped perimeter terraces make the lid sit visibly recessed below the walls.
+rightCompartmentStep1LongProfile = sketch(on = XY) {
+  compStep1LongFront = line(start = [var 0mm, var 0mm], end = [var 580mm, var 0mm])
+  compStep1LongRight = line(start = [var 580mm, var 0mm], end = [var 580mm, var 7mm])
+  compStep1LongBack = line(start = [var 580mm, var 7mm], end = [var 0mm, var 7mm])
+  compStep1LongLeft = line(start = [var 0mm, var 7mm], end = [var 0mm, var 0mm])
+
+  coincident([
+    compStep1LongFront.end,
+    compStep1LongRight.start
+  ])
+  coincident([
+    compStep1LongRight.end,
+    compStep1LongBack.start
+  ])
+  coincident([
+    compStep1LongBack.end,
+    compStep1LongLeft.start
+  ])
+  coincident([
+    compStep1LongLeft.end,
+    compStep1LongFront.start
+  ])
+  coincident([compStep1LongFront.start, ORIGIN])
+  horizontal(compStep1LongFront)
+  vertical(compStep1LongRight)
+  horizontal(compStep1LongBack)
+  vertical(compStep1LongLeft)
+  distance([
+  compStep1LongFront.start,
+  compStep1LongFront.end
+]) == rightCompartmentStep1LongLength
+  distance([
+  compStep1LongRight.start,
+  compStep1LongRight.end
+]) == rightCompartmentTerraceStepWidth
+}
+
+rightCompartmentStep1Front = extrude(region(point = [5mm, 2mm], sketch = rightCompartmentStep1LongProfile), length = rightCompartmentStep1Height, method = NEW)
+  |> translate(
+       x = rightCompartmentLidX + rightCompartmentStep1Inset,
+       y = rightCompartmentLidY + rightCompartmentStep1Inset,
+       z = rightCompartmentLidBaseTopZ,
+       global = true,
+     )
+  |> appearance(color = "#b1763d", roughness = 76, metalness = 0)
+rightCompartmentStep1Back = clone(rightCompartmentStep1Front)
+  |> translate(y = rightCompartmentLidWidth - (2 * rightCompartmentStep1Inset) - rightCompartmentTerraceStepWidth, global = true)
+hiddenRightCompartmentStep1LongProfile = hide(rightCompartmentStep1LongProfile)
+
+rightCompartmentStep1SideProfile = sketch(on = XY) {
+  compStep1SideFront = line(start = [var 0mm, var 0mm], end = [var 7mm, var 0mm])
+  compStep1SideRight = line(start = [var 7mm, var 0mm], end = [var 7mm, var 115mm])
+  compStep1SideBack = line(start = [var 7mm, var 115mm], end = [var 0mm, var 115mm])
+  compStep1SideLeft = line(start = [var 0mm, var 115mm], end = [var 0mm, var 0mm])
+
+  coincident([
+    compStep1SideFront.end,
+    compStep1SideRight.start
+  ])
+  coincident([
+    compStep1SideRight.end,
+    compStep1SideBack.start
+  ])
+  coincident([
+    compStep1SideBack.end,
+    compStep1SideLeft.start
+  ])
+  coincident([
+    compStep1SideLeft.end,
+    compStep1SideFront.start
+  ])
+  coincident([compStep1SideFront.start, ORIGIN])
+  horizontal(compStep1SideFront)
+  vertical(compStep1SideRight)
+  horizontal(compStep1SideBack)
+  vertical(compStep1SideLeft)
+  distance([
+  compStep1SideFront.start,
+  compStep1SideFront.end
+]) == rightCompartmentTerraceStepWidth
+  distance([
+  compStep1SideRight.start,
+  compStep1SideRight.end
+]) == rightCompartmentStep1SideLength
+}
+
+rightCompartmentStep1Left = extrude(region(point = [2mm, 5mm], sketch = rightCompartmentStep1SideProfile), length = rightCompartmentStep1Height, method = NEW)
+  |> translate(
+       x = rightCompartmentLidX + rightCompartmentStep1Inset,
+       y = rightCompartmentLidY + rightCompartmentStep1Inset + rightCompartmentTerraceStepWidth,
+       z = rightCompartmentLidBaseTopZ,
+       global = true,
+     )
+  |> appearance(color = "#b1763d", roughness = 76, metalness = 0)
+rightCompartmentStep1Right = clone(rightCompartmentStep1Left)
+  |> translate(x = rightCompartmentLidLength - (2 * rightCompartmentStep1Inset) - rightCompartmentTerraceStepWidth, global = true)
+hiddenRightCompartmentStep1SideProfile = hide(rightCompartmentStep1SideProfile)
+
+rightCompartmentStep2LongProfile = sketch(on = XY) {
+  compStep2LongFront = line(start = [var 0mm, var 0mm], end = [var 565mm, var 0mm])
+  compStep2LongRight = line(start = [var 565mm, var 0mm], end = [var 565mm, var 7mm])
+  compStep2LongBack = line(start = [var 565mm, var 7mm], end = [var 0mm, var 7mm])
+  compStep2LongLeft = line(start = [var 0mm, var 7mm], end = [var 0mm, var 0mm])
+
+  coincident([
+    compStep2LongFront.end,
+    compStep2LongRight.start
+  ])
+  coincident([
+    compStep2LongRight.end,
+    compStep2LongBack.start
+  ])
+  coincident([
+    compStep2LongBack.end,
+    compStep2LongLeft.start
+  ])
+  coincident([
+    compStep2LongLeft.end,
+    compStep2LongFront.start
+  ])
+  coincident([compStep2LongFront.start, ORIGIN])
+  horizontal(compStep2LongFront)
+  vertical(compStep2LongRight)
+  horizontal(compStep2LongBack)
+  vertical(compStep2LongLeft)
+  distance([
+  compStep2LongFront.start,
+  compStep2LongFront.end
+]) == rightCompartmentStep2LongLength
+  distance([
+  compStep2LongRight.start,
+  compStep2LongRight.end
+]) == rightCompartmentTerraceStepWidth
+}
+
+rightCompartmentStep2Front = extrude(region(point = [5mm, 2mm], sketch = rightCompartmentStep2LongProfile), length = rightCompartmentStep2Height, method = NEW)
+  |> translate(
+       x = rightCompartmentLidX + rightCompartmentStep2Inset,
+       y = rightCompartmentLidY + rightCompartmentStep2Inset,
+       z = rightCompartmentLidBaseTopZ,
+       global = true,
+     )
+  |> appearance(color = "#a96936", roughness = 78, metalness = 0)
+rightCompartmentStep2Back = clone(rightCompartmentStep2Front)
+  |> translate(y = rightCompartmentLidWidth - (2 * rightCompartmentStep2Inset) - rightCompartmentTerraceStepWidth, global = true)
+hiddenRightCompartmentStep2LongProfile = hide(rightCompartmentStep2LongProfile)
+
+rightCompartmentStep2SideProfile = sketch(on = XY) {
+  compStep2SideFront = line(start = [var 0mm, var 0mm], end = [var 7mm, var 0mm])
+  compStep2SideRight = line(start = [var 7mm, var 0mm], end = [var 7mm, var 100mm])
+  compStep2SideBack = line(start = [var 7mm, var 100mm], end = [var 0mm, var 100mm])
+  compStep2SideLeft = line(start = [var 0mm, var 100mm], end = [var 0mm, var 0mm])
+
+  coincident([
+    compStep2SideFront.end,
+    compStep2SideRight.start
+  ])
+  coincident([
+    compStep2SideRight.end,
+    compStep2SideBack.start
+  ])
+  coincident([
+    compStep2SideBack.end,
+    compStep2SideLeft.start
+  ])
+  coincident([
+    compStep2SideLeft.end,
+    compStep2SideFront.start
+  ])
+  coincident([compStep2SideFront.start, ORIGIN])
+  horizontal(compStep2SideFront)
+  vertical(compStep2SideRight)
+  horizontal(compStep2SideBack)
+  vertical(compStep2SideLeft)
+  distance([
+  compStep2SideFront.start,
+  compStep2SideFront.end
+]) == rightCompartmentTerraceStepWidth
+  distance([
+  compStep2SideRight.start,
+  compStep2SideRight.end
+]) == rightCompartmentStep2SideLength
+}
+
+rightCompartmentStep2Left = extrude(region(point = [2mm, 5mm], sketch = rightCompartmentStep2SideProfile), length = rightCompartmentStep2Height, method = NEW)
+  |> translate(
+       x = rightCompartmentLidX + rightCompartmentStep2Inset,
+       y = rightCompartmentLidY + rightCompartmentStep2Inset + rightCompartmentTerraceStepWidth,
+       z = rightCompartmentLidBaseTopZ,
+       global = true,
+     )
+  |> appearance(color = "#a96936", roughness = 78, metalness = 0)
+rightCompartmentStep2Right = clone(rightCompartmentStep2Left)
+  |> translate(x = rightCompartmentLidLength - (2 * rightCompartmentStep2Inset) - rightCompartmentTerraceStepWidth, global = true)
+hiddenRightCompartmentStep2SideProfile = hide(rightCompartmentStep2SideProfile)
