@@ -40,7 +40,7 @@ secondBridgeStringBounds = [
   secondBridgeLastString
 ]
 secondBridgeYBounds = map(secondBridgeStringBounds, f = stringY)
-secondBridgeCenterX = firstBridgeCenterX + bridgeSpacingX
+secondBridgeCenterX = firstBridgeCenterX + 70mm
 secondBridgeYMin = secondBridgeYBounds[0] - bridgeEndMarginY
 secondBridgeYMax = secondBridgeYBounds[1] + bridgeEndMarginY
 secondBridgeLength = secondBridgeYMax - secondBridgeYMin
@@ -58,7 +58,7 @@ thirdBridgeStringBounds = [
   thirdBridgeLastString
 ]
 thirdBridgeYBounds = map(thirdBridgeStringBounds, f = stringY)
-thirdBridgeCenterX = secondBridgeCenterX + bridgeSpacingX
+thirdBridgeCenterX = secondBridgeCenterX + 100mm
 thirdBridgeYMin = thirdBridgeYBounds[0] - bridgeEndMarginY
 thirdBridgeYMax = thirdBridgeYBounds[1] + bridgeEndMarginY
 thirdBridgeLength = thirdBridgeYMax - thirdBridgeYMin
