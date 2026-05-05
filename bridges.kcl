@@ -1,15 +1,15 @@
 import * from "params.kcl"
 
-// Treble bridge for the top 6 courses / 12 strings.
+// Treble bridge for the top 9 courses / 18 strings.
 // Strings run along X and the top/back courses are the highest Y positions.
-trebleBridgeCourseCount = 6
+trebleBridgeCourseCount = 9
 trebleBridgeStringCount = trebleBridgeCourseCount * 2
 trebleBridgeFirstString = numStrings - trebleBridgeStringCount
 trebleBridgeLastString = numStrings - 1
 trebleBridgeEndMarginY = 4mm
 
 // Preserve the earlier musical placement: one third of the case length in from
-// the right end, with the bridge running directly under the top 6 courses.
+// the right end, with the bridge running directly under the top 9 courses.
 trebleBridgeCenterX = caseLength - (caseLength / 3)
 trebleBridgeYMin = stringY(trebleBridgeFirstString) - trebleBridgeEndMarginY
 trebleBridgeYMax = stringY(trebleBridgeLastString) + trebleBridgeEndMarginY
