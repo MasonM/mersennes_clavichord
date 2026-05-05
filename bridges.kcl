@@ -9,55 +9,55 @@ bridgeHeight = stringHeight - bridgeBaseZ
 bridgeCurveCenterOffset = -10.5mm
 bridgeWoodColor = "#8b552b"
 
-// Treble bridge for the top 9 courses / 18 strings.
-trebleBridgeCourseCount = 9
-trebleBridgeStringCount = trebleBridgeCourseCount * 2
-trebleBridgeFirstString = numStrings - trebleBridgeStringCount
-trebleBridgeLastString = numStrings - 1
-trebleBridgeStringBounds = [
-  trebleBridgeFirstString,
-  trebleBridgeLastString
+// First bridge for the top 9 courses / 18 strings.
+firstBridgeCourseCount = 9
+firstBridgeStringCount = firstBridgeCourseCount * 2
+firstBridgeFirstString = numStrings - firstBridgeStringCount
+firstBridgeLastString = numStrings - 1
+firstBridgeStringBounds = [
+  firstBridgeFirstString,
+  firstBridgeLastString
 ]
-trebleBridgeYBounds = map(trebleBridgeStringBounds, f = stringY)
+firstBridgeYBounds = map(firstBridgeStringBounds, f = stringY)
 
 // Preserve the earlier musical placement: one third of the case length in from
 // the right end, with the bridge running directly under the top 9 courses.
-trebleBridgeCenterX = caseLength - (caseLength / 3)
-trebleBridgeYMin = trebleBridgeYBounds[0] - bridgeEndMarginY
-trebleBridgeYMax = trebleBridgeYBounds[1] + bridgeEndMarginY
-trebleBridgeLength = trebleBridgeYMax - trebleBridgeYMin
+firstBridgeCenterX = caseLength - (caseLength / 3)
+firstBridgeYMin = firstBridgeYBounds[0] - bridgeEndMarginY
+firstBridgeYMax = firstBridgeYBounds[1] + bridgeEndMarginY
+firstBridgeLength = firstBridgeYMax - firstBridgeYMin
 
 // Second bridge for the next 3 courses / 6 strings immediately before the
-// treble-bridge string group.
+// first-bridge string group.
 secondBridgeCourseCount = 3
 secondBridgeStringCount = secondBridgeCourseCount * 2
-secondBridgeFirstString = trebleBridgeFirstString - secondBridgeStringCount
-secondBridgeLastString = trebleBridgeFirstString - 1
+secondBridgeFirstString = firstBridgeFirstString - secondBridgeStringCount
+secondBridgeLastString = firstBridgeFirstString - 1
 secondBridgeStringBounds = [
   secondBridgeFirstString,
   secondBridgeLastString
 ]
 secondBridgeYBounds = map(secondBridgeStringBounds, f = stringY)
-secondBridgeCenterX = trebleBridgeCenterX + 50mm
+secondBridgeCenterX = firstBridgeCenterX + 50mm
 secondBridgeYMin = secondBridgeYBounds[0] - bridgeEndMarginY
 secondBridgeYMax = secondBridgeYBounds[1] + bridgeEndMarginY
 secondBridgeLength = secondBridgeYMax - secondBridgeYMin
-secondBridgeLengthScale = secondBridgeLength / trebleBridgeLength
-secondBridgeTranslateY = secondBridgeYMin - (trebleBridgeYMin * secondBridgeLengthScale)
+secondBridgeLengthScale = secondBridgeLength / firstBridgeLength
+secondBridgeTranslateY = secondBridgeYMin - (firstBridgeYMin * secondBridgeLengthScale)
 
 // Local sketch X is bridge length along global Y. Local sketch Y is height Z.
 // The extrusion normal is global X, producing the small bridge depth.
-trebleBridgeProfilePlane = {
+firstBridgeProfilePlane = {
   origin = [
-    trebleBridgeCenterX - (bridgeDepth / 2),
-    trebleBridgeYMin,
+    firstBridgeCenterX - (bridgeDepth / 2),
+    firstBridgeYMin,
     bridgeBaseZ
   ],
   xAxis = [0, 1, 0],
   yAxis = [0, 0, 1]
 }
 
-trebleBridgeProfile = sketch(on = trebleBridgeProfilePlane) {
+firstBridgeProfile = sketch(on = firstBridgeProfilePlane) {
   bridgeTop = line(start = [var 0mm, var 20mm], end = [var 44mm, var 20mm])
   bridgeRightCurve = arc(start = [var 44mm, var 20mm], end = [var 44mm, var 0mm], center = [var 54.5mm, var 10mm])
   bridgeBottom = line(start = [var 44mm, var 0mm], end = [var 0mm, var 0mm])
@@ -81,11 +81,11 @@ trebleBridgeProfile = sketch(on = trebleBridgeProfilePlane) {
   ])
   coincident([
     bridgeTop.end,
-    [trebleBridgeLength, bridgeHeight]
+    [firstBridgeLength, bridgeHeight]
   ])
   coincident([
     bridgeBottom.start,
-    [trebleBridgeLength, 0mm]
+    [firstBridgeLength, 0mm]
   ])
   coincident([
     bridgeLeftCurve.center,
@@ -97,40 +97,40 @@ trebleBridgeProfile = sketch(on = trebleBridgeProfilePlane) {
   coincident([
     bridgeRightCurve.center,
     [
-      trebleBridgeLength - bridgeCurveCenterOffset,
+      firstBridgeLength - bridgeCurveCenterOffset,
       bridgeHeight / 2
     ]
   ])
 
   horizontal(bridgeTop)
   horizontal(bridgeBottom)
-  distance([bridgeTop.start, bridgeTop.end]) == trebleBridgeLength
-  distance([bridgeBottom.start, bridgeBottom.end]) == trebleBridgeLength
+  distance([bridgeTop.start, bridgeTop.end]) == firstBridgeLength
+  distance([bridgeBottom.start, bridgeBottom.end]) == firstBridgeLength
 }
 
-trebleBridge = extrude(
+firstBridge = extrude(
   region(
     point = [
-      trebleBridgeLength / 2,
+      firstBridgeLength / 2,
       bridgeHeight / 2
     ],
-    sketch = trebleBridgeProfile,
+    sketch = firstBridgeProfile,
   ),
   length = bridgeDepth,
   method = NEW,
 )
   |> appearance(color = bridgeWoodColor, roughness = 78, metalness = 0)
 
-// Reuse the treble bridge geometry rather than duplicating the profile.  The
+// Reuse the first bridge geometry rather than duplicating the profile.  The
 // clone is scaled only in global Y so its top spans exactly the next 6 strings,
-// then shifted 50 mm to the right with the same Z as the treble bridge.
-secondBridge = clone(trebleBridge)
+// then shifted 50 mm to the right with the same Z as the first bridge.
+secondBridge = clone(firstBridge)
   |> scale(y = secondBridgeLengthScale, global = true)
   |> translate(
-       x = secondBridgeCenterX - trebleBridgeCenterX,
+       x = secondBridgeCenterX - firstBridgeCenterX,
        y = secondBridgeTranslateY,
        z = 0mm,
        global = true,
      )
 
-hiddenTrebleBridgeProfile = hide(trebleBridgeProfile)
+hiddenFirstBridgeProfile = hide(firstBridgeProfile)
