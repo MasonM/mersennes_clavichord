@@ -1,100 +1,103 @@
 import * from "params.kcl"
 
 // Treble bridge for the top 6 courses / 12 strings.
-// This is the same section produced by taking a rectangular bridge blank and
-// subtracting one Y-running cylinder from each side: wider at the base, narrower
-// at the top, and flat/straight for the full string-support length along Y.
-trebleBridgeStringCount = 12
+// Strings run along X and the top/back courses are the highest Y positions.
+trebleBridgeCourseCount = 6
+trebleBridgeStringCount = trebleBridgeCourseCount * 2
 trebleBridgeFirstString = numStrings - trebleBridgeStringCount
 trebleBridgeLastString = numStrings - 1
-trebleBridgeEndMarginY = 8mm
+trebleBridgeEndMarginY = 4mm
 
+// Preserve the earlier musical placement: one third of the case length in from
+// the right end, with the bridge running directly under the top 6 courses.
 trebleBridgeCenterX = caseLength - (caseLength / 3)
 trebleBridgeYMin = stringY(trebleBridgeFirstString) - trebleBridgeEndMarginY
 trebleBridgeYMax = stringY(trebleBridgeLastString) + trebleBridgeEndMarginY
 trebleBridgeLength = trebleBridgeYMax - trebleBridgeYMin
 
-trebleBridgeBaseHalfWidth = 9mm
-trebleBridgeTopHalfWidth = 4.5mm
-trebleBridgeWidth = 2 * trebleBridgeBaseHalfWidth
-trebleBridgeTopWidth = 2 * trebleBridgeTopHalfWidth
-trebleBridgeHeight = 20mm
+trebleBridgeDepth = 3mm
 trebleBridgeBaseZ = soundboardStart[2] + soundboardHeight
+trebleBridgeHeight = stringHeight - trebleBridgeBaseZ
 
-// Explicit circle dimension for the side arcs. This matches a 20 mm high blank,
-// 18 mm base width, and 9 mm flat top width.
-trebleBridgeSideCutterCenterOffsetX = 51.194444mm
+// This upright outline is the 2D result of taking a flat rectangle and punching
+// circular bites from the two side edges. The top remains flat and full length.
+trebleBridgeSideInset = 4mm
+trebleBridgeCurveCenterOffset = -10.5mm
 
-// XZ bridge section plane. Its normal points along -Y, so the section extrudes
-// from the high-Y end back to the low-Y end of the top-12-string group.
-trebleBridgeSectionPlane = {
+// Local sketch X is bridge length along global Y. Local sketch Y is height Z.
+// The extrusion normal is global X, producing the small 3 mm bridge depth.
+trebleBridgeProfilePlane = {
   origin = [
-    trebleBridgeCenterX,
-    trebleBridgeYMax,
+    trebleBridgeCenterX - (trebleBridgeDepth / 2),
+    trebleBridgeYMin,
     trebleBridgeBaseZ
   ],
-  xAxis = [1, 0, 0],
+  xAxis = [0, 1, 0],
   yAxis = [0, 0, 1]
 }
 
-trebleBridgeSection = sketch(on = trebleBridgeSectionPlane) {
-  bridgeBottom = line(start = [var -9mm, var 0mm], end = [var 9mm, var 0mm])
-  bridgeRightSide = arc(start = [var 4.5mm, var 20mm], end = [var 9mm, var 0mm], center = [var 51.194444mm, var 20mm])
-  bridgeTop = line(start = [var 4.5mm, var 20mm], end = [var -4.5mm, var 20mm])
-  bridgeLeftSide = arc(start = [var -9mm, var 0mm], end = [var -4.5mm, var 20mm], center = [var -51.194444mm, var 20mm])
+trebleBridgeProfile = sketch(on = trebleBridgeProfilePlane) {
+  bridgeTop = line(start = [var 0mm, var 20mm], end = [var 44mm, var 20mm])
+  bridgeRightCurve = arc(start = [var 44mm, var 20mm], end = [var 44mm, var 0mm], center = [var 54.5mm, var 10mm])
+  bridgeBottom = line(start = [var 44mm, var 0mm], end = [var 0mm, var 0mm])
+  bridgeLeftCurve = arc(start = [var 0mm, var 0mm], end = [var 0mm, var 20mm], center = [var -10.5mm, var 10mm])
 
-  coincident([bridgeBottom.end, bridgeRightSide.end])
-  coincident([bridgeRightSide.start, bridgeTop.start])
-  coincident([bridgeTop.end, bridgeLeftSide.end])
+  coincident([bridgeTop.end, bridgeRightCurve.start])
   coincident([
-    bridgeLeftSide.start,
+    bridgeRightCurve.end,
     bridgeBottom.start
-  ])
-
-  coincident([
-    bridgeBottom.start,
-    [-trebleBridgeBaseHalfWidth, 0mm]
   ])
   coincident([
     bridgeBottom.end,
-    [trebleBridgeBaseHalfWidth, 0mm]
+    bridgeLeftCurve.start
   ])
+  coincident([bridgeLeftCurve.end, bridgeTop.start])
+  coincident([bridgeBottom.end, ORIGIN])
+
   coincident([
     bridgeTop.start,
-    [
-      trebleBridgeTopHalfWidth,
-      trebleBridgeHeight
-    ]
+    [0mm, trebleBridgeHeight]
   ])
   coincident([
     bridgeTop.end,
+    [trebleBridgeLength, trebleBridgeHeight]
+  ])
+  coincident([
+    bridgeBottom.start,
+    [trebleBridgeLength, 0mm]
+  ])
+  coincident([
+    bridgeLeftCurve.center,
     [
-      -trebleBridgeTopHalfWidth,
-      trebleBridgeHeight
+      trebleBridgeCurveCenterOffset,
+      trebleBridgeHeight / 2
     ]
   ])
   coincident([
-    bridgeRightSide.center,
+    bridgeRightCurve.center,
     [
-      trebleBridgeSideCutterCenterOffsetX,
-      trebleBridgeHeight
-    ]
-  ])
-  coincident([
-    bridgeLeftSide.center,
-    [
-      -trebleBridgeSideCutterCenterOffsetX,
-      trebleBridgeHeight
+      trebleBridgeLength - trebleBridgeCurveCenterOffset,
+      trebleBridgeHeight / 2
     ]
   ])
 
-  horizontal(bridgeBottom)
   horizontal(bridgeTop)
-  distance([bridgeBottom.start, bridgeBottom.end]) == trebleBridgeWidth
-  distance([bridgeTop.start, bridgeTop.end]) == trebleBridgeTopWidth
+  horizontal(bridgeBottom)
+  distance([bridgeTop.start, bridgeTop.end]) == trebleBridgeLength
+  distance([bridgeBottom.start, bridgeBottom.end]) == trebleBridgeLength
 }
 
-trebleBridge = extrude(region(point = [0mm, 8mm], sketch = trebleBridgeSection), length = trebleBridgeLength, method = NEW)
+trebleBridge = extrude(
+  region(
+    point = [
+      trebleBridgeLength / 2,
+      trebleBridgeHeight / 2
+    ],
+    sketch = trebleBridgeProfile,
+  ),
+  length = trebleBridgeDepth,
+  method = NEW,
+)
   |> appearance(color = "#8b552b", roughness = 78, metalness = 0)
 
-hiddenTrebleBridgeSection = hide(trebleBridgeSection)
+hiddenTrebleBridgeProfile = hide(trebleBridgeProfile)

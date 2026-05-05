@@ -1,5 +1,6 @@
 import * from "params.kcl"
 import * from "utils.kcl"
+
 // Balance bar under the rear of the keyboard/key levers. It spans the full
 // keywell length and butts into the lower/front side of the belly rail at the
 // right end of the keywell.
@@ -11,7 +12,7 @@ balanceBarStartY = keywellWidth
 balanceBarStartZ = keyBaseZ - balanceBarHeight - naturalKeyHeight - 5mm
 balanceBarWoodColor = "#7a4b24"
 
-cube([
+balanceBar = cube([
   balanceBarLength,
   balanceBarWidth,
   balanceBarHeight

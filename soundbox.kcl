@@ -187,5 +187,3 @@ bellyRailCutouts = [
 bellyRail = subtract([bellyRailBlank], tools = bellyRailCutouts)
   |> appearance(color = "#7a4b24", roughness = 78, metalness = 0)
 hiddenPrototypeBellyRailCutout = hide([prototypeBellyRailCutout])
-hiddenBellyRailCutouts = hide(bellyRailCutouts)
-hiddenBellyRailBlank = hide([bellyRailBlank])
