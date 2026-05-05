@@ -6,9 +6,9 @@ import * from "utils.kcl"
 // right end of the keywell.
 balanceBarLength = keywellLength + 50mm
 balanceBarWidth = 30mm
-balanceBarHeight = 20mm
+balanceBarHeight = 40mm
 balanceBarStartX = soundboardStart[0] - balanceBarLength
-balanceBarStartY = keywellWidth
+balanceBarStartY = keywellWidth + wallThickness
 balanceBarStartZ = keyBaseZ - balanceBarHeight - naturalKeyHeight - 5mm
 balanceBarWoodColor = "#7a4b24"
 
