@@ -12,5 +12,5 @@ import "soundbox.kcl" as soundbox
 
 // The following are really slow to render. Comment them out when iterating on other modules.
 import "strings.kcl" as strings
-// import "keyboard.kcl" as keyboard
-// import "rack.kcl" as rack
+import "keyboard.kcl" as keyboard
+import "rack.kcl" as rack

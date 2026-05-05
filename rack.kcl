@@ -3,38 +3,24 @@ import * from "temperament.kcl"
 
 rackHeight = soundboardStart[2] + soundboardHeight
 slotWidth = 3mm
-slotDepth = 50mm
+slotDepth = 11mm
 slotCutHeight = 50mm
 rackKeyIndices = [0..<numKeys]
+rackFrontKinkX = soundboardStart[0] / 2
+rackFrontKinkY = rackBackY - 66mm
+rackFrontTipX = soundboardStart[0]
+rackFrontTipY = rackBackY - 12mm
+rackFrontLowerX = wallThickness + 100mm
+rackFrontLowerY = keywellWidth + 100mm
 
 rackProfile = sketch(on = XY) {
   leftToTop = line(start = [wallThickness, keywellWidth], end = [wallThickness, rackBackY])
-  topToSoundboard = line(start = [wallThickness, rackBackY], end = [soundboardStart[0], rackBackY])
-  soundboardToMiddle = line(
-    start = [soundboardStart[0], rackBackY],
-    end = [
-      soundboardStart[0] / 2,
-      rackBackY - 60mm
-    ],
-  )
-  middleToRightEdge = line(
-    start = [
-      soundboardStart[0] / 2,
-      rackBackY - 60mm
-    ],
-    end = [
-      wallThickness + 100mm,
-      keywellWidth + 100mm
-    ],
-  )
-  middleToBottom = line(
-    start = [
-      wallThickness + 100mm,
-      keywellWidth + 100mm
-    ],
-    end = [wallThickness + 100mm, keywellWidth],
-  )
-  bottomToLeft = line(start = [wallThickness + 100mm, keywellWidth], end = [wallThickness, keywellWidth])
+  topToSoundboard = line(start = [wallThickness, rackBackY], end = [rackFrontTipX, rackBackY])
+  tipDrop = line(start = [rackFrontTipX, rackBackY], end = [rackFrontTipX, rackFrontTipY])
+  tipToMiddle = line(start = [rackFrontTipX, rackFrontTipY], end = [rackFrontKinkX, rackFrontKinkY])
+  middleToRightEdge = line(start = [rackFrontKinkX, rackFrontKinkY], end = [rackFrontLowerX, rackFrontLowerY])
+  middleToBottom = line(start = [rackFrontLowerX, rackFrontLowerY], end = [rackFrontLowerX, keywellWidth])
+  bottomToLeft = line(start = [rackFrontLowerX, keywellWidth], end = [wallThickness, keywellWidth])
 }
 
 rackBlank = extrude(region(point = [20mm, keywellWidth + 20mm], sketch = rackProfile), length = rackHeight, method = NEW)
