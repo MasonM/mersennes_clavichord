@@ -1,7 +1,9 @@
+// Conversion between Paris inches and millimeters
 // https://en.wikipedia.org/wiki/Paris_inch
 export pouce = 27.069mm
 export ligne = 1 / 12 * pouce
 
+// OpenSCAD-inspired cube() function to simplify creating cubes
 export fn cube(@size) {
   sketch001 = sketch(on = XY) {
     line1 = line(start = [var 0mm, var 0mm], end = [var 3.08mm, var 0mm])
