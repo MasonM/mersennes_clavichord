@@ -37,12 +37,14 @@ export fn meantoneFrequencyForKey(@keyIdx) {
 // Fit the sounding-length layout to the existing rack: the lowest C uses the
 // deepest/bass part of the rack and c3 uses the shallow treble end. Because the
 // compass spans four octaves, c3 is 1/16 the sounding length of low C.
+export rackBackY = caseWidth - wallThickness
 export rackBassCutoutX = toolboxLength + wallThickness + 18mm
 export rackTrebleCutoutX = soundboardStart[0] - 54mm
 export rackCutoutXSpan = rackTrebleCutoutX - rackBassCutoutX
 export lowCSoundingLength = rackCutoutXSpan * 16 / 15
 export c3SoundingLength = lowCSoundingLength / 16
 export referenceA1SoundingLength = lowCSoundingLength / referenceA1PitchRatio
+export rackSoundingLengthAnchorX = rackBassCutoutX + lowCSoundingLength
 
 export fn soundingLengthForKey(@keyIdx) {
   return referenceA1SoundingLength * referencePitchA1 / meantoneFrequencyForKey(keyIdx)
@@ -52,19 +54,84 @@ export fn soundingLengthProgressForKey(@keyIdx) {
   return (lowCSoundingLength - soundingLengthForKey(keyIdx)) / (lowCSoundingLength - c3SoundingLength)
 }
 
-export rackBackY = caseWidth - wallThickness
-export slotPitchX = rackCutoutXSpan / (numKeys - 1)
-export slotBassY = keywellWidth + 145mm
-export slotTrebleY = rackBackY - 4mm
+// Shared rack front/lower edge definition. The rack profile and the slot
+// placement functions both consume these values so the slots remain registered
+// to the edge as the rack dimensions change.
+export rackFrontLowerX = wallThickness + 100mm
+export rackFrontLowerY = keywellWidth + 100mm
+export rackFrontKinkX = soundboardStart[0] / 2
+export rackFrontKinkY = rackBackY - 66mm
+export rackFrontTipX = soundboardStart[0]
+export rackFrontTipY = rackBackY - 12mm
 
-// Rack slot X follows the physical key order across the keywell.
-export fn slotXForKey(@keyIdx) {
-  return rackBassCutoutX + keyIdx * slotPitchX
+// Circle through the lower, kink, and treble tip points. This gives one smooth
+// curved lower/front edge for the rack, and the slot functions evaluate this
+// same curve instead of duplicating separate line-segment math.
+export rackLowerEdgeLowerSquare = rackFrontLowerX ^ 2 + rackFrontLowerY ^ 2
+export rackLowerEdgeKinkSquare = rackFrontKinkX ^ 2 + rackFrontKinkY ^ 2
+export rackLowerEdgeTipSquare = rackFrontTipX ^ 2 + rackFrontTipY ^ 2
+export rackLowerEdgeCircleD = 2 * (rackFrontLowerX * (rackFrontKinkY - rackFrontTipY) + rackFrontKinkX * (rackFrontTipY - rackFrontLowerY) + rackFrontTipX * (rackFrontLowerY - rackFrontKinkY))
+export rackLowerEdgeArcCenterX = ((rackLowerEdgeLowerSquare * (rackFrontKinkY - rackFrontTipY) + rackLowerEdgeKinkSquare * (rackFrontTipY - rackFrontLowerY) + rackLowerEdgeTipSquare * (rackFrontLowerY - rackFrontKinkY)) / rackLowerEdgeCircleD): mm
+export rackLowerEdgeArcCenterY = ((rackLowerEdgeLowerSquare * (rackFrontTipX - rackFrontKinkX) + rackLowerEdgeKinkSquare * (rackFrontLowerX - rackFrontTipX) + rackLowerEdgeTipSquare * (rackFrontKinkX - rackFrontLowerX)) / rackLowerEdgeCircleD): mm
+export rackLowerEdgeArcRadius = sqrt((rackFrontLowerX - rackLowerEdgeArcCenterX) ^ 2 + (rackFrontLowerY - rackLowerEdgeArcCenterY) ^ 2): mm
+
+export fn rackLowerEdgeYAtX(@x) {
+  xFromCenter = x - rackLowerEdgeArcCenterX
+  return (rackLowerEdgeArcCenterY + sqrt(rackLowerEdgeArcRadius ^ 2 - (xFromCenter ^ 2))): mm
 }
 
-// Rack slot Y is driven by the calculated sounding length for this key:
-// low/long-sounding notes sit lower/frontward on the rack, while the short
-// treble lengths climb toward the back edge.
+// Inward is the normal from the circular edge center toward the rack interior.
+// Tangent is perpendicular to that normal and is used as the slot-width axis.
+export fn rackLowerEdgeNormalXAtX(@x) {
+  return (x - rackLowerEdgeArcCenterX) / rackLowerEdgeArcRadius
+}
+
+export fn rackLowerEdgeNormalYAtX(@x) {
+  return (rackLowerEdgeYAtX(x) - rackLowerEdgeArcCenterY) / rackLowerEdgeArcRadius
+}
+
+export fn rackLowerEdgeTangentXAtX(@x) {
+  return rackLowerEdgeNormalYAtX(x)
+}
+
+export fn rackLowerEdgeTangentYAtX(@x) {
+  return 0 - rackLowerEdgeNormalXAtX(x)
+}
+
+// Rotation for a slot whose local +Y axis is its cut-depth direction.
+export fn rackLowerEdgeSlotAngleAtX(@x) {
+  edgeY = rackLowerEdgeYAtX(x)
+  return atan2(y = rackLowerEdgeArcCenterX - x, x = edgeY - rackLowerEdgeArcCenterY)
+}
+
+// Rack slot X is driven directly by the calculated speaking/sounding length.
+// Long bass notes sit at rackBassCutoutX; shorter treble notes move right as
+// their sounding length decreases.
+export fn slotXForKey(@keyIdx) {
+  return rackSoundingLengthAnchorX - soundingLengthForKey(keyIdx)
+}
+
+// Rack slot Y is the curved lower/front edge of the rack at the corresponding X.
 export fn slotYForKey(@keyIdx) {
-  return slotBassY + soundingLengthProgressForKey(keyIdx) * (slotTrebleY - slotBassY)
+  return rackLowerEdgeYAtX(slotXForKey(keyIdx))
+}
+
+export fn slotNormalXForKey(@keyIdx) {
+  return rackLowerEdgeNormalXAtX(slotXForKey(keyIdx))
+}
+
+export fn slotNormalYForKey(@keyIdx) {
+  return rackLowerEdgeNormalYAtX(slotXForKey(keyIdx))
+}
+
+export fn slotTangentXForKey(@keyIdx) {
+  return rackLowerEdgeTangentXAtX(slotXForKey(keyIdx))
+}
+
+export fn slotTangentYForKey(@keyIdx) {
+  return rackLowerEdgeTangentYAtX(slotXForKey(keyIdx))
+}
+
+export fn slotAngleForKey(@keyIdx) {
+  return rackLowerEdgeSlotAngleAtX(slotXForKey(keyIdx))
 }
