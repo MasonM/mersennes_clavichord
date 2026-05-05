@@ -1,6 +1,6 @@
 import * from "params.kcl"
 
-// Three bridge family members for the upper string courses.
+// Four bridge family members for the upper/middle string courses.
 // Strings run along X and Y increases toward the top/back edge of the case.
 bridgeEndMarginY = 4mm
 bridgeDepth = 3mm
@@ -8,8 +8,7 @@ bridgeBaseZ = soundboardStart[2] + soundboardHeight
 bridgeHeight = stringHeight - bridgeBaseZ
 bridgeCurveCenterOffset = -10.5mm
 bridgeWoodColor = "#8b552b"
-bridgeSpacingX = 50mm
-bridgeCourseCounts = [9, 3, 8]
+bridgeCourseCounts = [9, 3, 8, 9]
 
 // First bridge for the top 9 courses / 18 strings.
 firstBridgeCourseCount = bridgeCourseCounts[0]
@@ -65,6 +64,24 @@ thirdBridgeLength = thirdBridgeYMax - thirdBridgeYMin
 thirdBridgeLengthScale = thirdBridgeLength / firstBridgeLength
 thirdBridgeTranslateY = thirdBridgeYMin - (firstBridgeYMin * thirdBridgeLengthScale)
 
+// Fourth bridge for the next 9 courses / 18 strings immediately before the
+// third-bridge string group.
+fourthBridgeCourseCount = bridgeCourseCounts[3]
+fourthBridgeStringCount = fourthBridgeCourseCount * 2
+fourthBridgeFirstString = thirdBridgeFirstString - fourthBridgeStringCount
+fourthBridgeLastString = thirdBridgeFirstString - 1
+fourthBridgeStringBounds = [
+  fourthBridgeFirstString,
+  fourthBridgeLastString
+]
+fourthBridgeYBounds = map(fourthBridgeStringBounds, f = stringY)
+fourthBridgeCenterX = thirdBridgeCenterX + 100mm
+fourthBridgeYMin = fourthBridgeYBounds[0] - bridgeEndMarginY
+fourthBridgeYMax = fourthBridgeYBounds[1] + bridgeEndMarginY
+fourthBridgeLength = fourthBridgeYMax - fourthBridgeYMin
+fourthBridgeLengthScale = fourthBridgeLength / firstBridgeLength
+fourthBridgeTranslateY = fourthBridgeYMin - (firstBridgeYMin * fourthBridgeLengthScale)
+
 // Local sketch X is bridge length along global Y. Local sketch Y is height Z.
 // The extrusion normal is global X, producing the small bridge depth.
 firstBridgeProfilePlane = {
@@ -95,10 +112,7 @@ firstBridgeProfile = sketch(on = firstBridgeProfilePlane) {
   coincident([bridgeLeftCurve.end, bridgeTop.start])
   coincident([bridgeBottom.end, ORIGIN])
 
-  coincident([
-    bridgeTop.start,
-    [0mm, bridgeHeight]
-  ])
+  coincident([bridgeTop.start, [0mm, bridgeHeight]])
   coincident([
     bridgeTop.end,
     [firstBridgeLength, bridgeHeight]
@@ -158,6 +172,15 @@ thirdBridge = clone(firstBridge)
   |> translate(
        x = thirdBridgeCenterX - firstBridgeCenterX,
        y = thirdBridgeTranslateY,
+       z = 0mm,
+       global = true,
+     )
+
+fourthBridge = clone(firstBridge)
+  |> scale(y = fourthBridgeLengthScale, global = true)
+  |> translate(
+       x = fourthBridgeCenterX - firstBridgeCenterX,
+       y = fourthBridgeTranslateY,
        z = 0mm,
        global = true,
      )
