@@ -11,11 +11,10 @@ balanceBarStartY = keywellWidth
 balanceBarStartZ = keyBaseZ - balanceBarHeight - naturalKeyHeight - 5mm
 balanceBarWoodColor = "#7a4b24"
 
-
-cube([balanceBarLength, balanceBarWidth, balanceBarHeight])
-  |> translate(
-       x = balanceBarStartX,
-       y = balanceBarStartY,
-       z = balanceBarStartZ,
-     )
+cube([
+  balanceBarLength,
+  balanceBarWidth,
+  balanceBarHeight
+])
+  |> translate(x = balanceBarStartX, y = balanceBarStartY, z = balanceBarStartZ)
   |> appearance(color = balanceBarWoodColor, roughness = 78, metalness = 0)

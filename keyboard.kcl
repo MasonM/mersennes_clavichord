@@ -158,7 +158,7 @@ hiddenPrototypeKeys = hide([
 ])
 
 // Key levers are all coplanar: every lever starts at the natural key base Z and
-// extrudes to naturalKeyHeight. Accidental levers now start at the rear of their
+// extrudes to naturalKeyHeight. Accidental levers start at the rear of their
 // accidental keys. Natural-key lever bases are narrowed only where adjacent
 // accidentals occupy half of the neighboring key edge.
 keyLeverIndices = [0..<numKeys]
@@ -174,6 +174,15 @@ keyLeverAllNarrowY = keyLeverStartY + keyLeverTaperRun + 12mm
 keyLeverBendRun = 20mm
 keyLeverBendY = keyLeverAllNarrowY + keyLeverBendRun
 keyLeverColor = "#8b5a2b"
+
+// Rack tongue dimensions mirror the slots in rack.kcl with clearance.
+// rack.kcl uses a 3 mm wide, 50 mm deep slot; the tongue stays slightly
+// narrower and the wider shoulder stops outside the slot.
+rackTongueSlotWidth = 3mm
+rackTongueSideClearance = 0.35mm
+rackTongueWidth = rackTongueSlotWidth - (2 * rackTongueSideClearance)
+rackTongueLength = 50mm
+rackTongueShoulderRun = 8mm
 
 // One-octave patterns keep the lever layout formula-driven across the compass.
 // Chromatic pitch classes: C, C#, D, Eb, E, F, F#, G, G#, A, Bb, B.
@@ -235,9 +244,13 @@ fn makeKeyLever(@keyIdx) {
     rightTaperSide = line(start = [var 22mm, var 0mm], end = [var 8mm, var 16mm])
     rightHoldSide = line(start = [var 8mm, var 16mm], end = [var 8mm, var 36mm])
     rightBendSide = line(start = [var 8mm, var 36mm], end = [var 12mm, var 56mm])
-    rightStraightSide = line(start = [var 12mm, var 56mm], end = [var 12mm, var 140mm])
-    endFace = line(start = [var 12mm, var 140mm], end = [var 0mm, var 140mm])
-    leftStraightSide = line(start = [var 0mm, var 140mm], end = [var 0mm, var 56mm])
+    rightStraightSide = line(start = [var 12mm, var 56mm], end = [var 12mm, var 108mm])
+    rightTongueShoulder = line(start = [var 12mm, var 108mm], end = [var 2mm, var 116mm])
+    rightTongueSide = line(start = [var 2mm, var 116mm], end = [var 2mm, var 160mm])
+    endFace = line(start = [var 2mm, var 160mm], end = [var 0mm, var 160mm])
+    leftTongueSide = line(start = [var 0mm, var 160mm], end = [var 0mm, var 116mm])
+    leftTongueShoulder = line(start = [var 0mm, var 116mm], end = [var 0mm, var 108mm])
+    leftStraightSide = line(start = [var 0mm, var 108mm], end = [var 0mm, var 56mm])
     leftBendSide = line(start = [var 0mm, var 56mm], end = [var 0mm, var 36mm])
     leftHoldSide = line(start = [var 0mm, var 36mm], end = [var 0mm, var 16mm])
     leftTaperSide = line(start = [var 0mm, var 16mm], end = [var 0mm, var 0mm])
@@ -252,8 +265,24 @@ fn makeKeyLever(@keyIdx) {
       rightBendSide.end,
       rightStraightSide.start
     ])
-    coincident([rightStraightSide.end, endFace.start])
-    coincident([endFace.end, leftStraightSide.start])
+    coincident([
+      rightStraightSide.end,
+      rightTongueShoulder.start
+    ])
+    coincident([
+      rightTongueShoulder.end,
+      rightTongueSide.start
+    ])
+    coincident([rightTongueSide.end, endFace.start])
+    coincident([endFace.end, leftTongueSide.start])
+    coincident([
+      leftTongueSide.end,
+      leftTongueShoulder.start
+    ])
+    coincident([
+      leftTongueShoulder.end,
+      leftStraightSide.start
+    ])
     coincident([
       leftStraightSide.end,
       leftBendSide.start
@@ -301,14 +330,42 @@ fn makeKeyLever(@keyIdx) {
       rightStraightSide.end,
       [
         slotXForKey(keyIdx) + keyLeverRearWidthForKey(keyIdx) / 2,
+        slotYForKey(keyIdx) - rackTongueLength - rackTongueShoulderRun
+      ]
+    ])
+    coincident([
+      rightTongueShoulder.end,
+      [
+        slotXForKey(keyIdx) + rackTongueWidth / 2,
+        slotYForKey(keyIdx) - rackTongueLength
+      ]
+    ])
+    coincident([
+      rightTongueSide.end,
+      [
+        slotXForKey(keyIdx) + rackTongueWidth / 2,
         slotYForKey(keyIdx)
       ]
     ])
     coincident([
       endFace.end,
       [
-        slotXForKey(keyIdx) - (keyLeverRearWidthForKey(keyIdx) / 2),
+        slotXForKey(keyIdx) - (rackTongueWidth / 2),
         slotYForKey(keyIdx)
+      ]
+    ])
+    coincident([
+      leftTongueSide.end,
+      [
+        slotXForKey(keyIdx) - (rackTongueWidth / 2),
+        slotYForKey(keyIdx) - rackTongueLength
+      ]
+    ])
+    coincident([
+      leftTongueShoulder.end,
+      [
+        slotXForKey(keyIdx) - (keyLeverRearWidthForKey(keyIdx) / 2),
+        slotYForKey(keyIdx) - rackTongueLength - rackTongueShoulderRun
       ]
     ])
     coincident([
@@ -337,10 +394,12 @@ fn makeKeyLever(@keyIdx) {
     horizontal(endFace)
     vertical(rightHoldSide)
     vertical(rightStraightSide)
+    vertical(rightTongueSide)
+    vertical(leftTongueSide)
     vertical(leftStraightSide)
     vertical(leftHoldSide)
     distance([startFace.start, startFace.end]) == keyLeverBottomWidthForKey(keyIdx)
-    distance([endFace.start, endFace.end]) == keyLeverRearWidthForKey(keyIdx)
+    distance([endFace.start, endFace.end]) == rackTongueWidth
   }
 
   hiddenKeyLeverFootprint = hide(keyLeverFootprint)
