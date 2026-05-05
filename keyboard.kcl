@@ -175,14 +175,16 @@ keyLeverBendRun = 20mm
 keyLeverBendY = keyLeverAllNarrowY + keyLeverBendRun
 keyLeverColor = "#8b5a2b"
 
-// Rack tongue dimensions mirror the slots in rack.kcl with clearance.
-// rack.kcl uses a 3 mm wide, 50 mm deep slot; the tongue stays slightly
-// narrower and the wider shoulder stops outside the slot.
+// Rack tongue dimensions mirror the slots in rack.kcl with clearance. The tongue
+// stays short, but it is now positioned at the slot end: its rear tip stops about
+// 3 mm before slotYForKey(), so it actually lies inside the corresponding slot
+// along the Y axis while leaving tangent room.
 rackTongueSlotWidth = 3mm
 rackTongueSideClearance = 0.35mm
 rackTongueWidth = rackTongueSlotWidth - (2 * rackTongueSideClearance)
-rackTongueLength = 50mm
-rackTongueShoulderRun = 8mm
+rackTongueInsetDepth = 7mm
+rackTongueShoulderRun = 3mm
+rackTongueEndClearance = 3mm
 
 // One-octave patterns keep the lever layout formula-driven across the compass.
 // Chromatic pitch classes: C, C#, D, Eb, E, F, F#, G, G#, A, Bb, B.
@@ -236,6 +238,18 @@ fn keyLeverTaperYForKey(@keyIdx) {
 fn keyLeverRearWidthForKey(@keyIdx) {
   accidentalFlag = keyLeverAccidentalFlagPattern[keyIdx % 12]
   return keyLeverNaturalRearWidth + accidentalFlag * (keyLeverAccidentalRearWidth - keyLeverNaturalRearWidth)
+}
+
+fn rackTongueEndYForKey(@keyIdx) {
+  return slotYForKey(keyIdx) - rackTongueEndClearance
+}
+
+fn rackTongueStartYForKey(@keyIdx) {
+  return rackTongueEndYForKey(keyIdx) - rackTongueInsetDepth
+}
+
+fn rackTongueShoulderYForKey(@keyIdx) {
+  return rackTongueStartYForKey(keyIdx) - rackTongueShoulderRun
 }
 
 fn makeKeyLever(@keyIdx) {
@@ -330,42 +344,42 @@ fn makeKeyLever(@keyIdx) {
       rightStraightSide.end,
       [
         slotXForKey(keyIdx) + keyLeverRearWidthForKey(keyIdx) / 2,
-        slotYForKey(keyIdx) - rackTongueLength - rackTongueShoulderRun
+        rackTongueShoulderYForKey(keyIdx)
       ]
     ])
     coincident([
       rightTongueShoulder.end,
       [
         slotXForKey(keyIdx) + rackTongueWidth / 2,
-        slotYForKey(keyIdx) - rackTongueLength
+        rackTongueStartYForKey(keyIdx)
       ]
     ])
     coincident([
       rightTongueSide.end,
       [
         slotXForKey(keyIdx) + rackTongueWidth / 2,
-        slotYForKey(keyIdx)
+        rackTongueEndYForKey(keyIdx)
       ]
     ])
     coincident([
       endFace.end,
       [
         slotXForKey(keyIdx) - (rackTongueWidth / 2),
-        slotYForKey(keyIdx)
+        rackTongueEndYForKey(keyIdx)
       ]
     ])
     coincident([
       leftTongueSide.end,
       [
         slotXForKey(keyIdx) - (rackTongueWidth / 2),
-        slotYForKey(keyIdx) - rackTongueLength
+        rackTongueStartYForKey(keyIdx)
       ]
     ])
     coincident([
       leftTongueShoulder.end,
       [
         slotXForKey(keyIdx) - (keyLeverRearWidthForKey(keyIdx) / 2),
-        slotYForKey(keyIdx) - rackTongueLength - rackTongueShoulderRun
+        rackTongueShoulderYForKey(keyIdx)
       ]
     ])
     coincident([
