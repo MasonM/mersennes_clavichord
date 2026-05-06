@@ -3,7 +3,6 @@ import * from "utils.kcl"
 
 // 70 brass clavichord strings arranged as 35 courses of two.
 // Plan-view convention: strings run along X; Y increases toward the top/back edge of the case.
-stringRadius = stringDiameter / 2
 stringIndices = [0..<numStrings]
 
 hitchPinRadius = hitchPinDiameter / 2

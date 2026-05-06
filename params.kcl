@@ -29,8 +29,6 @@ export caseWidth = caseLength / 3
 // "I estimated the thickness of the sides in the same way as 4 lignes"
 export wallThickness = 4 * ligne
 export keywellWidth = 6 * pouce
-export innerLength = caseLength - (2 * wallThickness)
-export innerHeight = caseHeight - wallThickness
 export innerWidth = caseWidth - keywellWidth - wallThickness
 export wrestplankTopZ = caseHeight - (3 * pouce) + soundboardHeight
 
@@ -49,11 +47,9 @@ export wrestplankStart = [
 // Hollow front-right compartment between the case front and the soundboard.
 export rightCompartmentStartX = soundboardStart[0]
 export rightCompartmentLength = caseLength - wallThickness - rightCompartmentStartX
-export rightCompartmentFrontY = 0mm
 export rightCompartmentBackY = soundboardStart[1] - wallThickness
 export rightCompartmentInteriorY = wallThickness
 export rightCompartmentInteriorWidth = rightCompartmentBackY - rightCompartmentInteriorY
-export rightCompartmentFloorZ = wallThickness
 export rightCompartmentWallZ = wallThickness
 export rightCompartmentWallHeight = caseHeight - rightCompartmentWallZ
 

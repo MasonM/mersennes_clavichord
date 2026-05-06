@@ -164,7 +164,6 @@ hiddenPrototypeKeys = hide([
 keyLeverIndices = [0..<numKeys]
 keyLeverHeight = naturalKeyHeight
 keyLeverZ = keyBaseZ
-keyLeverMinimumWidth = 5mm
 keyLeverClearance = 0.5mm
 keyLeverNaturalRearWidth = naturalKeyWidth - accidentalKeyWidth - keyLeverClearance
 keyLeverAccidentalRearWidth = accidentalKeyWidth - keyLeverClearance
