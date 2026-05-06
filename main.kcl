@@ -3,6 +3,10 @@
  * universelle" (1636) and expounded on by Peter Bavington in "Reconstructing
  * Mersenne's Clavichord" (https://www.peter-bavington.co.uk/Mersennepaper.pdf).
  *
+ * Uses Mersenne's Laws to calculate the sounding length of each string,
+ * and supports two different temperments: quarter-comma meantone and equal temperment
+ * using Mersenne's proposed semitone ratio.
+ *
  * © 2026 by Mason Malone
  * Licensed under CC BY 4.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/4.0/
  */
