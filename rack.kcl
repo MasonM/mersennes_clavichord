@@ -6,6 +6,8 @@ import * from "temperament.kcl"
 // soundboard-like material to the left. That's different than the racks I'm
 // familiar with, and I'm not sure the correct terminology for this.
 
+// TODO: Cut out the triangular compartment box in the back.
+// TODO: Add the left-side bridge
 
 rackHeight = soundboardStart[2] + soundboardHeight
 slotWidth = rackSlotWidth
@@ -24,7 +26,7 @@ rackProfile = sketch(on = XY) {
 }
 
 rackBlank = extrude(region(point = [20mm, keywellWidth + 20mm], sketch = rackProfile), length = rackHeight, method = NEW)
-  |> appearance(color = "#7a4b24", roughness = 80, metalness = 0)
+  |> appearance(color = lightWoodColor, roughness = 80, metalness = 0)
 hiddenRackProfile = hide(rackProfile)
 
 slotProfile = sketch(on = XY) {
@@ -62,7 +64,7 @@ fn makeslot(@keyIdx) {
 slots = map(rackKeyIndices, f = makeslot)
 
 rack = subtract([rackBlank], tools = slots)
-  |> appearance(color = "#7a4b24", roughness = 80, metalness = 0)
+  |> appearance(color = lightWoodColor, roughness = 80, metalness = 0)
 
 hiddenslotProfile = hide(slotProfile)
 hiddenPrototypeslot = hide([prototypeslot])

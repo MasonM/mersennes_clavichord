@@ -8,7 +8,6 @@ bridgeDepth = 3mm
 bridgeBaseZ = soundboardStart[2] + soundboardHeight
 bridgeHeight = stringHeight - bridgeBaseZ
 bridgeCurveCenterOffset = -10.5mm
-bridgeWoodColor = "#8b552b"
 
 // First bridge for the bottom 6 courses / 12 strings.
 firstBridgeStringBounds = [
@@ -139,7 +138,7 @@ firstBridge = extrude(
   length = bridgeDepth,
   method = NEW,
 )
-  |> appearance(color = bridgeWoodColor, roughness = 78, metalness = 0)
+  |> appearance(color = darkWoodColor, roughness = 78, metalness = 0)
 
 // Reuse the first bridge geometry rather than duplicating the profile. The
 // clones are scaled only in global Y so their tops span their assigned strings,

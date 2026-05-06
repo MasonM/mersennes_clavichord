@@ -83,3 +83,5 @@ export stringHeight = soundboardStart[2] + soundboardHeight + 20mm
 
 export brassColor = "#b5a642"
 export ironColor = "#3b3f42"
+export lightWoodColor = "#d0a566"
+export darkWoodColor = "#8b552b"

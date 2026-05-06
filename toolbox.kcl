@@ -144,7 +144,7 @@ toolboxBlock = subtract([toolboxOuterBlock], tools = [toolboxCavityBlock])
        z = wallThickness,
        global = true,
      )
-  |> appearance(color = "#8b552b", roughness = 74, metalness = 0)
+  |> appearance(color = darkWoodColor, roughness = 74, metalness = 0)
 
 hiddenToolboxOuterProfile = hide(toolboxOuterProfile)
 hiddenToolboxCavityProfile = hide(toolboxCavityProfile)

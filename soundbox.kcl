@@ -13,7 +13,7 @@ soundboard = cube([
   soundboardHeight
 ])
   |> translate(xyz = soundboardStart)
-  |> appearance(color = "#d0a566", roughness = 82, metalness = 0)
+  |> appearance(color = lightWoodColor, roughness = 82, metalness = 0)
 
 wrestplank = cube([
   wrestplankLength,
@@ -21,7 +21,7 @@ wrestplank = cube([
   wrestplankThickness
 ])
   |> translate(xyz = wrestplankStart)
-  |> appearance(color = "#d0a566", roughness = 76, metalness = 0)
+  |> appearance(color = lightWoodColor, roughness = 76, metalness = 0)
 
 bellyRailBlank = cube([
   bellyRailLength,
