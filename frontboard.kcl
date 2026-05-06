@@ -88,21 +88,21 @@ frontboardProfile = sketch(on = frontboardPlane) {
   horizontal(frontboardCenterTop)
   vertical(frontboardLeftEnd)
   distance([
-  frontboardBottom.start,
-  frontboardBottom.end
-]) == frontboardLength
+    frontboardBottom.start,
+    frontboardBottom.end
+  ]) == frontboardLength
   distance([
-  frontboardRightEnd.start,
-  frontboardRightEnd.end
-]) == frontboardFullHeight
+    frontboardRightEnd.start,
+    frontboardRightEnd.end
+  ]) == frontboardFullHeight
   distance([
-  frontboardCenterTop.start,
-  frontboardCenterTop.end
-]) == frontboardLength - (2 * frontboardSlopeRun)
+    frontboardCenterTop.start,
+    frontboardCenterTop.end
+  ]) == frontboardLength - (2 * frontboardSlopeRun)
   distance([
-  frontboardLeftEnd.start,
-  frontboardLeftEnd.end
-]) == frontboardFullHeight
+    frontboardLeftEnd.start,
+    frontboardLeftEnd.end
+  ]) == frontboardFullHeight
   radius(frontboardRightSlope) == frontboardSlopeRadius
   radius(frontboardLeftSlope) == frontboardSlopeRadius
 }

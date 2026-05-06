@@ -71,17 +71,17 @@ frontSideBoardProfile = sketch(on = frontSideBoardPlane) {
   distance([frontRight.start, frontRight.end]) == caseBoardHeight
   distance([frontTopRight.start, frontTopRight.end]) == soundboardFrontLength
   distance([
-  frontNotchRight.start,
-  frontNotchRight.end
-]) == frontUpperHeight
+    frontNotchRight.start,
+    frontNotchRight.end
+  ]) == frontUpperHeight
   distance([
-  frontNotchBottom.start,
-  frontNotchBottom.end
-]) == keywellLength
+    frontNotchBottom.start,
+    frontNotchBottom.end
+  ]) == keywellLength
   distance([
-  frontNotchLeft.start,
-  frontNotchLeft.end
-]) == frontUpperHeight
+    frontNotchLeft.start,
+    frontNotchLeft.end
+  ]) == frontUpperHeight
   distance([frontTopLeft.start, frontTopLeft.end]) == toolboxLength
 }
 

@@ -51,13 +51,13 @@ naturalKeyFootprintProfile = sketch(on = XY) {
   horizontal(naturalKeyBack)
   vertical(naturalKeyLeft)
   distance([
-  naturalKeyFront.start,
-  naturalKeyFront.end
-]) == naturalKeyWidth
+    naturalKeyFront.start,
+    naturalKeyFront.end
+  ]) == naturalKeyWidth
   distance([
-  naturalKeyRight.start,
-  naturalKeyRight.end
-]) == naturalKeyLength
+    naturalKeyRight.start,
+    naturalKeyRight.end
+  ]) == naturalKeyLength
 }
 
 accidentalKeyFootprintProfile = sketch(on = XY) {
@@ -88,13 +88,13 @@ accidentalKeyFootprintProfile = sketch(on = XY) {
   horizontal(accidentalKeyBack)
   vertical(accidentalKeyLeft)
   distance([
-  accidentalKeyFront.start,
-  accidentalKeyFront.end
-]) == accidentalKeyWidth
+    accidentalKeyFront.start,
+    accidentalKeyFront.end
+  ]) == accidentalKeyWidth
   distance([
-  accidentalKeyRight.start,
-  accidentalKeyRight.end
-]) == accidentalKeyLength
+    accidentalKeyRight.start,
+    accidentalKeyRight.end
+  ]) == accidentalKeyLength
 }
 
 prototypeNaturalKey = extrude(region(point = [1mm, 1mm], sketch = naturalKeyFootprintProfile), length = naturalKeyHeight, method = NEW)
