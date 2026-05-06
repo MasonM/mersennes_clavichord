@@ -3,6 +3,13 @@ import pouce, ligne from "utils.kcl"
 // All quotes taken from "Reconstructing Mersenne's Clavichord" by Peter Bavington
 // https://www.peter-bavington.co.uk/Mersennepaper.pdf
 
+// --- General parameters ---
+export numStrings = 70
+export numKeys = 49
+// "For the design pitch, I chose a1 = 392 Hz; this, or something close to it, is likely to have been the organ pitch or ton de chapelle of Mersenne's time."
+export referencePitchA1 = 392
+
+// --- Basic dimensions ---
 // "The soundboard front would then also measure 24 pouces, easily marked off along the case front with the beam compass"
 export soundboardFrontLength = 24 * pouce
 // "It turned out that a keywell measurement of 24 (rather than 25) pouces produces an octave-span for the instrument of just under 157 mm: a typical French octave-span, and almost exactly that of the La Brèche harpsichord."
@@ -14,38 +21,34 @@ export soundboardLength = soundboardFrontLength - wrestplankLength
 export soundboardHeight = 6 * ligne
 export bellyRailLength = 1 * pouce
 export wrestplankThickness = 1 * pouce
-
 // "the depth of the case was exactly 1½ times the width of the box; and 1½ × 5⅓ is exactly 8, so the case would be 8 pouces high"
 export caseHeight = 1.5 * toolboxLength
-
 // "The depth of the keyboard opening is half the height"
 export keywellHeight = caseHeight / 2
-
 export caseLength = soundboardFrontLength + keywellLength + toolboxLength
 // "It is clear from the engraving that the overall proportion of length to width is exactly 3:1"
 export caseWidth = caseLength / 3
-
 // "I estimated the thickness of the sides in the same way as 4 lignes"
 export wallThickness = 4 * ligne
 export keywellWidth = 6 * pouce
 export innerWidth = caseWidth - keywellWidth - wallThickness
-export wrestplankTopZ = caseHeight - (3 * pouce) + soundboardHeight
 
+// --- Soundboard ---
 export soundboardStart = [
   caseLength - soundboardFrontLength - wallThickness,
   keywellWidth + wallThickness,
   caseHeight - (3 * pouce)
 ]
 
+// --- Wrestplank ---
+export wrestplankTopZ = caseHeight - (3 * pouce) + soundboardHeight
 export wrestplankStart = [
   soundboardStart[0] + soundboardLength,
   soundboardStart[1],
   wrestplankTopZ - wrestplankThickness
 ]
 
-// Hollow front-right compartment between the case front and the soundboard.
-// Start after the keywell, not at the soundboard's wall-overlap datum, so the
-// compartment left board clears the keyboard while the outer right end stays fixed.
+// --- Right compartment box ---
 export rightCompartmentStartX = soundboardStart[0] + wallThickness
 export rightCompartmentLength = caseLength - wallThickness - rightCompartmentStartX
 export rightCompartmentBackY = soundboardStart[1] - wallThickness
@@ -54,14 +57,10 @@ export rightCompartmentInteriorWidth = rightCompartmentBackY - rightCompartmentI
 export rightCompartmentWallZ = wallThickness
 export rightCompartmentWallHeight = caseHeight - rightCompartmentWallZ
 
-// "For the design pitch, I chose a1 = 392 Hz; this, or something close to it, is likely to have been the organ pitch or ton de chapelle of Mersenne's time."
-export referencePitchA1 = 392
-
-export numStrings = 70
+// --- Strings ---
 export stringDiameter = 0.70mm
 export stringPairGap = 1.25mm
-export hitchPinDiameter = 2mm
-export hitchPinHeight = 24mm
+export stringHeight = soundboardStart[2] + soundboardHeight + 20mm
 
 // Shared string layout. Even/odd adjacent indices form a two-string course.
 export numCourses = numStrings / 2
@@ -74,13 +73,15 @@ export fn stringY(@stringIdx) {
   return firstStringY + courseIdx * coursePitch + stringInCourse * stringPairGap
 }
 
-export numKeys = 49
+// --- Hitchpins ---
+export hitchPinDiameter = 2mm
+export hitchPinHeight = 24mm
 
+// --- Keyboard ---
 export keyBaseZ = keywellHeight + 5mm
-
 export naturalKeyHeight = 10mm
-export stringHeight = soundboardStart[2] + soundboardHeight + 20mm
 
+// --- Colors ---
 export brassColor = "#b5a642"
 export ironColor = "#3b3f42"
 export lightWoodColor = "#d0a566"
