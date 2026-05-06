@@ -1,4 +1,5 @@
 import * from "params.kcl"
+import * from "utils.kcl"
 
 // Front-right hollow compartment: an open-top board-built well filling the gap
 // between the front case side/keywell and the soundboard bay.
@@ -36,26 +37,7 @@ rightCompartmentStep2LongLength = rightCompartmentLidLength - (2 * rightCompartm
 rightCompartmentStep1SideLength = rightCompartmentLidWidth - (2 * rightCompartmentStep1Inset) - (2 * rightCompartmentTerraceStepWidth)
 rightCompartmentStep2SideLength = rightCompartmentLidWidth - (2 * rightCompartmentStep2Inset) - (2 * rightCompartmentTerraceStepWidth)
 
-rightCompartmentLongBoardProfile = sketch(on = XY) {
-  compLongFront = line(start = [var 0mm, var 0mm], end = [var 600mm, var 0mm])
-  compLongRight = line(start = [var 600mm, var 0mm], end = [var 600mm, var 10mm])
-  compLongBack = line(start = [var 600mm, var 10mm], end = [var 0mm, var 10mm])
-  compLongLeft = line(start = [var 0mm, var 10mm], end = [var 0mm, var 0mm])
-
-  coincident([compLongFront.end, compLongRight.start])
-  coincident([compLongRight.end, compLongBack.start])
-  coincident([compLongBack.end, compLongLeft.start])
-  coincident([compLongLeft.end, compLongFront.start])
-  coincident([compLongFront.start, ORIGIN])
-  horizontal(compLongFront)
-  vertical(compLongRight)
-  horizontal(compLongBack)
-  vertical(compLongLeft)
-  distance([compLongFront.start, compLongFront.end]) == rightCompartmentLength
-  distance([compLongRight.start, compLongRight.end]) == wallThickness
-}
-
-rightCompartmentFrontBoard = extrude(region(point = [10mm, 1mm], sketch = rightCompartmentLongBoardProfile), length = rightCompartmentWallHeight, method = NEW)
+rightCompartmentFrontBoard = cube([rightCompartmentLength, wallThickness, rightCompartmentWallHeight])
   |> translate(
        x = rightCompartmentStartX,
        y = rightCompartmentBackY,
@@ -64,28 +46,7 @@ rightCompartmentFrontBoard = extrude(region(point = [10mm, 1mm], sketch = rightC
      )
   |> appearance(color = "#8a5529", roughness = 78, metalness = 0)
 
-hiddenRightCompartmentLongBoardProfile = hide(rightCompartmentLongBoardProfile)
-
-rightCompartmentEndBoardProfile = sketch(on = XY) {
-  compEndFront = line(start = [var 0mm, var 0mm], end = [var 10mm, var 0mm])
-  compEndRight = line(start = [var 10mm, var 0mm], end = [var 10mm, var 150mm])
-  compEndBack = line(start = [var 10mm, var 150mm], end = [var 0mm, var 150mm])
-  compEndLeft = line(start = [var 0mm, var 150mm], end = [var 0mm, var 0mm])
-
-  coincident([compEndFront.end, compEndRight.start])
-  coincident([compEndRight.end, compEndBack.start])
-  coincident([compEndBack.end, compEndLeft.start])
-  coincident([compEndLeft.end, compEndFront.start])
-  coincident([compEndFront.start, ORIGIN])
-  horizontal(compEndFront)
-  vertical(compEndRight)
-  horizontal(compEndBack)
-  vertical(compEndLeft)
-  distance([compEndFront.start, compEndFront.end]) == wallThickness
-  distance([compEndRight.start, compEndRight.end]) == rightCompartmentInteriorWidth
-}
-
-rightCompartmentLeftBoard = extrude(region(point = [1mm, 10mm], sketch = rightCompartmentEndBoardProfile), length = rightCompartmentWallHeight, method = NEW)
+rightCompartmentLeftBoard = cube([wallThickness, rightCompartmentInteriorWidth, rightCompartmentWallHeight])
   |> translate(
        x = rightCompartmentStartX,
        y = rightCompartmentInteriorY,
@@ -96,7 +57,6 @@ rightCompartmentLeftBoard = extrude(region(point = [1mm, 10mm], sketch = rightCo
 
 rightCompartmentRightBoard = clone(rightCompartmentLeftBoard)
   |> translate(x = rightCompartmentLength - wallThickness, global = true)
-hiddenRightCompartmentEndBoardProfile = hide(rightCompartmentEndBoardProfile)
 
 rightCompartmentLidBaseProfile = sketch(on = XY) {
   compLidBaseFront = line(start = [var 0mm, var 0mm], end = [var 580mm, var 0mm])
