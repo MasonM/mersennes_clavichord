@@ -77,7 +77,7 @@ export secondBridgeLastString = secondBridgeFirstString + bridgeStringCounts[1] 
 export thirdBridgeFirstString = secondBridgeLastString + 1
 export thirdBridgeLastString = thirdBridgeFirstString + bridgeStringCounts[2] - 1
 export fourthBridgeFirstString = thirdBridgeLastString + 1
-export fourthBridgeLastString = thirdBridgeFirstString + bridgeStringCounts[3] - 1
+export fourthBridgeLastString = fourthBridgeFirstString + bridgeStringCounts[3] - 1
 export fifthBridgeFirstString = fourthBridgeLastString + 1
 export fifthBridgeLastString = numStrings - 1
 
