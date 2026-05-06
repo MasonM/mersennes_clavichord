@@ -5,6 +5,7 @@ import * from "params.kcl"
 // tuning pins, with a bend about one-third of the way along from the belly
 // rail."
 
+
 soundboardProfile = sketch(on = XY) {
   soundboardFront = line(start = [var 0mm, var 0mm], end = [var 500mm, var 0mm])
   soundboardRight = line(start = [var 500mm, var 0mm], end = [var 500mm, var 300mm])

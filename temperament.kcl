@@ -144,7 +144,7 @@ export fn slotXForKey(@keyIdx) {
   } else {
     // HACK ALERT: The code above isn't giving the right positions for reasons I
     // haven't figured out yet, so just give somewhat plausible positions.
-    rackBassCutoutX + (keyIdx * 13)
+    rackBassCutoutX + keyIdx * 13
   }
 }
 
@@ -166,7 +166,7 @@ export fn slotYForKey(@keyIdx) {
 
 // Uncomment for debugging
 export frequencies = map([0..<numKeys], f = frequencyForKey)
-//export soundingLengths = map([0..<numKeys], f = soundingLengthForKey)
+// export soundingLengths = map([0..<numKeys], f = soundingLengthForKey)
 export stringIndicesForKeys = map([0..<numKeys], f = stringIdxForKey)
 export stringForKeys = map([0..<numKeys], f = stringIdxForKey)
 export bridgeXForStrings = map([0..<numStrings], f = bridgeXForString)

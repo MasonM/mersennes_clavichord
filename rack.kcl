@@ -6,6 +6,7 @@ import * from "temperament.kcl"
 // soundboard-like material to the left. That's different than the racks I'm
 // familiar with, and I'm not sure the correct terminology for this.
 
+
 rackHeight = soundboardStart[2] + soundboardHeight
 slotWidth = rackSlotWidth
 slotDepth = rackSlotDepth
