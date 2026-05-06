@@ -1,11 +1,6 @@
 import * from "params.kcl"
 import * from "temperament.kcl"
 
-// The rack contains the slots where the key levers rest.
-// I can't clearly see the rack from Mersenne's description. It appears to have
-// soundboard-like material to the left. That's different than the racks I'm
-// familiar with, and I'm not sure the correct terminology for this.
-
 rackHeight = soundboardStart[2] + soundboardHeight
 slotWidth = rackSlotWidth
 slotDepth = rackSlotDepth

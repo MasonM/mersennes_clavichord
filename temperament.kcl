@@ -76,7 +76,7 @@ export secondBridgeLastString = secondBridgeFirstString + bridgeStringCounts[1] 
 export thirdBridgeFirstString = secondBridgeLastString + 1
 export thirdBridgeLastString = thirdBridgeFirstString + bridgeStringCounts[2] - 1
 export fourthBridgeFirstString = thirdBridgeLastString + 1
-export fourthBridgeLastString = fourthBridgeFirstString + bridgeStringCounts[3] - 1
+export fourthBridgeLastString = thirdBridgeFirstString + bridgeStringCounts[3] - 1
 export fifthBridgeFirstString = fourthBridgeLastString + 1
 export fifthBridgeLastString = numStrings - 1
 
@@ -142,10 +142,28 @@ export rackSlotWidth = 3mm
 export rackSlotDepth = 11mm
 export rackSoundingLengthAnchorX = rackBassCutoutX + lowCSoundingLength
 
-// Rack slot X follows the existing pitch-scaled tangent layout. The geometric
-// sounding length is evaluated separately against the assigned bridge below.
-export fn slotXForKey(@keyIdx) {
+export fn unspreadSlotXForKey(@keyIdx) {
   return rackSoundingLengthAnchorX - tangentLayoutLengthForKey(keyIdx)
+}
+
+// The pitch-scaled tangent positions are visually compressed at the treble end.
+// Spread the top octave from c2 through c3 across the remaining rack width,
+// keeping slots vertical and preserving the fretted string/course assignment.
+export trebleSlotSpreadFirstKeyIdx = 36
+export trebleSlotSpreadLastKeyIdx = numKeys - 1
+export trebleSlotEndMarginX = rackSlotWidth / 2 + 1mm
+export trebleSlotSpreadFirstX = unspreadSlotXForKey(trebleSlotSpreadFirstKeyIdx)
+export trebleSlotSpreadLastX = rackFrontTipX - trebleSlotEndMarginX
+export trebleSlotSpreadStep = (trebleSlotSpreadLastX - trebleSlotSpreadFirstX) / (trebleSlotSpreadLastKeyIdx - trebleSlotSpreadFirstKeyIdx)
+
+// Rack slot X follows the existing pitch-scaled tangent layout until the treble
+// spread range, then switches to the widened high-key layout above.
+export fn slotXForKey(@keyIdx) {
+  return if keyIdx < trebleSlotSpreadFirstKeyIdx {
+    unspreadSlotXForKey(keyIdx)
+  } else {
+    trebleSlotSpreadFirstX + (keyIdx - trebleSlotSpreadFirstKeyIdx) * trebleSlotSpreadStep
+  }
 }
 
 // The true sounding length is the distance from the tangent/slot X to the bridge
