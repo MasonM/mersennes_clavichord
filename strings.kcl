@@ -41,21 +41,7 @@ fn stringLengthForString(@stringIdx) {
   return stringEndX - stringStartX
 }
 
-stringProfile = sketch(on = XY) {
-  radiusGuide = line(start = [var 0mm, var 0mm], end = [var 0.35mm, var 0mm], construction = true)
-  stringCircle = circle(start = [var 0.35mm, var 0mm], center = [var 0mm, var 0mm])
-
-  coincident([radiusGuide.start, ORIGIN])
-  coincident([radiusGuide.start, stringCircle.center])
-  coincident([radiusGuide.end, stringCircle.start])
-  horizontal(radiusGuide)
-  horizontalDistance([radiusGuide.start, radiusGuide.end]) == stringRadius
-}
-
-stringRegion = region(point = [0.1mm, 0mm], sketch = stringProfile)
-hiddenStringProfile = hide(stringProfile)
-
-prototypeString = extrude(stringRegion, length = prototypeStringLength)
+prototypeString = cylinder(d=stringDiameter, h=prototypeStringLength)
   |> rotate(axis = Y, angle = 90deg)
 
 fn makeString(@stringIdx) {
@@ -79,30 +65,7 @@ brassStrings = appearance(
   roughness = 22,
 )
 
-hitchPinProfile = sketch(on = XY) {
-  hitchPinRadiusGuide = line(start = [var 0mm, var 0mm], end = [var 1mm, var 0mm], construction = true)
-  hitchPinCircle = circle(start = [var 1mm, var 0mm], center = [var 0mm, var 0mm])
-
-  coincident([hitchPinRadiusGuide.start, ORIGIN])
-  coincident([
-    hitchPinRadiusGuide.start,
-    hitchPinCircle.center
-  ])
-  coincident([
-    hitchPinRadiusGuide.end,
-    hitchPinCircle.start
-  ])
-  horizontal(hitchPinRadiusGuide)
-  horizontalDistance([
-  hitchPinRadiusGuide.start,
-  hitchPinRadiusGuide.end
-]) == hitchPinRadius
-}
-
-hitchPinRegion = region(point = [0.25mm, 0mm], sketch = hitchPinProfile)
-hiddenHitchPinProfile = hide(hitchPinProfile)
-
-prototypeHitchPin = extrude(hitchPinRegion, length = hitchPinHeight)
+prototypeHitchPin = cylinder(d=hitchPinDiameter, h=hitchPinHeight)
 
 fn makeHitchPin(@stringIdx) {
   return clone(prototypeHitchPin)
@@ -124,30 +87,7 @@ ironHitchPins = appearance(
   roughness = 35,
 )
 
-tuningPinProfile = sketch(on = XY) {
-  tuningPinRadiusGuide = line(start = [var 0mm, var 0mm], end = [var 1.5mm, var 0mm], construction = true)
-  tuningPinCircle = circle(start = [var 1.5mm, var 0mm], center = [var 0mm, var 0mm])
-
-  coincident([tuningPinRadiusGuide.start, ORIGIN])
-  coincident([
-    tuningPinRadiusGuide.start,
-    tuningPinCircle.center
-  ])
-  coincident([
-    tuningPinRadiusGuide.end,
-    tuningPinCircle.start
-  ])
-  horizontal(tuningPinRadiusGuide)
-  horizontalDistance([
-  tuningPinRadiusGuide.start,
-  tuningPinRadiusGuide.end
-]) == tuningPinRadius
-}
-
-tuningPinRegion = region(point = [0.5mm, 0mm], sketch = tuningPinProfile)
-hiddenTuningPinProfile = hide(tuningPinProfile)
-
-prototypeTuningPin = extrude(tuningPinRegion, length = tuningPinHeight)
+prototypeTuningPin = cylinder(d=tuningPinDiameter, h=tuningPinHeight)
 
 fn makeTuningPin(@stringIdx) {
   return clone(prototypeTuningPin)

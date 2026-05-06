@@ -34,11 +34,16 @@ export fn cube(@size) {
 
 export fn cylinder(d, h) {
   sketch001 = sketch(on = XY) {
-    circle1 = circle(center = ORIGIN, diameter = d)
-    fixed(circle1.center)
-    distance([circle1.center, circle1.start]) == d / 2
+    radiusGuide = line(start = [var 0mm, var 0mm], end = [var 0.35mm, var 0mm], construction = true)
+    stringCircle = circle(start = [var 0.35mm, var 0mm], center = [var 0mm, var 0mm])
+
+    coincident([radiusGuide.start, ORIGIN])
+    coincident([radiusGuide.start, stringCircle.center])
+    coincident([radiusGuide.end, stringCircle.start])
+    horizontal(radiusGuide)
+    horizontalDistance([radiusGuide.start, radiusGuide.end]) == d / 2
   }
   hide(sketch001)
-  return region(sketch = sketch001, point = [0.4, -0.4])
+  return region(sketch = sketch001, point = [0, 0.3])
     |> extrude(length = h)
 }
