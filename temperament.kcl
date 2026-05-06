@@ -41,6 +41,12 @@ export fn frequencyForKey(@keyIdx) {
   }
 }
 
+export fifthBridgeCenterX = caseLength - (caseLength / 3)
+export fourthBridgeCenterX = fifthBridgeCenterX + 70mm
+export thirdBridgeCenterX = fourthBridgeCenterX + 100mm
+export secondBridgeCenterX = thirdBridgeCenterX + 100mm
+export firstBridgeCenterX = secondBridgeCenterX + 70mm
+
 // Fit the rack tangent layout to the existing rack: the lowest C uses the
 // deepest/bass part of the rack and c3 uses the shallow treble end. Because the
 // compass spans four octaves, c3 is 1/16 the pitch-scaled reference length of low C.
@@ -48,7 +54,6 @@ export rackBassCutoutX = toolboxLength + wallThickness + 18mm
 export rackTrebleCutoutX = soundboardStart[0] - 54mm
 export rackCutoutXSpan = rackTrebleCutoutX - rackBassCutoutX
 export lowCSoundingLength = rackCutoutXSpan * 16 / 15
-export referenceA1SoundingLength = lowCSoundingLength / referenceA1PitchRatio
 
 // Pitch-scaled tangent layout length. This remains separate from the geometric
 // soundingLengthForKey(), because the true sounding length depends on the bridge
@@ -79,12 +84,6 @@ export fourthBridgeFirstString = thirdBridgeLastString + 1
 export fourthBridgeLastString = thirdBridgeFirstString + bridgeStringCounts[3] - 1
 export fifthBridgeFirstString = fourthBridgeLastString + 1
 export fifthBridgeLastString = numStrings - 1
-
-export fifthBridgeCenterX = caseLength - (caseLength / 3)
-export fourthBridgeCenterX = fifthBridgeCenterX + 70mm
-export thirdBridgeCenterX = fourthBridgeCenterX + 100mm
-export secondBridgeCenterX = thirdBridgeCenterX + 100mm
-export firstBridgeCenterX = secondBridgeCenterX + 70mm
 
 export fn bridgeXForString(@stringIdx) {
   return if stringIdx < secondBridgeFirstString {
