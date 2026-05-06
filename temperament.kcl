@@ -53,18 +53,40 @@ export fn soundingLengthProgressForKey(@keyIdx) {
 }
 
 export rackBackY = caseWidth - wallThickness
-export slotPitchX = rackCutoutXSpan / (numKeys - 1)
-export slotBassY = keywellWidth + 145mm
-export slotTrebleY = rackBackY - 4mm
 
-// Rack slot X follows the physical key order across the keywell.
+// Shared rack outline controls. rack.kcl uses these directly for the profile,
+// and slotYForKey() evaluates the same lower/front edge without changing it.
+export rackFrontKinkX = soundboardStart[0] / 2
+export rackFrontKinkY = rackBackY - 66mm
+export rackFrontTipX = soundboardStart[0]
+export rackFrontTipY = rackBackY - 12mm
+export rackFrontLowerX = wallThickness + 100mm
+export rackFrontLowerY = keywellWidth + 100mm
+export rackLowerFirstSlope = (rackFrontKinkY - rackFrontLowerY) / (rackFrontKinkX - rackFrontLowerX)
+export rackLowerSecondSlope = (rackFrontTipY - rackFrontKinkY) / (rackFrontTipX - rackFrontKinkX)
+
+export rackSlotWidth = 3mm
+export rackSlotDepth = 11mm
+export rackSoundingLengthAnchorX = rackBassCutoutX + lowCSoundingLength
+
+// Rack slot X is determined by the calculated sounding length. The anchor is
+// chosen so low C lands at rackBassCutoutX and c3 lands at rackTrebleCutoutX.
 export fn slotXForKey(@keyIdx) {
-  return rackBassCutoutX + keyIdx * slotPitchX
+  return rackSoundingLengthAnchorX - soundingLengthForKey(keyIdx)
 }
 
-// Rack slot Y is driven by the calculated sounding length for this key:
-// low/long-sounding notes sit lower/frontward on the rack, while the short
-// treble lengths climb toward the back edge.
+// Rack slot Y is the lower/front edge of the existing rack profile evaluated at
+// the sounding-length X. The rectangular slot cutter starts here and cuts inward
+// along the global +Y direction, so the slots stay straight instead of rotating.
 export fn slotYForKey(@keyIdx) {
-  return slotBassY + soundingLengthProgressForKey(keyIdx) * (slotTrebleY - slotBassY)
+  slotX = slotXForKey(keyIdx)
+  return if slotX < rackFrontLowerX {
+    keywellWidth
+  } else if slotX < rackFrontKinkX {
+    rackFrontLowerY + (slotX - rackFrontLowerX) * rackLowerFirstSlope
+  } else if slotX < rackFrontTipX {
+    rackFrontKinkY + (slotX - rackFrontKinkX) * rackLowerSecondSlope
+  } else {
+    rackFrontTipY
+  }
 }

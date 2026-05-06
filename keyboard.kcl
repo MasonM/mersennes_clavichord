@@ -175,11 +175,10 @@ keyLeverBendRun = 20mm
 keyLeverBendY = keyLeverAllNarrowY + keyLeverBendRun
 keyLeverColor = "#8b5a2b"
 
-// Rack tongue dimensions mirror the slots in rack.kcl with clearance. The tongue
-// stays short, but it is now positioned at the slot end: its rear tip stops about
-// 3 mm before slotYForKey(), so it actually lies inside the corresponding slot
-// along the Y axis while leaving tangent room.
-rackTongueSlotWidth = 3mm
+// Rack tongue dimensions mirror the slots in rack.kcl with clearance. slotYForKey()
+// is now the lower/front rack edge, so the tongue end is placed inside the slot,
+// short of the rear of the equal-depth cut.
+rackTongueSlotWidth = rackSlotWidth
 rackTongueSideClearance = 0.35mm
 rackTongueWidth = rackTongueSlotWidth - (2 * rackTongueSideClearance)
 rackTongueInsetDepth = 7mm
@@ -241,7 +240,7 @@ fn keyLeverRearWidthForKey(@keyIdx) {
 }
 
 fn rackTongueEndYForKey(@keyIdx) {
-  return slotYForKey(keyIdx) - rackTongueEndClearance
+  return slotYForKey(keyIdx) + rackSlotDepth - rackTongueEndClearance
 }
 
 fn rackTongueStartYForKey(@keyIdx) {

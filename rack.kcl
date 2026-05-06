@@ -2,16 +2,10 @@ import * from "params.kcl"
 import * from "temperament.kcl"
 
 rackHeight = soundboardStart[2] + soundboardHeight
-slotWidth = 3mm
-slotDepth = 11mm
+slotWidth = rackSlotWidth
+slotDepth = rackSlotDepth
 slotCutHeight = 50mm
 rackKeyIndices = [0..<numKeys]
-rackFrontKinkX = soundboardStart[0] / 2
-rackFrontKinkY = rackBackY - 66mm
-rackFrontTipX = soundboardStart[0]
-rackFrontTipY = rackBackY - 12mm
-rackFrontLowerX = wallThickness + 100mm
-rackFrontLowerY = keywellWidth + 100mm
 
 rackProfile = sketch(on = XY) {
   leftToTop = line(start = [wallThickness, keywellWidth], end = [wallThickness, rackBackY])
@@ -53,7 +47,7 @@ fn makeslot(@keyIdx) {
   return clone(prototypeslot)
     |> translate(
          x = slotXForKey(keyIdx) - (slotWidth / 2),
-         y = slotYForKey(keyIdx) - slotDepth,
+         y = slotYForKey(keyIdx),
          z = rackHeight - slotCutHeight,
          global = true,
        )
