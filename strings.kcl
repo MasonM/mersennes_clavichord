@@ -41,7 +41,7 @@ fn stringLengthForString(@stringIdx) {
   return stringEndX - stringStartX
 }
 
-prototypeString = cylinder(d=stringDiameter, h=prototypeStringLength)
+prototypeString = cylinder(d = stringDiameter, h = prototypeStringLength)
   |> rotate(axis = Y, angle = 90deg)
 
 fn makeString(@stringIdx) {
@@ -65,7 +65,7 @@ brassStrings = appearance(
   roughness = 22,
 )
 
-prototypeHitchPin = cylinder(d=hitchPinDiameter, h=hitchPinHeight)
+prototypeHitchPin = cylinder(d = hitchPinDiameter, h = hitchPinHeight)
 
 fn makeHitchPin(@stringIdx) {
   return clone(prototypeHitchPin)
@@ -87,7 +87,7 @@ ironHitchPins = appearance(
   roughness = 35,
 )
 
-prototypeTuningPin = cylinder(d=tuningPinDiameter, h=tuningPinHeight)
+prototypeTuningPin = cylinder(d = tuningPinDiameter, h = tuningPinHeight)
 
 fn makeTuningPin(@stringIdx) {
   return clone(prototypeTuningPin)

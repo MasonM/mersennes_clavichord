@@ -6,15 +6,28 @@ import * from "utils.kcl"
 // tuning pins, with a bend about one-third of the way along from the belly
 // rail."
 
-soundboard = cube([soundboardLength, innerWidth, soundboardHeight])
+
+soundboard = cube([
+  soundboardLength,
+  innerWidth,
+  soundboardHeight
+])
   |> translate(xyz = soundboardStart)
   |> appearance(color = "#d0a566", roughness = 82, metalness = 0)
 
-wrestplank = cube([wrestplankLength, innerWidth, wrestplankThickness])
+wrestplank = cube([
+  wrestplankLength,
+  innerWidth,
+  wrestplankThickness
+])
   |> translate(xyz = wrestplankStart)
   |> appearance(color = "#d0a566", roughness = 76, metalness = 0)
 
-bellyRailBlank = cube([bellyRailLength, innerWidth, soundboardStart[2]])
+bellyRailBlank = cube([
+  bellyRailLength,
+  innerWidth,
+  soundboardStart[2]
+])
   |> translate(x = soundboardStart[0], y = soundboardStart[1], global = true)
 
 bellyRailCutoutCount = 7
@@ -24,7 +37,7 @@ bellyRailCutoutCutX = bellyRailLength + 4mm
 bellyRailCutoutHeight = 15mm
 bellyRailCutoutBottomZ = soundboardStart[2] - bellyRailCutoutHeight - 10mm
 bellyRailCutoutStartX = soundboardStart[0] - 2mm
-bellyRailCutoutStartY01 = soundboardStart[1] + bellyRailCutoutGapY
+bellyRailFirstCutoutY = soundboardStart[1] + bellyRailCutoutGapY
 bellyRailCutoutPitchY = bellyRailCutoutWidthY + bellyRailCutoutGapY
 
 bellyRailCutoutProfile = sketch(on = XY) {
@@ -46,39 +59,15 @@ bellyRailCutoutProfile = sketch(on = XY) {
   distance([cutoutRight.start, cutoutRight.end]) == bellyRailCutoutWidthY
 }
 
-prototypeBellyRailCutout = extrude(region(point = [1mm, 1mm], sketch = bellyRailCutoutProfile), length = bellyRailCutoutHeight, method = NEW)
-hiddenBellyRailCutoutProfile = hide(bellyRailCutoutProfile)
-
-bellyRailCutout01 = clone(prototypeBellyRailCutout)
+bellyRailCutouts = extrude(region(point = [1mm, 1mm], sketch = bellyRailCutoutProfile), length = bellyRailCutoutHeight, method = NEW)
   |> translate(
        x = bellyRailCutoutStartX,
-       y = bellyRailCutoutStartY01,
+       y = bellyRailFirstCutoutY,
        z = bellyRailCutoutBottomZ,
        global = true,
      )
-bellyRailCutout02 = clone(bellyRailCutout01)
-  |> translate(y = bellyRailCutoutPitchY, global = true)
-bellyRailCutout03 = clone(bellyRailCutout02)
-  |> translate(y = bellyRailCutoutPitchY, global = true)
-bellyRailCutout04 = clone(bellyRailCutout03)
-  |> translate(y = bellyRailCutoutPitchY, global = true)
-bellyRailCutout05 = clone(bellyRailCutout04)
-  |> translate(y = bellyRailCutoutPitchY, global = true)
-bellyRailCutout06 = clone(bellyRailCutout05)
-  |> translate(y = bellyRailCutoutPitchY, global = true)
-bellyRailCutout07 = clone(bellyRailCutout06)
-  |> translate(y = bellyRailCutoutPitchY, global = true)
-
-bellyRailCutouts = [
-  bellyRailCutout01,
-  bellyRailCutout02,
-  bellyRailCutout03,
-  bellyRailCutout04,
-  bellyRailCutout05,
-  bellyRailCutout06,
-  bellyRailCutout07
-]
+  |> patternLinear3d(instances = bellyRailCutoutCount, distance = bellyRailCutoutPitchY, axis = Y)
+hiddenBellyRailCutoutProfile = hide(bellyRailCutoutProfile)
 
 bellyRail = subtract([bellyRailBlank], tools = bellyRailCutouts)
   |> appearance(color = "#7a4b24", roughness = 78, metalness = 0)
-hiddenPrototypeBellyRailCutout = hide([prototypeBellyRailCutout])
