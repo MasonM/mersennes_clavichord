@@ -6,105 +6,65 @@ slotWidth = 3mm
 slotDepth = 11mm
 slotCutHeight = 50mm
 rackKeyIndices = [0..<numKeys]
+rackFrontKinkX = soundboardStart[0] / 2
+rackFrontKinkY = rackBackY - 66mm
+rackFrontTipX = soundboardStart[0]
+rackFrontTipY = rackBackY - 12mm
+rackFrontLowerX = wallThickness + 100mm
+rackFrontLowerY = keywellWidth + 100mm
 
 rackProfile = sketch(on = XY) {
   leftToTop = line(start = [wallThickness, keywellWidth], end = [wallThickness, rackBackY])
   topToSoundboard = line(start = [wallThickness, rackBackY], end = [rackFrontTipX, rackBackY])
   tipDrop = line(start = [rackFrontTipX, rackBackY], end = [rackFrontTipX, rackFrontTipY])
-  tipToLowerCurve = arc(
-    start = [rackFrontTipX, rackFrontTipY],
-    end = [rackFrontLowerX, rackFrontLowerY],
-    center = [
-      rackLowerEdgeArcCenterX,
-      rackLowerEdgeArcCenterY
-    ],
-  )
-  lowerToBottom = line(start = [rackFrontLowerX, rackFrontLowerY], end = [rackFrontLowerX, keywellWidth])
+  tipToMiddle = line(start = [rackFrontTipX, rackFrontTipY], end = [rackFrontKinkX, rackFrontKinkY])
+  middleToRightEdge = line(start = [rackFrontKinkX, rackFrontKinkY], end = [rackFrontLowerX, rackFrontLowerY])
+  middleToBottom = line(start = [rackFrontLowerX, rackFrontLowerY], end = [rackFrontLowerX, keywellWidth])
   bottomToLeft = line(start = [rackFrontLowerX, keywellWidth], end = [wallThickness, keywellWidth])
 }
 
-rackBlank = extrude(
-  region(point = [20mm, keywellWidth + 20mm], sketch = rackProfile),
-  length = rackHeight,
-  method = NEW,
-  tagEnd = $rackTop,
-)
+rackBlank = extrude(region(point = [20mm, keywellWidth + 20mm], sketch = rackProfile), length = rackHeight, method = NEW)
   |> appearance(color = "#7a4b24", roughness = 80, metalness = 0)
 hiddenRackProfile = hide(rackProfile)
 
-// Return a point offset from the slot mouth center. Tangent offset controls slot
-// width; normal offset controls true cut depth into the curved rack edge.
-fn slotPointX(@keyIdx, tangentOffset, normalOffset) {
-  return slotXForKey(keyIdx) + tangentOffset * slotTangentXForKey(keyIdx) + normalOffset * slotNormalXForKey(keyIdx)
+slotProfile = sketch(on = XY) {
+  cutoutFront = line(start = [var 0mm, var 0mm], end = [var 6mm, var 0mm])
+  cutoutRight = line(start = [var 6mm, var 0mm], end = [var 6mm, var 5mm])
+  cutoutBack = line(start = [var 6mm, var 5mm], end = [var 0mm, var 5mm])
+  cutoutLeft = line(start = [var 0mm, var 5mm], end = [var 0mm, var 0mm])
+
+  coincident([cutoutFront.end, cutoutRight.start])
+  coincident([cutoutRight.end, cutoutBack.start])
+  coincident([cutoutBack.end, cutoutLeft.start])
+  coincident([cutoutLeft.end, cutoutFront.start])
+  coincident([cutoutFront.start, ORIGIN])
+  horizontal(cutoutFront)
+  vertical(cutoutRight)
+  horizontal(cutoutBack)
+  vertical(cutoutLeft)
+  distance([cutoutFront.start, cutoutFront.end]) == slotWidth
+  distance([cutoutRight.start, cutoutRight.end]) == slotDepth
 }
 
-fn slotPointY(@keyIdx, tangentOffset, normalOffset) {
-  return slotYForKey(keyIdx) + tangentOffset * slotTangentYForKey(keyIdx) + normalOffset * slotNormalYForKey(keyIdx)
+slotRegion = region(point = [1mm, 1mm], sketch = slotProfile)
+prototypeslot = extrude(slotRegion, length = slotCutHeight, method = NEW)
+
+fn makeslot(@keyIdx) {
+  return clone(prototypeslot)
+    |> translate(
+         x = slotXForKey(keyIdx) - (slotWidth / 2),
+         y = slotYForKey(keyIdx) - slotDepth,
+         z = rackHeight - slotCutHeight,
+         global = true,
+       )
 }
 
-fn cutRackSlot(@keyIdx, accum) {
-  leftOffset = 0mm - (slotWidth / 2)
-  rightOffset = slotWidth / 2
-  mouthOffset = 0mm
-  backOffset = slotDepth
-  interiorOffset = slotDepth / 2
-  topFace = faceOf(accum[0], face = rackTop)
+slots = map(rackKeyIndices, f = makeslot)
 
-  slotCutProfile = sketch(on = topFace) {
-    slotMouth = line(
-      start = [
-        slotPointX(keyIdx, tangentOffset = leftOffset, normalOffset = mouthOffset),
-        slotPointY(keyIdx, tangentOffset = leftOffset, normalOffset = mouthOffset)
-      ],
-      end = [
-        slotPointX(keyIdx, tangentOffset = rightOffset, normalOffset = mouthOffset),
-        slotPointY(keyIdx, tangentOffset = rightOffset, normalOffset = mouthOffset)
-      ],
-    )
-    slotRight = line(
-      start = [
-        slotPointX(keyIdx, tangentOffset = rightOffset, normalOffset = mouthOffset),
-        slotPointY(keyIdx, tangentOffset = rightOffset, normalOffset = mouthOffset)
-      ],
-      end = [
-        slotPointX(keyIdx, tangentOffset = rightOffset, normalOffset = backOffset),
-        slotPointY(keyIdx, tangentOffset = rightOffset, normalOffset = backOffset)
-      ],
-    )
-    slotBack = line(
-      start = [
-        slotPointX(keyIdx, tangentOffset = rightOffset, normalOffset = backOffset),
-        slotPointY(keyIdx, tangentOffset = rightOffset, normalOffset = backOffset)
-      ],
-      end = [
-        slotPointX(keyIdx, tangentOffset = leftOffset, normalOffset = backOffset),
-        slotPointY(keyIdx, tangentOffset = leftOffset, normalOffset = backOffset)
-      ],
-    )
-    slotLeft = line(
-      start = [
-        slotPointX(keyIdx, tangentOffset = leftOffset, normalOffset = backOffset),
-        slotPointY(keyIdx, tangentOffset = leftOffset, normalOffset = backOffset)
-      ],
-      end = [
-        slotPointX(keyIdx, tangentOffset = leftOffset, normalOffset = mouthOffset),
-        slotPointY(keyIdx, tangentOffset = leftOffset, normalOffset = mouthOffset)
-      ],
-    )
-  }
-
-  hiddenSlotCutProfile = hide(slotCutProfile)
-  return extrude(
-    region(
-      point = [
-        slotPointX(keyIdx, tangentOffset = 0mm, normalOffset = interiorOffset),
-        slotPointY(keyIdx, tangentOffset = 0mm, normalOffset = interiorOffset)
-      ],
-      sketch = slotCutProfile,
-    ),
-    length = 0mm - slotCutHeight,
-  )
-}
-
-rack = reduce(rackKeyIndices, initial = [rackBlank], f = cutRackSlot)
+rack = subtract([rackBlank], tools = slots)
   |> appearance(color = "#7a4b24", roughness = 80, metalness = 0)
+
+hiddenslotProfile = hide(slotProfile)
+hiddenPrototypeslot = hide([prototypeslot])
+hiddenslots = hide(slots)
+hiddenRackBlank = hide([rackBlank])
