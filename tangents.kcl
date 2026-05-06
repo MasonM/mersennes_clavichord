@@ -1,5 +1,6 @@
 import * from "params.kcl"
 import * from "temperament.kcl"
+import * from "utils.kcl"
 
 // Brass clavichord tangents. Each key gets one vertical rectangular blade whose
 // plan position is driven by the rack slot X and the string/course Y mapping.
@@ -20,27 +21,7 @@ fn tangentYForKey(@keyIdx) {
   return stringY(stringIdxForKey(keyIdx)) - (tangentWidthY / 2)
 }
 
-tangentFootprint = sketch(on = XY) {
-  tangentFront = line(start = [var 0mm, var 0mm], end = [var 1mm, var 0mm])
-  tangentRight = line(start = [var 1mm, var 0mm], end = [var 1mm, var 4mm])
-  tangentBack = line(start = [var 1mm, var 4mm], end = [var 0mm, var 4mm])
-  tangentLeft = line(start = [var 0mm, var 4mm], end = [var 0mm, var 0mm])
-
-  coincident([tangentFront.end, tangentRight.start])
-  coincident([tangentRight.end, tangentBack.start])
-  coincident([tangentBack.end, tangentLeft.start])
-  coincident([tangentLeft.end, tangentFront.start])
-  coincident([tangentFront.start, ORIGIN])
-  horizontal(tangentFront)
-  vertical(tangentRight)
-  horizontal(tangentBack)
-  vertical(tangentLeft)
-  distance([tangentFront.start, tangentFront.end]) == tangentThicknessX
-  distance([tangentRight.start, tangentRight.end]) == tangentWidthY
-}
-
-tangentRegion = region(point = [0.2mm, 0.2mm], sketch = tangentFootprint)
-prototypeTangent = extrude(tangentRegion, length = tangentHeight, method = NEW)
+prototypeTangent = cube([tangentThicknessX, tangentWidthY, tangentHeight])
 
 fn makeTangent(@keyIdx) {
   return clone(prototypeTangent)
@@ -60,5 +41,4 @@ brassTangents = appearance(
   roughness = 24,
   metalness = 88,
 )
-hiddenTangentFootprint = hide(tangentFootprint)
 hiddenPrototypeTangent = hide([prototypeTangent])

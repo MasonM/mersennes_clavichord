@@ -1,3 +1,12 @@
+/*
+ * Reconstruction of the clavichord described by Mersenne in "Harmonie
+ * universelle" (1636) and expounded on by Peter Bavington in "Reconstructing
+ * Mersenne's Clavichord" (https://www.peter-bavington.co.uk/Mersennepaper.pdf).
+ *
+ * © 2026 by Mason Malone. Repository: https://github.com/MasonM/urbino_clavichord/
+ * Licensed under CC BY 4.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/4.0/
+*/
+
 // The dimensions of the clavichord are described in Paris inches (aka pouces), but "in" in Zoo refers to English inches.
 @settings(defaultLengthUnit = mm, kclVersion = 1.0)
 
