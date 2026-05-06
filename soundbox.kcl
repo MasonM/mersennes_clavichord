@@ -1,5 +1,10 @@
 import * from "params.kcl"
 
+// TODO: This soundboard is flat, which isn't correct.
+// Per Bavington, "the soundboard cannot be flat. It must slope down to the
+// tuning pins, with a bend about one-third of the way along from the belly
+// rail."
+
 soundboardProfile = sketch(on = XY) {
   soundboardFront = line(start = [var 0mm, var 0mm], end = [var 500mm, var 0mm])
   soundboardRight = line(start = [var 500mm, var 0mm], end = [var 500mm, var 300mm])

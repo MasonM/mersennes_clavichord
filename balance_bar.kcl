@@ -1,6 +1,9 @@
 import * from "params.kcl"
 import * from "utils.kcl"
 
+// TODO: Add balance pins. There should be one for each key, centered under the
+// key lever and spaced evenly along the bar.
+
 // Balance bar under the rear of the keyboard/key levers. It spans the full
 // keywell length and butts into the lower/front side of the belly rail at the
 // right end of the keywell.
