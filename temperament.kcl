@@ -30,8 +30,15 @@ export fn meantonePitchRatioForKey(@keyIdx) {
   return meantonePitchClassRatios[pitchClassIdx] * 2 ^ octaveIdx
 }
 
-export fn meantoneFrequencyForKey(@keyIdx) {
-  return referencePitchA1 * meantonePitchRatioForKey(keyIdx) / referenceA1PitchRatio
+export useEqualTemperament = false
+export equalTemperedSemitoneInterval = (2 / (3 - (2 ^ (1 / 2)))) ^ (1 / 4)
+
+export fn frequencyForKey(@keyIdx) {
+  return if useEqualTemperament {
+    referencePitchA1 * equalTemperedSemitoneInterval ^ (keyIdx - referenceA1KeyIdx)
+  } else {
+    referencePitchA1 * meantonePitchRatioForKey(keyIdx) / referenceA1PitchRatio
+  }
 }
 
 // Fit the sounding-length layout to the existing rack: the lowest C uses the
@@ -41,16 +48,15 @@ export rackBassCutoutX = toolboxLength + wallThickness + 18mm
 export rackTrebleCutoutX = soundboardStart[0] - 54mm
 export rackCutoutXSpan = rackTrebleCutoutX - rackBassCutoutX
 export lowCSoundingLength = rackCutoutXSpan * 16 / 15
-export c3SoundingLength = lowCSoundingLength / 16
 export referenceA1SoundingLength = lowCSoundingLength / referenceA1PitchRatio
 
 export fn soundingLengthForKey(@keyIdx) {
-  return referenceA1SoundingLength * referencePitchA1 / meantoneFrequencyForKey(keyIdx)
+  return frequencyForKey(0) * lowCSoundingLength / frequencyForKey(keyIdx)
 }
 
-export fn soundingLengthProgressForKey(@keyIdx) {
-  return (lowCSoundingLength - soundingLengthForKey(keyIdx)) / (lowCSoundingLength - c3SoundingLength)
-}
+// Uncomment for debugging
+// export frequencies = map([0..<numKeys], f = frequencyForKey)
+// export soundingLengths = map([0..<numKeys], f = soundingLengthForKey)
 
 export rackBackY = caseWidth - wallThickness
 
