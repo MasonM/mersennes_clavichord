@@ -74,7 +74,7 @@ hiddenPrototypeString = hide([prototypeString])
 
 brassStrings = appearance(
   strings,
-  color = "#c59a3d",
+  color = brassColor,
   metalness = 85,
   roughness = 22,
 )
@@ -119,7 +119,7 @@ hiddenPrototypeHitchPin = hide([prototypeHitchPin])
 
 ironHitchPins = appearance(
   hitchPins,
-  color = "#3b3f42",
+  color = ironColor,
   metalness = 90,
   roughness = 35,
 )
@@ -164,7 +164,7 @@ hiddenPrototypeTuningPin = hide([prototypeTuningPin])
 
 ironTuningPins = appearance(
   tuningPins,
-  color = "#2f3336",
+  color = ironColor,
   metalness = 92,
   roughness = 32,
 )

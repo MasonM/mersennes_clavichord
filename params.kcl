@@ -83,3 +83,6 @@ export keyBaseZ = keywellHeight + 5mm
 
 export naturalKeyHeight = 10mm
 export stringHeight = soundboardStart[2] + soundboardHeight + 20mm
+
+export brassColor = "#b5a642"
+export ironColor = "#3b3f42"

@@ -3,14 +3,13 @@ import * from "temperament.kcl"
 
 // Brass clavichord tangents. Each key gets one vertical rectangular blade whose
 // plan position is driven by the rack slot X and the string/course Y mapping.
-tangentThicknessX = 1mm
+tangentThicknessX = 3mm
 tangentWidthY = 3.5mm
 tangentTopClearance = 5mm
 keyLeverHeight = naturalKeyHeight
 keyLeverZ = keyBaseZ
 tangentBaseZ = keyLeverZ + keyLeverHeight
 tangentHeight = stringHeight - tangentBaseZ - tangentTopClearance
-tangentBrassColor = "#c59a3d"
 tangentKeyIndices = [0..<numKeys]
 
 fn tangentXForKey(@keyIdx) {
@@ -57,7 +56,7 @@ tangents = map(tangentKeyIndices, f = makeTangent)
 
 brassTangents = appearance(
   tangents,
-  color = tangentBrassColor,
+  color = brassColor,
   roughness = 24,
   metalness = 88,
 )
