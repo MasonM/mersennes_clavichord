@@ -44,7 +44,9 @@ export wrestplankStart = [
 ]
 
 // Hollow front-right compartment between the case front and the soundboard.
-export rightCompartmentStartX = soundboardStart[0]
+// Start after the keywell, not at the soundboard's wall-overlap datum, so the
+// compartment left board clears the keyboard while the outer right end stays fixed.
+export rightCompartmentStartX = soundboardStart[0] + wallThickness
 export rightCompartmentLength = caseLength - wallThickness - rightCompartmentStartX
 export rightCompartmentBackY = soundboardStart[1] - wallThickness
 export rightCompartmentInteriorY = wallThickness

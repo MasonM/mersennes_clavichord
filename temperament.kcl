@@ -166,10 +166,8 @@ export fn slotYForKey(@keyIdx) {
 }
 
 // Uncomment for debugging
-/*
-export frequencies = map([0..<numKeys], f = frequencyForKey)
+/* export frequencies = map([0..<numKeys], f = frequencyForKey)
 export stringIndicesForKeys = map([0..<numKeys], f = stringIdxForKey)
 export stringForKeys = map([0..<numKeys], f = stringIdxForKey)
 export bridgeXForStrings = map([0..<numStrings], f = bridgeXForString)
-export slotXForKeys = map([0..<numKeys], f = slotXForKey)
-*/
+export slotXForKeys = map([0..<numKeys], f = slotXForKey) */

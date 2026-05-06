@@ -21,7 +21,11 @@ fn tangentYForKey(@keyIdx) {
   return stringY(stringIdxForKey(keyIdx)) - (tangentWidthY / 2)
 }
 
-prototypeTangent = cube([tangentThicknessX, tangentWidthY, tangentHeight])
+prototypeTangent = cube([
+  tangentThicknessX,
+  tangentWidthY,
+  tangentHeight
+])
 
 fn makeTangent(@keyIdx) {
   return clone(prototypeTangent)
