@@ -30,7 +30,7 @@ export fn meantonePitchRatioForKey(@keyIdx) {
   return meantonePitchClassRatios[pitchClassIdx] * 2 ^ octaveIdx
 }
 
-export useEqualTemperament = false
+export useEqualTemperament = true
 export equalTemperedSemitoneInterval = (2 / (3 - (2 ^ (1 / 2)))) ^ (1 / 4)
 
 export fn frequencyForKey(@keyIdx) {
@@ -80,11 +80,11 @@ export fourthBridgeLastString = fourthBridgeFirstString + bridgeStringCounts[3] 
 export fifthBridgeFirstString = fourthBridgeLastString + 1
 export fifthBridgeLastString = numStrings - 1
 
-export firstBridgeCenterX = caseLength - (caseLength / 3)
-export secondBridgeCenterX = firstBridgeCenterX + 70mm
-export thirdBridgeCenterX = secondBridgeCenterX + 100mm
-export fourthBridgeCenterX = thirdBridgeCenterX + 100mm
-export fifthBridgeCenterX = fourthBridgeCenterX + 70mm
+export fifthBridgeCenterX = caseLength - (caseLength / 3)
+export fourthBridgeCenterX = fifthBridgeCenterX + 70mm
+export thirdBridgeCenterX = fourthBridgeCenterX + 100mm
+export secondBridgeCenterX = thirdBridgeCenterX + 100mm
+export firstBridgeCenterX = secondBridgeCenterX + 70mm
 
 export fn bridgeXForString(@stringIdx) {
   return if stringIdx < secondBridgeFirstString {
@@ -171,7 +171,9 @@ export fn slotYForKey(@keyIdx) {
 }
 
 // Uncomment for debugging
-// export frequencies = map([0..<numKeys], f = frequencyForKey)
-// export tangentLayoutLengths = map([0..<numKeys], f = tangentLayoutLengthForKey)
-// export soundingLengths = map([0..<numKeys], f = soundingLengthForKey)
-// export stringIndicesForKeys = map([0..<numKeys], f = stringIdxForKey)
+export frequencies = map([0..<numKeys], f = frequencyForKey)
+export tangentLayoutLengths = map([0..<numKeys], f = tangentLayoutLengthForKey)
+export soundingLengths = map([0..<numKeys], f = soundingLengthForKey)
+export stringIndicesForKeys = map([0..<numKeys], f = stringIdxForKey)
+export stringForKeys = map([0..<numKeys], f = stringIdxForKey)
+export bridgeXForStrings = map([0..<numStrings], f = bridgeXForString)
