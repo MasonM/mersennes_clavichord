@@ -5,9 +5,7 @@ import * from "params.kcl"
 // The black keys are interpreted as C#, Eb, F#, G#, and Bb, which is the
 // usual practical quarter-comma meantone spelling for this compass.
 export referenceA1KeyIdx = 33
-export referenceA1PitchClassIdx = 9
 export referenceA1OctaveIdx = 2
-export quarterCommaFifth = 5 ^ (1 / 4)
 export meantonePitchClassRatios = [
   1,
   5 ^ (7 / 4) / 16,
@@ -50,15 +48,13 @@ export firstBridgeCenterX = secondBridgeCenterX + 70mm
 // Fit the rack tangent layout to the existing rack: the lowest C uses the
 // deepest/bass part of the rack and c3 uses the shallow treble end. Because the
 // compass spans four octaves, c3 is 1/16 the pitch-scaled reference length of low C.
-export rackBassCutoutX = toolboxLength + wallThickness + 18mm
-export rackTrebleCutoutX = soundboardStart[0] - 54mm
-export rackCutoutXSpan = rackTrebleCutoutX - rackBassCutoutX
-export lowCSoundingLength = rackCutoutXSpan * 16 / 15
+export rackBassCutoutX = toolboxLength
+export lowCSoundingLength = firstBridgeCenterX - rackBassCutoutX
 
 // Pitch-scaled tangent layout length. This remains separate from the geometric
 // soundingLengthForKey(), because the true sounding length depends on the bridge
 // assigned to the string course that the key strikes.
-export fn tangentLayoutLengthForKey(@keyIdx) {
+export fn soundingLengthForKey(@keyIdx) {
   return frequencyForKey(0) * lowCSoundingLength / frequencyForKey(keyIdx)
 }
 
@@ -139,36 +135,17 @@ export rackLowerSecondSlope = (rackFrontTipY - rackFrontKinkY) / (rackFrontTipX 
 
 export rackSlotWidth = 3mm
 export rackSlotDepth = 11mm
-export rackSoundingLengthAnchorX = rackBassCutoutX + lowCSoundingLength
-
-export fn unspreadSlotXForKey(@keyIdx) {
-  return rackSoundingLengthAnchorX - tangentLayoutLengthForKey(keyIdx)
-}
-
-// The pitch-scaled tangent positions are visually compressed at the treble end.
-// Spread the top octave from c2 through c3 across the remaining rack width,
-// keeping slots vertical and preserving the fretted string/course assignment.
-export trebleSlotSpreadFirstKeyIdx = 36
-export trebleSlotSpreadLastKeyIdx = numKeys - 1
-export trebleSlotEndMarginX = rackSlotWidth / 2 + 1mm
-export trebleSlotSpreadFirstX = unspreadSlotXForKey(trebleSlotSpreadFirstKeyIdx)
-export trebleSlotSpreadLastX = rackFrontTipX - trebleSlotEndMarginX
-export trebleSlotSpreadStep = (trebleSlotSpreadLastX - trebleSlotSpreadFirstX) / (trebleSlotSpreadLastKeyIdx - trebleSlotSpreadFirstKeyIdx)
 
 // Rack slot X follows the existing pitch-scaled tangent layout until the treble
 // spread range, then switches to the widened high-key layout above.
 export fn slotXForKey(@keyIdx) {
-  return if keyIdx < trebleSlotSpreadFirstKeyIdx {
-    unspreadSlotXForKey(keyIdx)
+  return if false {
+    bridgeXForString(stringIdxForKey(keyIdx)) - soundingLengthForKey(keyIdx)
   } else {
-    trebleSlotSpreadFirstX + (keyIdx - trebleSlotSpreadFirstKeyIdx) * trebleSlotSpreadStep
+    // HACK ALERT: The code above isn't giving the right positions for reasons I
+    // haven't figured out yet, so just give somewhat plausible positions.
+    rackBassCutoutX + (keyIdx * 13)
   }
-}
-
-// The true sounding length is the distance from the tangent/slot X to the bridge
-// over which that key's two-string course passes.
-export fn soundingLengthForKey(@keyIdx) {
-  return bridgeXForString(stringIdxForKey(keyIdx)) - slotXForKey(keyIdx)
 }
 
 // Rack slot Y is the lower/front edge of the existing rack profile evaluated at
@@ -189,8 +166,8 @@ export fn slotYForKey(@keyIdx) {
 
 // Uncomment for debugging
 export frequencies = map([0..<numKeys], f = frequencyForKey)
-export tangentLayoutLengths = map([0..<numKeys], f = tangentLayoutLengthForKey)
-export soundingLengths = map([0..<numKeys], f = soundingLengthForKey)
+//export soundingLengths = map([0..<numKeys], f = soundingLengthForKey)
 export stringIndicesForKeys = map([0..<numKeys], f = stringIdxForKey)
 export stringForKeys = map([0..<numKeys], f = stringIdxForKey)
 export bridgeXForStrings = map([0..<numStrings], f = bridgeXForString)
+export slotXForKeys = map([0..<numKeys], f = slotXForKey)
