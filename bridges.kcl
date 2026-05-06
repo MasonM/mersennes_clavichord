@@ -10,7 +10,7 @@ bridgeCurveCenterOffset = -10.5mm
 bridgeWoodColor = "#8b552b"
 bridgeCourseCounts = [9, 3, 8, 9, 6]
 
-// First bridge for the top 9 courses / 18 strings.
+// First bridge for the bottom 9 courses / 18 strings.
 firstBridgeCourseCount = bridgeCourseCounts[0]
 firstBridgeStringCount = firstBridgeCourseCount * 2
 firstBridgeFirstString = numStrings - firstBridgeStringCount
@@ -28,7 +28,7 @@ firstBridgeYMin = firstBridgeYBounds[0] - bridgeEndMarginY
 firstBridgeYMax = firstBridgeYBounds[1] + bridgeEndMarginY
 firstBridgeLength = firstBridgeYMax - firstBridgeYMin
 
-// Second bridge for the next 3 courses / 6 strings immediately before the
+// Second bridge for the next 3 courses / 6 strings immediately after the
 // first-bridge string group.
 secondBridgeCourseCount = bridgeCourseCounts[1]
 secondBridgeStringCount = secondBridgeCourseCount * 2
@@ -46,7 +46,7 @@ secondBridgeLength = secondBridgeYMax - secondBridgeYMin
 secondBridgeLengthScale = secondBridgeLength / firstBridgeLength
 secondBridgeTranslateY = secondBridgeYMin - (firstBridgeYMin * secondBridgeLengthScale)
 
-// Third bridge for the next 8 courses / 16 strings immediately before the
+// Third bridge for the next 8 courses / 16 strings immediately after the
 // second-bridge string group.
 thirdBridgeCourseCount = bridgeCourseCounts[2]
 thirdBridgeStringCount = thirdBridgeCourseCount * 2
@@ -64,7 +64,7 @@ thirdBridgeLength = thirdBridgeYMax - thirdBridgeYMin
 thirdBridgeLengthScale = thirdBridgeLength / firstBridgeLength
 thirdBridgeTranslateY = thirdBridgeYMin - (firstBridgeYMin * thirdBridgeLengthScale)
 
-// Fourth bridge for the next 9 courses / 18 strings immediately before the
+// Fourth bridge for the next 9 courses / 18 strings immediately after the
 // third-bridge string group.
 fourthBridgeCourseCount = bridgeCourseCounts[3]
 fourthBridgeStringCount = fourthBridgeCourseCount * 2
@@ -82,7 +82,7 @@ fourthBridgeLength = fourthBridgeYMax - fourthBridgeYMin
 fourthBridgeLengthScale = fourthBridgeLength / firstBridgeLength
 fourthBridgeTranslateY = fourthBridgeYMin - (firstBridgeYMin * fourthBridgeLengthScale)
 
-// Fifth and final bridge for the last 6 courses / 12 strings immediately before
+// Fifth and final bridge for the last 6 courses / 12 strings immediately after
 // the fourth-bridge string group.
 fifthBridgeCourseCount = bridgeCourseCounts[4]
 fifthBridgeStringCount = fifthBridgeCourseCount * 2
