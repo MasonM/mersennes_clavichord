@@ -29,6 +29,8 @@ export fn meantonePitchRatioForKey(@keyIdx) {
 }
 
 export useEqualTemperament = true
+
+// This is the interval proposed by Mersenne
 export equalTemperedSemitoneInterval = (2 / (3 - (2 ^ (1 / 2)))) ^ (1 / 4)
 
 export fn frequencyForKey(@keyIdx) {
@@ -51,9 +53,7 @@ export firstBridgeCenterX = secondBridgeCenterX + 70mm
 export rackBassCutoutX = toolboxLength
 export lowCSoundingLength = firstBridgeCenterX - rackBassCutoutX
 
-// Pitch-scaled tangent layout length. This remains separate from the geometric
-// soundingLengthForKey(), because the true sounding length depends on the bridge
-// assigned to the string course that the key strikes.
+// Calculate sounding length using Mersenne's laws
 export fn soundingLengthForKey(@keyIdx) {
   return frequencyForKey(0) * lowCSoundingLength / frequencyForKey(keyIdx)
 }
@@ -140,10 +140,11 @@ export rackSlotDepth = 11mm
 // spread range, then switches to the widened high-key layout above.
 export fn slotXForKey(@keyIdx) {
   return if false {
+    // TODO: Figure out why this isn't giving the right positions. Did I get the bridge positioning wrong?
     bridgeXForString(stringIdxForKey(keyIdx)) - soundingLengthForKey(keyIdx)
   } else {
-    // HACK ALERT: The code above isn't giving the right positions for reasons I
-    // haven't figured out yet, so just give somewhat plausible positions.
+    // HACK: return plausible positions instead of calculating based on the
+    // sounding length
     rackBassCutoutX + keyIdx * 13
   }
 }
