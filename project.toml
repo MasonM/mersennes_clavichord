@@ -7,3 +7,6 @@ id = "72c87115-aa66-4b85-88c8-c03e0f631138"
 
 [settings.debug]
 show_modeling_machine_state = true
+
+[cloud."zoo.dev"]
+project_id = "8a3d0547-5ac6-41f7-82f4-90084e617db2"
