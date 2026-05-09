@@ -68,5 +68,3 @@ rack = subtract([rackBlank], tools = slots)
 
 hiddenslotProfile = hide(slotProfile)
 hiddenPrototypeslot = hide([prototypeslot])
-hiddenslots = hide(slots)
-hiddenRackBlank = hide([rackBlank])
