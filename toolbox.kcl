@@ -148,7 +148,6 @@ toolboxBlock = subtract([toolboxOuterBlock], tools = [toolboxCavityBlock])
 
 hiddenToolboxOuterProfile = hide(toolboxOuterProfile)
 hiddenToolboxCavityProfile = hide(toolboxCavityProfile)
-hiddenToolboxConstruction = hide([toolboxOuterBlock, toolboxCavityBlock])
 
 lidBaseProfile = sketch(on = XY) {
   lidBaseFront = line(start = [var 0mm, var 0mm], end = [var 110mm, var 0mm])
