@@ -1,90 +1,15 @@
 import * from "params.kcl"
 import * from "rack_utils.kcl"
 import * from "key_utils.kcl"
+import * from "utils.kcl"
 
 accidentalKeyStartY = naturalKeyLength / 3
 accidentalKeyLength = naturalKeyLength - (accidentalKeyStartY)
 accidentalKeyBaseZ = keyBaseZ + naturalKeyHeight
 accidentalKeyHeight = 5mm
 
-naturalKeyFootprintProfile = sketch(on = XY) {
-  naturalKeyFront = line(start = [var 0mm, var 0mm], end = [var 22mm, var 0mm])
-  naturalKeyRight = line(start = [var 22mm, var 0mm], end = [var 22mm, var 160mm])
-  naturalKeyBack = line(start = [var 22mm, var 160mm], end = [var 0mm, var 160mm])
-  naturalKeyLeft = line(start = [var 0mm, var 160mm], end = [var 0mm, var 0mm])
-
-  coincident([
-    naturalKeyFront.end,
-    naturalKeyRight.start
-  ])
-  coincident([
-    naturalKeyRight.end,
-    naturalKeyBack.start
-  ])
-  coincident([
-    naturalKeyBack.end,
-    naturalKeyLeft.start
-  ])
-  coincident([
-    naturalKeyLeft.end,
-    naturalKeyFront.start
-  ])
-  coincident([naturalKeyFront.start, ORIGIN])
-  horizontal(naturalKeyFront)
-  vertical(naturalKeyRight)
-  horizontal(naturalKeyBack)
-  vertical(naturalKeyLeft)
-  distance([
-    naturalKeyFront.start,
-    naturalKeyFront.end
-  ]) == naturalKeyWidth
-  distance([
-    naturalKeyRight.start,
-    naturalKeyRight.end
-  ]) == naturalKeyLength
-}
-
-accidentalKeyFootprintProfile = sketch(on = XY) {
-  accidentalKeyFront = line(start = [var 0mm, var 0mm], end = [var 13mm, var 0mm])
-  accidentalKeyRight = line(start = [var 13mm, var 0mm], end = [var 13mm, var 110mm])
-  accidentalKeyBack = line(start = [var 13mm, var 110mm], end = [var 0mm, var 110mm])
-  accidentalKeyLeft = line(start = [var 0mm, var 110mm], end = [var 0mm, var 0mm])
-
-  coincident([
-    accidentalKeyFront.end,
-    accidentalKeyRight.start
-  ])
-  coincident([
-    accidentalKeyRight.end,
-    accidentalKeyBack.start
-  ])
-  coincident([
-    accidentalKeyBack.end,
-    accidentalKeyLeft.start
-  ])
-  coincident([
-    accidentalKeyLeft.end,
-    accidentalKeyFront.start
-  ])
-  coincident([accidentalKeyFront.start, ORIGIN])
-  horizontal(accidentalKeyFront)
-  vertical(accidentalKeyRight)
-  horizontal(accidentalKeyBack)
-  vertical(accidentalKeyLeft)
-  distance([
-    accidentalKeyFront.start,
-    accidentalKeyFront.end
-  ]) == accidentalKeyWidth
-  distance([
-    accidentalKeyRight.start,
-    accidentalKeyRight.end
-  ]) == accidentalKeyLength
-}
-
-prototypeNaturalKey = extrude(region(point = [1mm, 1mm], sketch = naturalKeyFootprintProfile), length = naturalKeyHeight, method = NEW)
-prototypeAccidentalKey = extrude(region(point = [1mm, 1mm], sketch = accidentalKeyFootprintProfile), length = accidentalKeyHeight, method = NEW)
-hiddenNaturalKeyFootprintProfile = hide(naturalKeyFootprintProfile)
-hiddenAccidentalKeyFootprintProfile = hide(accidentalKeyFootprintProfile)
+prototypeNaturalKey = cube([naturalKeyWidth, naturalKeyLength, naturalKeyHeight])
+prototypeAccidentalKey = cube([accidentalKeyWidth, accidentalKeyLength, accidentalKeyHeight])
 
 fn naturalKeyX(@naturalIdx) {
   return keyStartX + naturalIdx * naturalKeyWidth
@@ -101,28 +26,28 @@ fn accidentalKeyX(@accidentalIdx) {
   return keyStartX + (baseNaturalIdx + 1) * naturalKeyWidth - (accidentalKeyWidth / 2)
 }
 
-fn makeNaturalKey(@naturalIdx) {
-  return clone(prototypeNaturalKey)
-    |> translate(
-         x = naturalKeyX(naturalIdx),
-         y = 0,
-         z = keyBaseZ,
-         global = true,
-       )
+fn naturalKeyTransform(@naturalIdx) {
+  return {
+    translate = [
+      naturalKeyX(naturalIdx),
+      0,
+      keyBaseZ,
+    ]
+  }
 }
 
-fn makeAccidentalKey(@accidentalIdx) {
-  return clone(prototypeAccidentalKey)
-    |> translate(
-         x = accidentalKeyX(accidentalIdx),
-         y = accidentalKeyStartY,
-         z = accidentalKeyBaseZ,
-         global = true,
-       )
+fn accidentalKeyTransform(@accidentalIdx) {
+  return {
+    translate = [
+      accidentalKeyX(accidentalIdx),
+      accidentalKeyStartY,
+      accidentalKeyBaseZ,
+    ]
+  }
 }
 
-naturalKeys = map(naturalKeyIndices, f = makeNaturalKey)
-accidentalKeys = map(accidentalKeyIndices, f = makeAccidentalKey)
+naturalKeys = patternTransform(prototypeNaturalKey, instances = numNaturalKeys, transform = naturalKeyTransform)
+accidentalKeys = patternTransform(prototypeAccidentalKey, instances = numAccidentalKeys, transform = accidentalKeyTransform)
 
 whiteNaturalKeys = appearance(
   naturalKeys,
