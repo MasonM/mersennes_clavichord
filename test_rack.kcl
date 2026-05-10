@@ -1,0 +1,29 @@
+//import slots from "rack.kcl"
+import * from "utils.kcl"
+import * from "params.kcl"
+import * from "temperament.kcl"
+
+slotCutHeight = 50mm
+rackHeight = soundboardStart[2] + soundboardHeight
+
+cube([5mm, caseWidth, caseHeight])
+  |> translate(x = toolboxLength)
+
+cube([5mm, caseWidth, caseHeight])
+  |> translate(x = soundboardStart[0])
+
+fn transformSlot(@keyIdx) {
+    return {
+        translate =  [
+            slotXForKey(keyIdx) - (rackSlotWidth / 2),
+            slotYForKey(keyIdx),
+            rackHeight - slotCutHeight,
+        ]
+    }
+}
+
+prototypeslot = cube([rackSlotWidth, rackSlotDepth, slotCutHeight])
+
+patternTransform(prototypeslot, instances = numKeys, transform = transformSlot)
+
+hiddenPrototypeslot = hide([prototypeslot])
