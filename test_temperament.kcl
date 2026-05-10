@@ -1,12 +1,4 @@
-import caseLength, numKeys, numStrings from "params.kcl"
-import frequencyForKey, stringIdxForKey, bridgeXForString, slotXForKey, soundingLengthForKey from "temperament.kcl"
+import frequencyForKey from "temperament.kcl"
+import numKeys from "params.kcl"
 
-keyIndices = [0..<numKeys]
-stringIndices = [0..<numStrings]
-
-frequencies = map(keyIndices, f = frequencyForKey)
-stringIndicesForKeys = map(keyIndices, f = stringIdxForKey)
-stringForKeys = map(keyIndices, f = stringIdxForKey)
-bridgeXForStrings = map(stringIndices, f = bridgeXForString)
-slotXForKeys = map(keyIndices, f = slotXForKey)
-soundingLengthForKeys = map(keyIndices, f = soundingLengthForKey)
+frequencies = map([0..<numKeys], f = frequencyForKey)

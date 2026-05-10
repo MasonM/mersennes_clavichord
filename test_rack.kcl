@@ -1,7 +1,6 @@
-//import slots from "rack.kcl"
-import * from "utils.kcl"
+import cube from "utils.kcl"
 import * from "params.kcl"
-import * from "temperament.kcl"
+import * from "rack_utils.kcl"
 
 slotCutHeight = 50mm
 rackHeight = soundboardStart[2] + soundboardHeight
@@ -27,3 +26,12 @@ prototypeslot = cube([rackSlotWidth, rackSlotDepth, slotCutHeight])
 patternTransform(prototypeslot, instances = numKeys, transform = transformSlot)
 
 hiddenPrototypeslot = hide([prototypeslot])
+
+keyIndices = [0..<numKeys]
+stringIndices = [0..<numStrings]
+
+_stringIndicesForKeys = map(keyIndices, f = stringIdxForKey)
+_stringForKeys = map(keyIndices, f = stringIdxForKey)
+_bridgeXForStrings = map(stringIndices, f = bridgeXForString)
+_slotXForKeys = map(keyIndices, f = slotXForKey)
+_soundingLengthForKeys = map(keyIndices, f = soundingLengthForKey)
