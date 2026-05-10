@@ -26,5 +26,6 @@ import "soundbox.kcl" as soundbox
 // The following are really slow to render. Comment them out when iterating on other modules.
 import "strings.kcl" as strings
 import "keyboard.kcl" as keyboard
+import "key_levers.kcl" as keyLevers
 import "rack.kcl" as rack
 import "tangents.kcl" as tangents
