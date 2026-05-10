@@ -52,7 +52,7 @@ fn transformString(@stringNum) {
 prototypeString = cylinder(d = stringDiameter, h = prototypeStringLength)
   |> rotate(axis = Y, angle = 90deg)
 
-strings = patternTransform(prototypeString, instances = numStrings, transform = transformString)
+strings = patternTransform(prototypeString, instances = numStrings + 1, transform = transformString)
 hiddenPrototypeString = hide([prototypeString])
 
 brassStrings = appearance(
@@ -74,7 +74,7 @@ fn transformHitchpin(@stringNum) {
 }
 
 prototypeHitchPin = cylinder(d = hitchPinDiameter, h = hitchPinHeight)
-hitchPins = patternTransform(prototypeHitchPin, instances = numStrings, transform = transformHitchpin)
+hitchPins = patternTransform(prototypeHitchPin, instances = numStrings + 1, transform = transformHitchpin)
 hiddenPrototypeHitchPin = hide([prototypeHitchPin])
 
 ironHitchPins = appearance(
@@ -96,7 +96,7 @@ fn transformTuningpin(@stringNum) {
 }
 
 prototypeTuningPin = cylinder(d = tuningPinDiameter, h = tuningPinHeight)
-tuningPins = patternTransform(prototypeTuningPin, instances = numStrings, transform = transformTuningpin)
+tuningPins = patternTransform(prototypeTuningPin, instances = numStrings + 1, transform = transformTuningpin)
 hiddenPrototypeTuningPin = hide([prototypeTuningPin])
 
 ironTuningPins = appearance(

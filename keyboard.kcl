@@ -8,9 +8,6 @@ accidentalKeyLength = naturalKeyLength - (accidentalKeyStartY)
 accidentalKeyBaseZ = keyBaseZ + naturalKeyHeight
 accidentalKeyHeight = 5mm
 
-prototypeNaturalKey = cube([naturalKeyWidth, naturalKeyLength, naturalKeyHeight])
-prototypeAccidentalKey = cube([accidentalKeyWidth, accidentalKeyLength, accidentalKeyHeight])
-
 fn naturalKeyX(@naturalIdx) {
   return keyStartX + naturalIdx * naturalKeyWidth
 }
@@ -26,30 +23,34 @@ fn accidentalKeyX(@accidentalIdx) {
   return keyStartX + (baseNaturalIdx + 1) * naturalKeyWidth - (accidentalKeyWidth / 2)
 }
 
-fn transformNaturalKey(@naturalNum) {
-  naturalIdx = naturalNum - 1
+fn transformNaturalKey(@naturalIdx) {
   return {
     translate = [
-      naturalKeyX(naturalIdx),
+      naturalKeyX(naturalIdx) - naturalKeyX(0),
       0,
-      keyBaseZ,
+      0,
     ]
   }
 }
 
-fn transformAccidentalKey(@accidentalNum) {
-  accidentalIdx = accidentalNum - 1
+fn transformAccidentalKey(@accidentalIdx) {
   return {
     translate = [
-      accidentalKeyX(accidentalIdx),
-      accidentalKeyStartY,
-      accidentalKeyBaseZ,
+      accidentalKeyX(accidentalIdx) - accidentalKeyX(0),
+      0,
+      0,
     ]
   }
 }
 
-naturalKeys = patternTransform(prototypeNaturalKey, instances = numNaturalKeys, transform = transformNaturalKey)
-accidentalKeys = patternTransform(prototypeAccidentalKey, instances = numAccidentalKeys, transform = transformAccidentalKey)
+firstNaturalKey = cube([naturalKeyWidth, naturalKeyLength, naturalKeyHeight])
+  |> translate(x=naturalKeyX(0), z=keyBaseZ)
+
+firstAccidentalKey = cube([accidentalKeyWidth, accidentalKeyLength, accidentalKeyHeight])
+  |> translate(x=accidentalKeyX(0), y=accidentalKeyStartY, z=accidentalKeyBaseZ)
+
+naturalKeys = patternTransform(firstNaturalKey, instances = numNaturalKeys, transform = transformNaturalKey)
+accidentalKeys = patternTransform(firstAccidentalKey, instances = numAccidentalKeys, transform = transformAccidentalKey)
 
 whiteNaturalKeys = appearance(
   naturalKeys,
@@ -63,8 +64,4 @@ blackAccidentalKeys = appearance(
   roughness = 48,
   metalness = 0,
 )
-hiddenPrototypeKeys = hide([
-  prototypeNaturalKey,
-  prototypeAccidentalKey
-])
 

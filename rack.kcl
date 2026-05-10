@@ -41,7 +41,7 @@ fn transformSlot(@keyNum) {
 
 prototypeslot = cube([rackSlotWidth, rackSlotDepth, slotCutHeight])
 
-slots = patternTransform(prototypeslot, instances = numKeys, transform = transformSlot)
+slots = patternTransform(prototypeslot, instances = numKeys + 1, transform = transformSlot)
 
 rack = subtract([rackBlank], tools = slots)
   |> appearance(color = lightWoodColor, roughness = 80, metalness = 0)
