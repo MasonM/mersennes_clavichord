@@ -1,9 +1,12 @@
 import caseLength, numKeys, numStrings from "params.kcl"
-import frequencyForKey, stringIdxForKey, bridgeXForString, slotXForKey from "temperament.kcl"
+import frequencyForKey, stringIdxForKey, bridgeXForString, slotXForKey, soundingLengthForKey from "temperament.kcl"
 
-// Uncomment for debugging
-export frequencies = map([0..<numKeys], f = frequencyForKey)
-export stringIndicesForKeys = map([0..<numKeys], f = stringIdxForKey)
-export stringForKeys = map([0..<numKeys], f = stringIdxForKey)
-export bridgeXForStrings = map([0..<numStrings], f = bridgeXForString)
-export slotXForKeys = map([0..<numKeys], f = slotXForKey)
+keyIndices = [0..<numKeys]
+stringIndices = [0..<numStrings]
+
+frequencies = map(keyIndices, f = frequencyForKey)
+stringIndicesForKeys = map(keyIndices, f = stringIdxForKey)
+stringForKeys = map(keyIndices, f = stringIdxForKey)
+bridgeXForStrings = map(stringIndices, f = bridgeXForString)
+slotXForKeys = map(keyIndices, f = slotXForKey)
+soundingLengthForKeys = map(keyIndices, f = soundingLengthForKey)

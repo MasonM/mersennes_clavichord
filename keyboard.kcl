@@ -1,5 +1,5 @@
 import * from "params.kcl"
-import * from "temperament.kcl"
+import * from "rack_utils.kcl"
 
 // 49-key chromatic compass C..c3, no short octave.
 // The front of the keyboard is the low-Y side of the keywell.

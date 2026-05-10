@@ -1,0 +1,126 @@
+import * from "params.kcl"
+import * from "temperament.kcl"
+
+export fifthBridgeCenterX = caseLength - (caseLength / 3)
+export fourthBridgeCenterX = fifthBridgeCenterX + 70mm
+export thirdBridgeCenterX = fourthBridgeCenterX + 100mm
+export secondBridgeCenterX = thirdBridgeCenterX + 100mm
+export firstBridgeCenterX = secondBridgeCenterX + 70mm
+
+// Fit the rack tangent layout to the existing rack: the lowest C uses the
+// deepest/bass part of the rack and c3 uses the shallow treble end. Because the
+// compass spans four octaves, c3 is 1/16 the pitch-scaled reference length of low C.
+export rackBassCutoutX = toolboxLength
+export lowCSoundingLength = firstBridgeCenterX - rackBassCutoutX
+
+// Calculate sounding length using Mersenne's laws
+export fn soundingLengthForKey(@keyIdx) {
+  return frequencyForKey(0) * lowCSoundingLength / frequencyForKey(keyIdx)
+}
+
+// Mersenne-style bridge/course layout for 70 strings in 35 paired courses.
+// String indices increase upward/backward. Each key strikes the lower-indexed
+// representative string of its two-string course.
+export bridgeCourseCounts = [6, 9, 8, 3, 9]
+export bridgeStringCounts = [
+  bridgeCourseCounts[0] * 2,
+  bridgeCourseCounts[1] * 2,
+  bridgeCourseCounts[2] * 2,
+  bridgeCourseCounts[3] * 2,
+  bridgeCourseCounts[4] * 2
+]
+
+export firstBridgeFirstString = 0
+export firstBridgeLastString = firstBridgeFirstString + bridgeStringCounts[0] - 1
+export secondBridgeFirstString = firstBridgeLastString + 1
+export secondBridgeLastString = secondBridgeFirstString + bridgeStringCounts[1] - 1
+export thirdBridgeFirstString = secondBridgeLastString + 1
+export thirdBridgeLastString = thirdBridgeFirstString + bridgeStringCounts[2] - 1
+export fourthBridgeFirstString = thirdBridgeLastString + 1
+export fourthBridgeLastString = fourthBridgeFirstString + bridgeStringCounts[3] - 1
+export fifthBridgeFirstString = fourthBridgeLastString + 1
+export fifthBridgeLastString = numStrings - 1
+
+export fn bridgeXForString(@stringIdx) {
+  return if stringIdx < secondBridgeFirstString {
+    firstBridgeCenterX
+  } else if stringIdx < thirdBridgeFirstString {
+    secondBridgeCenterX
+  } else if stringIdx < fourthBridgeFirstString {
+    thirdBridgeCenterX
+  } else if stringIdx < fifthBridgeFirstString {
+    fourthBridgeCenterX
+  } else {
+    fifthBridgeCenterX
+  }
+}
+
+// The lower 17 notes are unfretted. From f upward, diatonic fretting with free
+// E and A continues to the top, with the final Bb2-B2-C3 sharing one course.
+export firstFrettedKeyIdx = 17
+export firstFrettedCourseIdx = 17
+export frettedKeysPerOctave = 12
+export frettedCoursesPerOctave = 7
+export frettedCoursePatternFromF = [0, 0, 1, 1, 2, 3, 3, 4, 4, 5, 5, 6]
+
+export fn courseIdxForKey(@keyIdx) {
+  return if keyIdx < firstFrettedKeyIdx {
+    keyIdx
+  } else if keyIdx == numKeys - 1 {
+    numCourses - 1
+  } else {
+    frettedKeyOffset = keyIdx - firstFrettedKeyIdx
+    frettedOctaveIdx = floor(frettedKeyOffset / frettedKeysPerOctave)
+    frettedPitchIdx = frettedKeyOffset % frettedKeysPerOctave
+    firstFrettedCourseIdx + frettedOctaveIdx * frettedCoursesPerOctave + frettedCoursePatternFromF[frettedPitchIdx]
+  }
+}
+
+export fn stringIdxForKey(@keyIdx) {
+  return courseIdxForKey(keyIdx) * 2
+}
+
+export rackBackY = caseWidth - wallThickness
+
+// Shared rack outline controls. rack.kcl uses these directly for the profile,
+// and slotYForKey() evaluates the same lower/front edge without changing it.
+export rackFrontKinkX = soundboardStart[0] / 2
+export rackFrontKinkY = rackBackY - 66mm
+export rackFrontTipX = soundboardStart[0]
+export rackFrontTipY = rackBackY - 12mm
+export rackFrontLowerX = wallThickness + 100mm
+export rackFrontLowerY = keywellWidth + 100mm
+export rackLowerFirstSlope = (rackFrontKinkY - rackFrontLowerY) / (rackFrontKinkX - rackFrontLowerX)
+export rackLowerSecondSlope = (rackFrontTipY - rackFrontKinkY) / (rackFrontTipX - rackFrontKinkX)
+
+export rackSlotWidth = 3mm
+export rackSlotDepth = 11mm
+
+// Rack slot X follows the existing pitch-scaled tangent layout until the treble
+// spread range, then switches to the widened high-key layout above.
+export fn slotXForKey(@keyIdx) {
+  return if false {
+    // TODO: Figure out why this isn't giving the right positions. Did I get the bridge positioning wrong?
+    bridgeXForString(stringIdxForKey(keyIdx)) - soundingLengthForKey(keyIdx)
+  } else {
+    // HACK: return plausible positions instead of calculating based on the
+    // sounding length
+    rackBassCutoutX + keyIdx * 13
+  }
+}
+
+// Rack slot Y is the lower/front edge of the existing rack profile evaluated at
+// the sounding-length X. The rectangular slot cutter starts here and cuts inward
+// along the global +Y direction, so the slots stay straight instead of rotating.
+export fn slotYForKey(@keyIdx) {
+  slotX = slotXForKey(keyIdx)
+  return if slotX < rackFrontLowerX {
+    keywellWidth
+  } else if slotX < rackFrontKinkX {
+    rackFrontLowerY + (slotX - rackFrontLowerX) * rackLowerFirstSlope
+  } else if slotX < rackFrontTipX {
+    rackFrontKinkY + (slotX - rackFrontKinkX) * rackLowerSecondSlope
+  } else {
+    rackFrontTipY
+  }
+}
