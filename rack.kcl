@@ -1,5 +1,6 @@
 import * from "params.kcl"
 import * from "temperament.kcl"
+import * from "utils.kcl"
 
 // The rack contains the slots where the key levers rest.
 // I can't clearly see the rack from Mersenne's description. It appears to have
@@ -29,27 +30,7 @@ rackBlank = extrude(region(point = [20mm, keywellWidth + 20mm], sketch = rackPro
   |> appearance(color = lightWoodColor, roughness = 80, metalness = 0)
 hiddenRackProfile = hide(rackProfile)
 
-slotProfile = sketch(on = XY) {
-  cutoutFront = line(start = [var 0mm, var 0mm], end = [var 6mm, var 0mm])
-  cutoutRight = line(start = [var 6mm, var 0mm], end = [var 6mm, var 5mm])
-  cutoutBack = line(start = [var 6mm, var 5mm], end = [var 0mm, var 5mm])
-  cutoutLeft = line(start = [var 0mm, var 5mm], end = [var 0mm, var 0mm])
-
-  coincident([cutoutFront.end, cutoutRight.start])
-  coincident([cutoutRight.end, cutoutBack.start])
-  coincident([cutoutBack.end, cutoutLeft.start])
-  coincident([cutoutLeft.end, cutoutFront.start])
-  coincident([cutoutFront.start, ORIGIN])
-  horizontal(cutoutFront)
-  vertical(cutoutRight)
-  horizontal(cutoutBack)
-  vertical(cutoutLeft)
-  distance([cutoutFront.start, cutoutFront.end]) == slotWidth
-  distance([cutoutRight.start, cutoutRight.end]) == slotDepth
-}
-
-slotRegion = region(point = [1mm, 1mm], sketch = slotProfile)
-prototypeslot = extrude(slotRegion, length = slotCutHeight, method = NEW)
+prototypeslot = cube([slotWidth, slotDepth, slotCutHeight])
 
 fn makeslot(@keyIdx) {
   return clone(prototypeslot)
@@ -66,5 +47,4 @@ slots = map(rackKeyIndices, f = makeslot)
 rack = subtract([rackBlank], tools = slots)
   |> appearance(color = lightWoodColor, roughness = 80, metalness = 0)
 
-hiddenslotProfile = hide(slotProfile)
 hiddenPrototypeslot = hide([prototypeslot])
