@@ -9,6 +9,10 @@
  * "temperament.kcl" to switch between them. See the "slotXForKeyFn()" for the
  * math used to calculate this.
  *
+ * Here's what it sounds like: https://open.spotify.com/album/7y2jMKdg6wnGTF2KrCVYo6?si=OVO8V7e3RBundObkuwff6A
+ *
+ * Git repository: https://github.com/MasonM/mersennes_clavichord
+ *
  * © 2026 by Mason Malone
  * Licensed under CC BY 4.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/4.0/
  */
