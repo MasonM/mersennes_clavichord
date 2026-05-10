@@ -28,7 +28,8 @@ rackBlank = extrude(region(point = [20mm, keywellWidth + 20mm], sketch = rackPro
   |> appearance(color = lightWoodColor, roughness = 80, metalness = 0)
 hiddenRackProfile = hide(rackProfile)
 
-fn transformSlot(@keyIdx) {
+fn transformSlot(@keyNum) {
+    keyIdx = keyNum - 1
     return {
         translate =  [
             slotXForKey[keyIdx] - (rackSlotWidth / 2),
@@ -44,5 +45,3 @@ slots = patternTransform(prototypeslot, instances = numKeys, transform = transfo
 
 rack = subtract([rackBlank], tools = slots)
   |> appearance(color = lightWoodColor, roughness = 80, metalness = 0)
-
-hiddenPrototypeslot = hide([prototypeslot])

@@ -26,7 +26,8 @@ fn accidentalKeyX(@accidentalIdx) {
   return keyStartX + (baseNaturalIdx + 1) * naturalKeyWidth - (accidentalKeyWidth / 2)
 }
 
-fn naturalKeyTransform(@naturalIdx) {
+fn transformNaturalKey(@naturalNum) {
+  naturalIdx = naturalNum - 1
   return {
     translate = [
       naturalKeyX(naturalIdx),
@@ -36,7 +37,8 @@ fn naturalKeyTransform(@naturalIdx) {
   }
 }
 
-fn accidentalKeyTransform(@accidentalIdx) {
+fn transformAccidentalKey(@accidentalNum) {
+  accidentalIdx = accidentalNum - 1
   return {
     translate = [
       accidentalKeyX(accidentalIdx),
@@ -46,8 +48,8 @@ fn accidentalKeyTransform(@accidentalIdx) {
   }
 }
 
-naturalKeys = patternTransform(prototypeNaturalKey, instances = numNaturalKeys, transform = naturalKeyTransform)
-accidentalKeys = patternTransform(prototypeAccidentalKey, instances = numAccidentalKeys, transform = accidentalKeyTransform)
+naturalKeys = patternTransform(prototypeNaturalKey, instances = numNaturalKeys, transform = transformNaturalKey)
+accidentalKeys = patternTransform(prototypeAccidentalKey, instances = numAccidentalKeys, transform = transformAccidentalKey)
 
 whiteNaturalKeys = appearance(
   naturalKeys,

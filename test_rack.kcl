@@ -37,7 +37,8 @@ cube([5mm, caseWidth, caseHeight])
 cube([5mm, caseWidth, caseHeight])
   |> translate(x = soundboardStart[0])
 
-fn transformSlot(@keyIdx) {
+fn transformSlot(@keyNum) {
+    keyIdx = keyNum - 1
     return {
         translate =  [
             slotXForKeysArray[keyIdx] - (rackSlotWidth / 2),
