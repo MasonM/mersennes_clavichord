@@ -33,28 +33,25 @@ fn tuningPinXForString(@stringIdx) {
   return tuningPinBaseX + tuningPinRow * tuningPinRowPitch
 }
 
-// Return the string segment length from the hitchpin tangent to the tuning pin tangent.
-fn stringLengthForString(@stringIdx) {
+fn transformString(@stringIdx) {
   stringStartX = hitchPinXForString(stringIdx) + hitchPinRadius
   stringEndX = tuningPinXForString(stringIdx) - tuningPinRadius
-  return stringEndX - stringStartX
+  length = stringEndX - stringStartX
+  return {
+    scale = [length, 1, 1],
+    scale = [1, 1, 1],
+    translate = [
+      hitchPinXForString(stringIdx) + hitchPinRadius,
+      stringY(stringIdx),
+      stringHeight
+    ]
+  }
 }
 
 prototypeString = cylinder(d = stringDiameter, h = prototypeStringLength)
   |> rotate(axis = Y, angle = 90deg)
 
-fn makeString(@stringIdx) {
-  return clone(prototypeString)
-    |> scale(x = stringLengthForString(stringIdx) / prototypeStringLength, global = true)
-    |> translate(
-         x = hitchPinXForString(stringIdx) + hitchPinRadius,
-         y = stringY(stringIdx),
-         z = stringHeight,
-         global = true,
-       )
-}
-
-strings = map(stringIndices, f = makeString)
+strings = patternTransform(prototypeString, instances = numStrings, transform = transformString)
 hiddenPrototypeString = hide([prototypeString])
 
 brassStrings = appearance(
@@ -64,19 +61,18 @@ brassStrings = appearance(
   roughness = 22,
 )
 
-prototypeHitchPin = cylinder(d = hitchPinDiameter, h = hitchPinHeight)
-
-fn makeHitchPin(@stringIdx) {
-  return clone(prototypeHitchPin)
-    |> translate(
-         x = hitchPinXForString(stringIdx),
-         y = stringY(stringIdx),
-         z = hitchPinBaseZ,
-         global = true,
-       )
+fn transformHitchpin(@stringIdx) {
+  return {
+    translate = [
+      hitchPinXForString(stringIdx),
+      stringY(stringIdx),
+      hitchPinBaseZ
+    ]
+  }
 }
 
-hitchPins = map(stringIndices, f = makeHitchPin)
+prototypeHitchPin = cylinder(d = hitchPinDiameter, h = hitchPinHeight)
+hitchPins = patternTransform(prototypeHitchPin, instances = numStrings, transform = transformHitchpin)
 hiddenPrototypeHitchPin = hide([prototypeHitchPin])
 
 ironHitchPins = appearance(
@@ -86,19 +82,18 @@ ironHitchPins = appearance(
   roughness = 35,
 )
 
-prototypeTuningPin = cylinder(d = tuningPinDiameter, h = tuningPinHeight)
-
-fn makeTuningPin(@stringIdx) {
-  return clone(prototypeTuningPin)
-    |> translate(
-         x = tuningPinXForString(stringIdx),
-         y = stringY(stringIdx),
-         z = tuningPinBaseZ,
-         global = true,
-       )
+fn transformTuningpin(@stringIdx) {
+  return {
+    translate = [
+      tuningPinXForString(stringIdx),
+      stringY(stringIdx),
+      tuningPinBaseZ
+    ]
+  }
 }
 
-tuningPins = map(stringIndices, f = makeTuningPin)
+prototypeTuningPin = cylinder(d = tuningPinDiameter, h = tuningPinHeight)
+tuningPins = patternTransform(prototypeTuningPin, instances = numStrings, transform = transformTuningpin)
 hiddenPrototypeTuningPin = hide([prototypeTuningPin])
 
 ironTuningPins = appearance(
