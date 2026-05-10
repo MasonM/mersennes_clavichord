@@ -7,16 +7,15 @@ rightCompartmentInteriorLength = rightCompartmentLength - (2 * wallThickness)
 rightCompartmentTopZ = rightCompartmentWallZ + rightCompartmentWallHeight
 
 // Recessed compartment lid, styled after the toolbox lid but without a knob.
-rightCompartmentLidClearance = 2mm
 rightCompartmentLidRimRecess = 9mm
 rightCompartmentLidBaseThickness = 5mm
 rightCompartmentTerraceStepWidth = 7mm
 rightCompartmentTerraceStepDrop = 1.8mm
 
-rightCompartmentLidLength = rightCompartmentInteriorLength - (2 * rightCompartmentLidClearance)
-rightCompartmentLidWidth = rightCompartmentInteriorWidth - (2 * rightCompartmentLidClearance)
-rightCompartmentLidX = rightCompartmentStartX + wallThickness + rightCompartmentLidClearance
-rightCompartmentLidY = rightCompartmentInteriorY + rightCompartmentLidClearance
+rightCompartmentLidLength = rightCompartmentInteriorLength
+rightCompartmentLidWidth = rightCompartmentInteriorWidth
+rightCompartmentLidX = rightCompartmentStartX + wallThickness
+rightCompartmentLidY = rightCompartmentInteriorY
 
 rightCompartmentTerraceOuterTopZ = rightCompartmentTopZ - rightCompartmentLidRimRecess
 rightCompartmentLidBaseTopZ = rightCompartmentTerraceOuterTopZ - (4 * rightCompartmentTerraceStepDrop)

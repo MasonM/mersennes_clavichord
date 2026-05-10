@@ -35,7 +35,7 @@ export innerWidth = caseWidth - keywellWidth - wallThickness
 
 // --- Soundboard ---
 export soundboardStart = [
-  caseLength - soundboardFrontLength - wallThickness,
+  keywellLength + toolboxLength,
   keywellWidth + wallThickness,
   caseHeight - (3 * pouce)
 ]
@@ -49,8 +49,8 @@ export wrestplankStart = [
 ]
 
 // --- Right compartment box ---
-export rightCompartmentStartX = soundboardStart[0] + wallThickness
-export rightCompartmentLength = caseLength - wallThickness - rightCompartmentStartX
+export rightCompartmentStartX = soundboardStart[0]
+export rightCompartmentLength = caseLength - rightCompartmentStartX
 export rightCompartmentBackY = soundboardStart[1] - wallThickness
 export rightCompartmentInteriorY = wallThickness
 export rightCompartmentInteriorWidth = rightCompartmentBackY - rightCompartmentInteriorY

@@ -104,12 +104,41 @@ export fn slotSpacing() {
   }
 }
 
-// Rack slot X follows the existing pitch-scaled tangent layout until the treble
-// spread range, then switches to the widened high-key layout above.
+// Determine the x position of the rack slot the given key will fit into.
+//
+// This is used to determine the x position of the tangent too, which means it
+// will also determine the sounding length of the string (i.e. the distance
+// between where the tangent strikes and the bridge).
+//
+// The slot for the lowest C key is defined as 10mm from the toolbox, and
+// subsequent slots are calculated relative to that.
+//
+// We must take into account the temperament for the slots of fretted keys (i.e.
+// keys that share a single string course). That wouldn't be necessary if this
+// were an unfretted instrument (i.e. each key has a dedicated course), since
+// changing the temperament would only require changing the string tension. We
+// can't do that for a fretted keys, since the string tension must be kept
+// constant.
+//
+// To do that, we use Mersenne's laws, which relate the sounding length of a
+// string to its pitch and tension. We use the form of these laws explained in
+// chapter 9 of "The Science of Music" by Mark Newman (https://public.websites.umich.edu/~mejn/tsom/index.html).
+//  freq = (1 / L * d) * sqrt(T / pi * p)
+// where L is the sounding length, d is the string diameter, T is the tension,
+// and p is the linear density of the string. For a given string under constant
+// tension, the frequency is inversely proportional to the sounding length. So
+// if we know the frequency of the previous key and its slot position (which
+// determines its sounding length), we can calculate the slot position for the
+// current key based on its frequency.
+//
+// This function had to be refactored to avoid a stack overflow, since Zoo
+// currently has a stack limit of 50: https://github.com/KittyCAD/modeling-app/blob/d0e1eb2615aaf3af07409ce7dce1890327c0281c/rust/kcl-lib/src/execution/state.rs#L410
 export fn slotXForKeyFn(@keyIdx) {
   return if keyIdx == 0 {
+    // Low C has fixed position relative to the toolbox
     toolboxLength + 10mm
   } else if courseIdxForKey(keyIdx) == courseIdxForKey(keyIdx - 1) {
+    // Fretted key. Calculate the sounding length using Mersenne's laws.
     bridgeXForString(stringIdxForKey(keyIdx)) - (
       frequencyForKey(keyIdx - 1) * (
         (bridgeXForString(stringIdxForKey(keyIdx - 1)) - slotXForKeyFn(keyIdx - 1))

@@ -1,9 +1,5 @@
 import * from "params.kcl"
 
-// Strict quarter-comma meantone pitch model for the 49-key compass C..c3.
-// Key indices are chromatic: 0 = C, 9 = A in the lowest octave, 33 = a1.
-// The black keys are interpreted as C#, Eb, F#, G#, and Bb, which is the
-// usual practical quarter-comma meantone spelling for this compass.
 export referenceA1KeyIdx = 33
 export referenceA1OctaveIdx = 2
 export meantonePitchClassRatios = [
@@ -22,13 +18,17 @@ export meantonePitchClassRatios = [
 ]
 export referenceA1PitchRatio = 5 ^ (3 / 4) / 2 * 2 ^ referenceA1OctaveIdx
 
+// Strict quarter-comma meantone pitch model for the 49-key compass C..c3.
+// Key indices are chromatic: 0 = C, 9 = A in the lowest octave, 33 = a1.
+// The black keys are interpreted as C#, Eb, F#, G#, and Bb, which is the
+// usual practical quarter-comma meantone spelling for this compass.
 export fn meantonePitchRatioForKey(@keyIdx) {
   octaveIdx = floor(keyIdx / 12)
   pitchClassIdx = keyIdx % 12
   return meantonePitchClassRatios[pitchClassIdx] * 2 ^ octaveIdx
 }
 
-export useEqualTemperament = true
+export useEqualTemperament = false
 
 // This is the interval proposed by Mersenne
 export equalTemperedSemitoneInterval = (2 / (3 - (2 ^ (1 / 2)))) ^ (1 / 4)
