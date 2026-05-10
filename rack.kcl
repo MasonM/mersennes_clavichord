@@ -11,8 +11,6 @@ import * from "utils.kcl"
 // TODO: Add the left-side bridge
 
 rackHeight = soundboardStart[2] + soundboardHeight
-slotWidth = rackSlotWidth
-slotDepth = rackSlotDepth
 slotCutHeight = 50mm
 rackKeyIndices = [0..<numKeys]
 
@@ -30,19 +28,19 @@ rackBlank = extrude(region(point = [20mm, keywellWidth + 20mm], sketch = rackPro
   |> appearance(color = lightWoodColor, roughness = 80, metalness = 0)
 hiddenRackProfile = hide(rackProfile)
 
-prototypeslot = cube([slotWidth, slotDepth, slotCutHeight])
-
-fn makeslot(@keyIdx) {
-  return clone(prototypeslot)
-    |> translate(
-         x = slotXForKey(keyIdx) - (slotWidth / 2),
-         y = slotYForKey(keyIdx),
-         z = rackHeight - slotCutHeight,
-         global = true,
-       )
+fn transformSlot(@keyIdx) {
+    return {
+        translate =  [
+            slotXForKey(keyIdx) - (rackSlotWidth / 2),
+            slotYForKey(keyIdx),
+            rackHeight - slotCutHeight,
+        ]
+    }
 }
 
-slots = map(rackKeyIndices, f = makeslot)
+prototypeslot = cube([rackSlotWidth, rackSlotDepth, slotCutHeight])
+
+slots = patternTransform(prototypeslot, instances = numKeys, transform = transformSlot)
 
 rack = subtract([rackBlank], tools = slots)
   |> appearance(color = lightWoodColor, roughness = 80, metalness = 0)
