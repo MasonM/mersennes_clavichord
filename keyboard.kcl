@@ -164,7 +164,7 @@ hiddenPrototypeKeys = hide([
 keyLeverIndices = [0..<numKeys]
 keyLeverHeight = naturalKeyHeight
 keyLeverZ = keyBaseZ
-keyLeverClearance = 0.5mm
+keyLeverClearance = 5.0mm
 keyLeverNaturalRearWidth = naturalKeyWidth - accidentalKeyWidth - keyLeverClearance
 keyLeverAccidentalRearWidth = accidentalKeyWidth - keyLeverClearance
 keyLeverStartY = keyStartY + naturalKeyLength
@@ -334,56 +334,56 @@ fn makeKeyLever(@keyIdx) {
     coincident([
       rightBendSide.end,
       [
-        slotXForKey(keyIdx) + keyLeverRearWidthForKey(keyIdx) / 2,
+        slotXForKey[keyIdx] + keyLeverRearWidthForKey(keyIdx) / 2,
         keyLeverBendY
       ]
     ])
     coincident([
       rightStraightSide.end,
       [
-        slotXForKey(keyIdx) + keyLeverRearWidthForKey(keyIdx) / 2,
+        slotXForKey[keyIdx] + keyLeverRearWidthForKey(keyIdx) / 2,
         rackTongueShoulderYForKey(keyIdx)
       ]
     ])
     coincident([
       rightTongueShoulder.end,
       [
-        slotXForKey(keyIdx) + rackTongueWidth / 2,
+        slotXForKey[keyIdx] + rackTongueWidth / 2,
         rackTongueStartYForKey(keyIdx)
       ]
     ])
     coincident([
       rightTongueSide.end,
       [
-        slotXForKey(keyIdx) + rackTongueWidth / 2,
+        slotXForKey[keyIdx] + rackTongueWidth / 2,
         rackTongueEndYForKey(keyIdx)
       ]
     ])
     coincident([
       endFace.end,
       [
-        slotXForKey(keyIdx) - (rackTongueWidth / 2),
+        slotXForKey[keyIdx] - (rackTongueWidth / 2),
         rackTongueEndYForKey(keyIdx)
       ]
     ])
     coincident([
       leftTongueSide.end,
       [
-        slotXForKey(keyIdx) - (rackTongueWidth / 2),
+        slotXForKey[keyIdx] - (rackTongueWidth / 2),
         rackTongueStartYForKey(keyIdx)
       ]
     ])
     coincident([
       leftTongueShoulder.end,
       [
-        slotXForKey(keyIdx) - (keyLeverRearWidthForKey(keyIdx) / 2),
+        slotXForKey[keyIdx] - (keyLeverRearWidthForKey(keyIdx) / 2),
         rackTongueShoulderYForKey(keyIdx)
       ]
     ])
     coincident([
       leftStraightSide.end,
       [
-        slotXForKey(keyIdx) - (keyLeverRearWidthForKey(keyIdx) / 2),
+        slotXForKey[keyIdx] - (keyLeverRearWidthForKey(keyIdx) / 2),
         keyLeverBendY
       ]
     ])

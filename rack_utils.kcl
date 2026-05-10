@@ -96,24 +96,38 @@ export rackLowerSecondSlope = (rackFrontTipY - rackFrontKinkY) / (rackFrontTipX 
 export rackSlotWidth = 3mm
 export rackSlotDepth = 11mm
 
-// Rack slot X follows the existing pitch-scaled tangent layout until the treble
-// spread range, then switches to the widened high-key layout above.
-export fn slotXForKey(@keyIdx) {
-  return if false {
-    // TODO: Figure out why this isn't giving the right positions. Did I get the bridge positioning wrong?
-    bridgeXForString(stringIdxForKey(keyIdx)) - soundingLengthForKey(keyIdx)
+export fn slotSpacing() {
+  return if useEqualTemperament {
+    7mm
   } else {
-    // HACK: return plausible positions instead of calculating based on the
-    // sounding length
-    rackBassCutoutX + keyIdx * 13
+    9mm
   }
 }
+
+// Rack slot X follows the existing pitch-scaled tangent layout until the treble
+// spread range, then switches to the widened high-key layout above.
+export fn slotXForKeyFn(@keyIdx) {
+  return if keyIdx == 0 {
+    toolboxLength + 10mm
+  } else if courseIdxForKey(keyIdx) == courseIdxForKey(keyIdx - 1) {
+    bridgeXForString(stringIdxForKey(keyIdx)) - (
+      frequencyForKey(keyIdx - 1) * (
+        (bridgeXForString(stringIdxForKey(keyIdx - 1)) - slotXForKeyFn(keyIdx - 1))
+        / frequencyForKey(keyIdx)
+      )
+    )
+  } else {
+    slotXForKeyFn(keyIdx - 1) + slotSpacing()
+  }
+}
+
+export slotXForKey = map([0..<numKeys], f = slotXForKeyFn)
 
 // Rack slot Y is the lower/front edge of the existing rack profile evaluated at
 // the sounding-length X. The rectangular slot cutter starts here and cuts inward
 // along the global +Y direction, so the slots stay straight instead of rotating.
 export fn slotYForKey(@keyIdx) {
-  slotX = slotXForKey(keyIdx)
+  slotX = slotXForKey[keyIdx]
   return if slotX < rackFrontLowerX {
     keywellWidth
   } else if slotX < rackFrontKinkX {

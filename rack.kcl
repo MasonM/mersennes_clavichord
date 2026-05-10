@@ -31,7 +31,7 @@ hiddenRackProfile = hide(rackProfile)
 fn transformSlot(@keyIdx) {
     return {
         translate =  [
-            slotXForKey(keyIdx) - (rackSlotWidth / 2),
+            slotXForKey[keyIdx] - (rackSlotWidth / 2),
             slotYForKey(keyIdx),
             rackHeight - slotCutHeight,
         ]

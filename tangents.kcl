@@ -14,7 +14,7 @@ tangentHeight = stringHeight - tangentBaseZ - tangentTopClearance
 tangentKeyIndices = [0..<numKeys]
 
 fn tangentXForKey(@keyIdx) {
-  return slotXForKey(keyIdx) - (tangentThicknessX / 2)
+  return slotXForKey[keyIdx] - (tangentThicknessX / 2)
 }
 
 fn tangentYForKey(@keyIdx) {
