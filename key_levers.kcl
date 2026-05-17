@@ -6,7 +6,6 @@ import * from "key_utils.kcl"
 // extrudes to naturalKeyHeight. Accidental levers start at the rear of their
 // accidental keys. Natural-key lever bases are narrowed only where adjacent
 // accidentals occupy half of the neighboring key edge.
-keyLeverIndices = [0..<numKeys]
 keyLeverHeight = naturalKeyHeight
 keyLeverZ = keyBaseZ
 keyLeverClearance = 5.0mm
@@ -275,7 +274,7 @@ fn makeKeyLever(@keyIdx) {
     |> translate(z = keyLeverZ, global = true)
 }
 
-keyLevers = map(keyLeverIndices, f = makeKeyLever)
+keyLevers = map([0..<numKeys], f = makeKeyLever)
 woodKeyLevers = appearance(
   keyLevers,
   color = keyLeverColor,
