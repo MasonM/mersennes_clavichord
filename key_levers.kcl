@@ -79,7 +79,7 @@ fn keyLeverTopWidthForKey(@keyIdx) {
   } else {
     slotXForKey[keyIdx + 1] - slotXForKey[keyIdx] - keyLeverBendSideClearance
   }
-  return min(distanceFromLeftKey, distanceFromRightKey)  - keyLeverBendSideClearance
+  return min([distanceFromLeftKey, distanceFromRightKey])  - keyLeverBendSideClearance
 }
 
 fn keyLeverBottomYForKey(@keyIdx) {
