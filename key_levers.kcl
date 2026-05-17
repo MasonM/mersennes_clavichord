@@ -9,13 +9,12 @@ import * from "key_utils.kcl"
 keyLeverHeight = naturalKeyHeight
 keyLeverZ = keyBaseZ
 keyLeverClearance = 5.0mm
-keyLeverNaturalRearWidth = naturalKeyWidth - accidentalKeyWidth - keyLeverClearance
-keyLeverAccidentalRearWidth = accidentalKeyWidth - keyLeverClearance
 keyLeverStartY = keywellWidth
 keyLeverTaperRun = 24mm
 keyLeverAllNarrowY = keyLeverStartY + keyLeverTaperRun + 12mm
 keyLeverBendRun = 20mm
 keyLeverBendY = keyLeverAllNarrowY + keyLeverBendRun
+keyLeverBendSideClearance = 1mm
 keyLeverColor = "#8b5a2b"
 
 // Rack tongue dimensions mirror the slots in rack.kcl with clearance. slotYForKey()
@@ -77,11 +76,6 @@ fn keyLeverTaperYForKey(@keyIdx) {
   return keyLeverBottomYForKey(keyIdx) + keyLeverTaperRun
 }
 
-fn keyLeverRearWidthForKey(@keyIdx) {
-  accidentalFlag = keyLeverAccidentalFlagPattern[keyIdx % 12]
-  return keyLeverNaturalRearWidth + accidentalFlag * (keyLeverAccidentalRearWidth - keyLeverNaturalRearWidth)
-}
-
 fn rackTongueEndYForKey(@keyIdx) {
   return slotYForKey(keyIdx) + rackSlotDepth - rackTongueEndClearance
 }
@@ -95,6 +89,19 @@ fn rackTongueShoulderYForKey(@keyIdx) {
 }
 
 fn makeKeyLever(@keyIdx) {
+  frontLeftX = keyLeverStartXForKey(keyIdx) - (keyLeverBottomWidthForKey(keyIdx) / 2)
+  frontRightX = keyLeverStartXForKey(keyIdx) + (keyLeverBottomWidthForKey(keyIdx) / 2)
+  bendLeftX = if keyIdx == 0 {
+    slotXForKey[keyIdx] - ((slotXForKey[keyIdx + 1] - slotXForKey[keyIdx] - keyLeverBendSideClearance) / 2)
+  } else {
+    ((slotXForKey[keyIdx - 1] + slotXForKey[keyIdx]) / 2) + (keyLeverBendSideClearance / 2)
+  }
+  bendRightX = if keyIdx == numKeys - 1 {
+    slotXForKey[keyIdx] + ((slotXForKey[keyIdx] - slotXForKey[keyIdx - 1] - keyLeverBendSideClearance) / 2)
+  } else {
+    ((slotXForKey[keyIdx] + slotXForKey[keyIdx + 1]) / 2) - (keyLeverBendSideClearance / 2)
+  }
+
   keyLeverFootprint = sketch(on = XY) {
     startFace = line(start = [var 0mm, var 0mm], end = [var 22mm, var 0mm])
     rightTaperSide = line(start = [var 22mm, var 0mm], end = [var 8mm, var 16mm])
@@ -150,42 +157,42 @@ fn makeKeyLever(@keyIdx) {
     coincident([
       startFace.start,
       [
-        keyLeverStartXForKey(keyIdx) - (keyLeverBottomWidthForKey(keyIdx) / 2),
+        frontLeftX,
         keyLeverBottomYForKey(keyIdx)
       ]
     ])
     coincident([
       startFace.end,
       [
-        keyLeverStartXForKey(keyIdx) + keyLeverBottomWidthForKey(keyIdx) / 2,
+        frontRightX,
         keyLeverBottomYForKey(keyIdx)
       ]
     ])
     coincident([
       rightTaperSide.end,
       [
-        keyLeverStartXForKey(keyIdx) + keyLeverRearWidthForKey(keyIdx) / 2,
+        frontRightX,
         keyLeverTaperYForKey(keyIdx)
       ]
     ])
     coincident([
       rightHoldSide.end,
       [
-        keyLeverStartXForKey(keyIdx) + keyLeverRearWidthForKey(keyIdx) / 2,
+        frontRightX,
         keyLeverAllNarrowY
       ]
     ])
     coincident([
       rightBendSide.end,
       [
-        slotXForKey[keyIdx] + keyLeverRearWidthForKey(keyIdx) / 2,
+        bendRightX,
         keyLeverBendY
       ]
     ])
     coincident([
       rightStraightSide.end,
       [
-        slotXForKey[keyIdx] + keyLeverRearWidthForKey(keyIdx) / 2,
+        bendRightX,
         rackTongueShoulderYForKey(keyIdx)
       ]
     ])
@@ -220,28 +227,28 @@ fn makeKeyLever(@keyIdx) {
     coincident([
       leftTongueShoulder.end,
       [
-        slotXForKey[keyIdx] - (keyLeverRearWidthForKey(keyIdx) / 2),
+        bendLeftX,
         rackTongueShoulderYForKey(keyIdx)
       ]
     ])
     coincident([
       leftStraightSide.end,
       [
-        slotXForKey[keyIdx] - (keyLeverRearWidthForKey(keyIdx) / 2),
+        bendLeftX,
         keyLeverBendY
       ]
     ])
     coincident([
       leftBendSide.end,
       [
-        keyLeverStartXForKey(keyIdx) - (keyLeverRearWidthForKey(keyIdx) / 2),
+        frontLeftX,
         keyLeverAllNarrowY
       ]
     ])
     coincident([
       leftHoldSide.end,
       [
-        keyLeverStartXForKey(keyIdx) - (keyLeverRearWidthForKey(keyIdx) / 2),
+        frontLeftX,
         keyLeverTaperYForKey(keyIdx)
       ]
     ])
