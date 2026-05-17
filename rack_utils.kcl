@@ -80,6 +80,10 @@ export fn stringIdxForKey(@keyIdx) {
   return courseIdxForKey(keyIdx) * 2
 }
 
+export fn bridgeXForKey(@keyIdx) {
+  return bridgeXForString(stringIdxForKey(keyIdx))
+}
+
 export rackBackY = caseWidth - wallThickness
 
 // Shared rack outline controls. rack.kcl uses these directly for the profile,
@@ -121,15 +125,23 @@ export fn slotSpacing() {
 // constant.
 //
 // To do that, we use Mersenne's laws, which relate the sounding length of a
-// string to its pitch and tension. We use the form of these laws explained in
-// chapter 9 of "The Science of Music" by Mark Newman (https://public.websites.umich.edu/~mejn/tsom/index.html).
-//  freq = (1 / L * d) * sqrt(T / pi * p)
-// where L is the sounding length, d is the string diameter, T is the tension,
-// and p is the linear density of the string. For a given string under constant
-// tension, the frequency is inversely proportional to the sounding length. So
-// if we know the frequency of the previous key and its slot position (which
-// determines its sounding length), we can calculate the slot position for the
-// current key based on its frequency.
+// string to its pitch and tensions. The frequency f(x) for a key is:
+//   f(x) = sqrt(F(x) / μ(x)) / (2*L(x))
+// where L(x) is the sounding length, F(x) is the tension, and μ(x) is the
+// linear density of the string. For fretted strings, sqrt(F(x) / μ(x)) term
+// must be kept constant, so we can solve for it as follows:
+//   sqrt(F(x) / μ(x)) = f(x) * 2 * L(x)
+// Then, for a subsequent fretted key with frequency f(x+1), we can solve for
+// the sounding length L(x+1) that will keep the tension constant:
+//   L(x+1) = sqrt(F(x) / μ(x)) / (f(x+1) * 2)
+//   L(x+1) = (f(x) * 2 * L(x)) / (f(x+1) * 2)
+//   L(x+1) = (f(x) * L(x)) / f(x+1)
+// The sounding length is related to the slot x position and bridge x position by:
+//   L(x) = bridgeXForKey(x) - slotX(x)
+// So the final equation becomes:
+//   slotX(x+1) = bridgeXForKey(x+1) - L(x+1)
+//   slotX(x+1) = bridgeXForKey(x+1) - (f(x) * L(x)) / f(x+1)
+//   slotX(x+1) = bridgeXForKey(x+1) - (f(x) * (bridgeXForKey(x) - slotXForKeyFn(x))) / f(x+1)
 //
 // This function had to be refactored to avoid a stack overflow, since Zoo
 // currently has a stack limit of 50: https://github.com/KittyCAD/modeling-app/blob/d0e1eb2615aaf3af07409ce7dce1890327c0281c/rust/kcl-lib/src/execution/state.rs#L410
@@ -139,13 +151,14 @@ export fn slotXForKeyFn(@keyIdx) {
     toolboxLength + 10mm
   } else if courseIdxForKey(keyIdx) == courseIdxForKey(keyIdx - 1) {
     // Fretted key. Calculate the sounding length using Mersenne's laws.
-    bridgeXForString(stringIdxForKey(keyIdx)) - (
+    bridgeXForKey(keyIdx) - (
       frequencyForKey(keyIdx - 1) * (
-        (bridgeXForString(stringIdxForKey(keyIdx - 1)) - slotXForKeyFn(keyIdx - 1))
+        (bridgeXForKey(keyIdx - 1) - slotXForKeyFn(keyIdx - 1))
         / frequencyForKey(keyIdx)
       )
     )
   } else {
+    // Unfretted key. Just use fixed spacing from the previous slot.
     slotXForKeyFn(keyIdx - 1) + slotSpacing()
   }
 }
