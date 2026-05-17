@@ -69,17 +69,17 @@ fn keyLeverBottomWidthForKey(@keyIdx) {
 }
 
 fn keyLeverTopWidthForKey(@keyIdx) {
-  return if keyIdx == 0 {
-    slotXForKey[keyIdx + 1] - slotXForKey[keyIdx] - keyLeverBendSideClearance
-  } else if keyIdx == numKeys -1 {
-    slotXForKey[keyIdx] - slotXForKey[keyIdx-1] - keyLeverBendSideClearance
+  distanceFromLeftKey = if keyIdx == 0 {
+    9999
   } else {
-    min(
-      slotXForKey[keyIdx + 1] - slotXForKey[keyIdx],
-      slotXForKey[keyIdx] - slotXForKey[keyIdx-1]
-    )  - keyLeverBendSideClearance
+    slotXForKey[keyIdx] - slotXForKey[keyIdx-1] - keyLeverBendSideClearance
   }
-
+  distanceFromRightKey = if keyIdx == numKeys - 1 {
+    9999
+  } else {
+    slotXForKey[keyIdx + 1] - slotXForKey[keyIdx] - keyLeverBendSideClearance
+  }
+  return min(distanceFromLeftKey, distanceFromRightKey)  - keyLeverBendSideClearance
 }
 
 fn keyLeverBottomYForKey(@keyIdx) {
