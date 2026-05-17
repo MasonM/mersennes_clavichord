@@ -89,8 +89,6 @@ fn rackTongueShoulderYForKey(@keyIdx) {
 }
 
 fn makeKeyLever(@keyIdx) {
-  frontLeftX = keyLeverStartXForKey(keyIdx) - (keyLeverBottomWidthForKey(keyIdx) / 2)
-  frontRightX = keyLeverStartXForKey(keyIdx) + (keyLeverBottomWidthForKey(keyIdx) / 2)
   bendLeftX = if keyIdx == 0 {
     slotXForKey[keyIdx] - ((slotXForKey[keyIdx + 1] - slotXForKey[keyIdx] - keyLeverBendSideClearance) / 2)
   } else {
@@ -157,28 +155,28 @@ fn makeKeyLever(@keyIdx) {
     coincident([
       startFace.start,
       [
-        frontLeftX,
+        keyLeverStartXForKey(keyIdx) - (keyLeverBottomWidthForKey(keyIdx) / 2),
         keyLeverBottomYForKey(keyIdx)
       ]
     ])
     coincident([
       startFace.end,
       [
-        frontRightX,
+        keyLeverStartXForKey(keyIdx) + (keyLeverBottomWidthForKey(keyIdx) / 2),
         keyLeverBottomYForKey(keyIdx)
       ]
     ])
     coincident([
       rightTaperSide.end,
       [
-        frontRightX,
+        keyLeverStartXForKey(keyIdx) + (keyLeverBottomWidthForKey(keyIdx) / 2),
         keyLeverTaperYForKey(keyIdx)
       ]
     ])
     coincident([
       rightHoldSide.end,
       [
-        frontRightX,
+        keyLeverStartXForKey(keyIdx) + (keyLeverBottomWidthForKey(keyIdx) / 2),
         keyLeverAllNarrowY
       ]
     ])
@@ -241,14 +239,14 @@ fn makeKeyLever(@keyIdx) {
     coincident([
       leftBendSide.end,
       [
-        frontLeftX,
+        keyLeverStartXForKey(keyIdx) - (keyLeverBottomWidthForKey(keyIdx) / 2),
         keyLeverAllNarrowY
       ]
     ])
     coincident([
       leftHoldSide.end,
       [
-        frontLeftX,
+        keyLeverStartXForKey(keyIdx) - (keyLeverBottomWidthForKey(keyIdx) / 2),
         keyLeverTaperYForKey(keyIdx)
       ]
     ])
