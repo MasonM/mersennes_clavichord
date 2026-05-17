@@ -68,6 +68,20 @@ fn keyLeverBottomWidthForKey(@keyIdx) {
   return naturalLeverWidth + accidentalFlag * (accidentalKeyWidth - naturalLeverWidth)
 }
 
+fn keyLeverTopWidthForKey(@keyIdx) {
+  return if keyIdx == 0 {
+    slotXForKey[keyIdx + 1] - slotXForKey[keyIdx] - keyLeverBendSideClearance
+  } else if keyIdx == numKeys -1 {
+    slotXForKey[keyIdx] - slotXForKey[keyIdx-1] - keyLeverBendSideClearance
+  } else {
+    min(
+      slotXForKey[keyIdx + 1] - slotXForKey[keyIdx],
+      slotXForKey[keyIdx] - slotXForKey[keyIdx-1]
+    )  - keyLeverBendSideClearance
+  }
+
+}
+
 fn keyLeverBottomYForKey(@keyIdx) {
   return keyLeverStartY
 }
@@ -89,16 +103,8 @@ fn rackTongueShoulderYForKey(@keyIdx) {
 }
 
 fn makeKeyLever(@keyIdx) {
-  bendLeftX = if keyIdx == 0 {
-    slotXForKey[keyIdx] - ((slotXForKey[keyIdx + 1] - slotXForKey[keyIdx] - keyLeverBendSideClearance) / 2)
-  } else {
-    ((slotXForKey[keyIdx - 1] + slotXForKey[keyIdx]) / 2) + (keyLeverBendSideClearance / 2)
-  }
-  bendRightX = if keyIdx == numKeys - 1 {
-    slotXForKey[keyIdx] + ((slotXForKey[keyIdx] - slotXForKey[keyIdx - 1] - keyLeverBendSideClearance) / 2)
-  } else {
-    ((slotXForKey[keyIdx] + slotXForKey[keyIdx + 1]) / 2) - (keyLeverBendSideClearance / 2)
-  }
+  bendLeftX = slotXForKey[keyIdx] - (keyLeverTopWidthForKey(keyIdx) / 2)
+  bendRightX = slotXForKey[keyIdx] + (keyLeverTopWidthForKey(keyIdx) / 2)
 
   keyLeverFootprint = sketch(on = XY) {
     startFace = line(start = [var 0mm, var 0mm], end = [var 22mm, var 0mm])
