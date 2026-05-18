@@ -48,15 +48,6 @@ export wrestplankStart = [
   wrestplankTopZ - wrestplankThickness
 ]
 
-// --- Right compartment box ---
-export rightCompartmentStartX = soundboardStart[0]
-export rightCompartmentLength = caseLength - rightCompartmentStartX
-export rightCompartmentBackY = soundboardStart[1] - wallThickness
-export rightCompartmentInteriorY = wallThickness
-export rightCompartmentInteriorWidth = rightCompartmentBackY - rightCompartmentInteriorY
-export rightCompartmentWallZ = wallThickness
-export rightCompartmentWallHeight = caseHeight - rightCompartmentWallZ
-
 // --- Strings ---
 export stringDiameter = 0.70mm
 export stringPairGap = 1.25mm

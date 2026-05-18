@@ -1,6 +1,14 @@
 import * from "params.kcl"
 import * from "utils.kcl"
 
+rightCompartmentStartX = soundboardStart[0]
+rightCompartmentLength = caseLength - rightCompartmentStartX
+rightCompartmentBackY = soundboardStart[1] - wallThickness
+rightCompartmentInteriorY = wallThickness
+rightCompartmentInteriorWidth = rightCompartmentBackY - rightCompartmentInteriorY
+rightCompartmentWallZ = wallThickness
+rightCompartmentWallHeight = caseHeight - rightCompartmentWallZ
+
 // Front-right hollow compartment: an open-top board-built well filling the gap
 // between the front case side/keywell and the soundboard bay.
 rightCompartmentInteriorLength = rightCompartmentLength - (2 * wallThickness)
