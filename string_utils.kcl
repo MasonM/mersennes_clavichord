@@ -5,3 +5,24 @@ export fn stringY(@stringIdx) {
   stringInCourse = stringIdx % 2
   return firstStringY + courseIdx * coursePitch + stringInCourse * stringPairGap
 }
+
+export hitchPinX = wallThickness + 6mm
+export hitchPinStaggerX = 3mm
+
+export tuningPinRows = 4
+export tuningPinFrontMargin = 4mm
+export tuningPinBackMargin = 4mm
+export tuningPinRowPitch = (wrestplankLength - wallThickness - tuningPinFrontMargin - tuningPinBackMargin) / (tuningPinRows - 1)
+export tuningPinBaseX = wrestplankStart[0] + tuningPinFrontMargin
+
+// Return the staggered X position for the hitchpin attached to a string.
+export fn hitchPinXForString(@stringIdx) {
+  return hitchPinX + stringIdx % 2 * hitchPinStaggerX
+}
+
+// Return the X position for the tuning pin attached to a string.
+// Adjacent strings step through four rows across the wrestplank, avoiding overlap.
+export fn tuningPinXForString(@stringIdx) {
+  tuningPinRow = stringIdx % tuningPinRows
+  return tuningPinBaseX + tuningPinRow * tuningPinRowPitch
+}

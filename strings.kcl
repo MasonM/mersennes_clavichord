@@ -4,39 +4,17 @@ import * from "string_utils.kcl"
 
 // 70 brass clavichord strings arranged as 35 courses of two.
 // Plan-view convention: strings run along X; Y increases toward the top/back edge of the case.
-stringIndices = [0..<numStrings]
 
-hitchPinRadius = hitchPinDiameter / 2
-hitchPinX = wallThickness + 6mm
-hitchPinStaggerX = 3mm
 hitchPinBaseZ = soundboardStart[2] + soundboardHeight
 
 tuningPinDiameter = 2mm
-tuningPinRadius = tuningPinDiameter / 2
 tuningPinHeight = 22mm
-tuningPinRows = 4
-tuningPinFrontMargin = 4mm
-tuningPinBackMargin = 4mm
-tuningPinRowPitch = (wrestplankLength - wallThickness - tuningPinFrontMargin - tuningPinBackMargin) / (tuningPinRows - 1)
-tuningPinBaseX = wrestplankStart[0] + tuningPinFrontMargin
 tuningPinBaseZ = wrestplankTopZ
-
-// Return the staggered X position for the hitchpin attached to a string.
-fn hitchPinXForString(@stringIdx) {
-  return hitchPinX + stringIdx % 2 * hitchPinStaggerX
-}
-
-// Return the X position for the tuning pin attached to a string.
-// Adjacent strings step through four rows across the wrestplank, avoiding overlap.
-fn tuningPinXForString(@stringIdx) {
-  tuningPinRow = stringIdx % tuningPinRows
-  return tuningPinBaseX + tuningPinRow * tuningPinRowPitch
-}
 
 fn transformString(@stringNum) {
   stringIdx = stringNum - 1
   stringStartX = hitchPinXForString(stringIdx)
-  stringEndX = tuningPinXForString(stringIdx) - tuningPinRadius
+  stringEndX = tuningPinXForString(stringIdx) - tuningPinDiameter / 2
   length = stringEndX - stringStartX
   return {
     scale = [length, 1, 1],
