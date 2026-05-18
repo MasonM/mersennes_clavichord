@@ -4,7 +4,7 @@ import * from "key_utils.kcl"
 import * from "utils.kcl"
 
 accidentalKeyStartY = naturalKeyLength / 3
-accidentalKeyLength = naturalKeyLength - (accidentalKeyStartY)
+accidentalKeyLength = naturalKeyLength - accidentalKeyStartY
 accidentalKeyBaseZ = keyBaseZ + naturalKeyHeight
 accidentalKeyHeight = 5mm
 
@@ -28,7 +28,7 @@ fn transformNaturalKey(@naturalIdx) {
     translate = [
       naturalKeyX(naturalIdx) - naturalKeyX(0),
       0,
-      0,
+      0
     ]
   }
 }
@@ -38,16 +38,24 @@ fn transformAccidentalKey(@accidentalIdx) {
     translate = [
       accidentalKeyX(accidentalIdx) - accidentalKeyX(0),
       0,
-      0,
+      0
     ]
   }
 }
 
-firstNaturalKey = cube([naturalKeyWidth, naturalKeyLength, naturalKeyHeight])
-  |> translate(x=naturalKeyX(0), z=keyBaseZ)
+firstNaturalKey = cube([
+  naturalKeyWidth,
+  naturalKeyLength,
+  naturalKeyHeight
+])
+  |> translate(x = naturalKeyX(0), z = keyBaseZ)
 
-firstAccidentalKey = cube([accidentalKeyWidth, accidentalKeyLength, accidentalKeyHeight])
-  |> translate(x=accidentalKeyX(0), y=accidentalKeyStartY, z=accidentalKeyBaseZ)
+firstAccidentalKey = cube([
+  accidentalKeyWidth,
+  accidentalKeyLength,
+  accidentalKeyHeight
+])
+  |> translate(x = accidentalKeyX(0), y = accidentalKeyStartY, z = accidentalKeyBaseZ)
 
 naturalKeys = patternTransform(firstNaturalKey, instances = numNaturalKeys, transform = transformNaturalKey)
 accidentalKeys = patternTransform(firstAccidentalKey, instances = numAccidentalKeys, transform = transformAccidentalKey)
@@ -64,4 +72,3 @@ blackAccidentalKeys = appearance(
   roughness = 48,
   metalness = 0,
 )
-

@@ -1,3 +1,5 @@
+// Toolbox and stepped lid
+// Hollow box with recessed terrace lid and mushroom pull.
 import * from "params.kcl"
 
 // Separate hollow toolbox block plus a recessed, stepped-terrace lid.
@@ -48,8 +50,9 @@ handleBaseDiameter = 18mm
 handleBaseRadius = handleBaseDiameter / 2
 handleBaseHeight = 2mm
 handleKnobRadius = 8mm
-handleKnobShoulderHeight = 5mm
-handleKnobHeight = handleKnobShoulderHeight + handleKnobRadius
+handleKnobShaftRadius = 3.5mm
+handleKnobShaftLength = 10mm
+handleKnobHeight = handleKnobShaftLength + handleKnobRadius
 
 // Hollow wooden toolbox block inside the front/end corner.
 toolboxOuterProfile = sketch(on = XY) {
@@ -395,28 +398,48 @@ handleBase = extrude(region(point = [1mm, 1mm], sketch = handleBaseProfile), len
   |> appearance(color = "#050505", roughness = 34, metalness = 65)
 hiddenHandleBaseProfile = hide(handleBaseProfile)
 
-// Rounded, larger graspable knob: revolved profile with a straight shoulder
-// and a quarter-round dome top.
+// Graspable mushroom pull: a thinner 10 mm shaft under a rounded cap.
 handleKnobProfile = sketch(on = XZ) {
-  knobBottom = line(start = [var 0mm, var 0mm], end = [var 8mm, var 0mm])
-  knobSide = line(start = [var 8mm, var 0mm], end = [var 8mm, var 5mm])
-  knobDome = arc(start = [var 8mm, var 5mm], end = [var 0mm, var 13mm], center = [var 0mm, var 5mm])
-  knobAxis = line(start = [var 0mm, var 13mm], end = [var 0mm, var 0mm])
+  knobShaftBottom = line(start = [var 0mm, var 0mm], end = [var 3.5mm, var 0mm])
+  knobShaftSide = line(start = [var 3.5mm, var 0mm], end = [var 3.5mm, var 10mm])
+  knobCapUnderside = line(start = [var 3.5mm, var 10mm], end = [var 8mm, var 10mm])
+  knobCapDome = arc(start = [var 8mm, var 10mm], end = [var 0mm, var 18mm], center = [var 0mm, var 10mm])
+  knobAxis = line(start = [var 0mm, var 18mm], end = [var 0mm, var 0mm])
 
-  coincident([knobBottom.end, knobSide.start])
-  coincident([knobSide.end, knobDome.start])
-  coincident([knobDome.end, knobAxis.start])
-  coincident([knobAxis.end, knobBottom.start])
-  coincident([knobBottom.start, ORIGIN])
-  horizontal(knobBottom)
-  vertical(knobSide)
+  coincident([
+    knobShaftBottom.end,
+    knobShaftSide.start
+  ])
+  coincident([
+    knobShaftSide.end,
+    knobCapUnderside.start
+  ])
+  coincident([
+    knobCapUnderside.end,
+    knobCapDome.start
+  ])
+  coincident([knobCapDome.end, knobAxis.start])
+  coincident([knobAxis.end, knobShaftBottom.start])
+  coincident([knobShaftBottom.start, ORIGIN])
+  coincident([knobCapDome.center, knobAxis])
+  horizontal(knobShaftBottom)
+  vertical(knobShaftSide)
+  horizontal(knobCapUnderside)
   vertical(knobAxis)
-  distance([knobBottom.start, knobBottom.end]) == handleKnobRadius
-  distance([knobSide.start, knobSide.end]) == handleKnobShoulderHeight
+  distance([
+  knobShaftBottom.start,
+  knobShaftBottom.end
+]) == handleKnobShaftRadius
+  distance([knobShaftSide.start, knobShaftSide.end]) == handleKnobShaftLength
+  distance([
+  knobCapUnderside.start,
+  knobCapUnderside.end
+]) == handleKnobRadius - handleKnobShaftRadius
+  radius(knobCapDome) == handleKnobRadius
   distance([knobAxis.start, knobAxis.end]) == handleKnobHeight
 }
 
-handleKnobRegion = region(point = [3mm, 4mm], sketch = handleKnobProfile)
+handleKnobRegion = region(point = [4mm, 11mm], sketch = handleKnobProfile)
 handleKnob = revolve(handleKnobRegion, axis = Y)
   |> translate(
        x = handleX,

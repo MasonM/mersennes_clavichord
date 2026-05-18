@@ -36,7 +36,11 @@ rightCompartmentStep2LongLength = rightCompartmentLidLength - (2 * rightCompartm
 rightCompartmentStep1SideLength = rightCompartmentLidWidth - (2 * rightCompartmentStep1Inset) - (2 * rightCompartmentTerraceStepWidth)
 rightCompartmentStep2SideLength = rightCompartmentLidWidth - (2 * rightCompartmentStep2Inset) - (2 * rightCompartmentTerraceStepWidth)
 
-rightCompartmentFrontBoard = cube([rightCompartmentLength, wallThickness, rightCompartmentWallHeight])
+rightCompartmentFrontBoard = cube([
+  rightCompartmentLength,
+  wallThickness,
+  rightCompartmentWallHeight
+])
   |> translate(
        x = rightCompartmentStartX,
        y = rightCompartmentBackY,
@@ -45,7 +49,11 @@ rightCompartmentFrontBoard = cube([rightCompartmentLength, wallThickness, rightC
      )
   |> appearance(color = "#8a5529", roughness = 78, metalness = 0)
 
-rightCompartmentLeftBoard = cube([wallThickness, rightCompartmentInteriorWidth, rightCompartmentWallHeight])
+rightCompartmentLeftBoard = cube([
+  wallThickness,
+  rightCompartmentInteriorWidth,
+  rightCompartmentWallHeight
+])
   |> translate(
        x = rightCompartmentStartX,
        y = rightCompartmentInteriorY,

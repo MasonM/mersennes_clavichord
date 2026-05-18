@@ -29,17 +29,21 @@ rackBlank = extrude(region(point = [20mm, keywellWidth + 20mm], sketch = rackPro
 hiddenRackProfile = hide(rackProfile)
 
 fn transformSlot(@keyNum) {
-    keyIdx = keyNum - 1
-    return {
-        translate =  [
-            slotXForKey[keyIdx] - (rackSlotWidth / 2),
-            slotYForKey(keyIdx),
-            rackHeight - slotCutHeight,
-        ]
-    }
+  keyIdx = keyNum - 1
+  return {
+    translate = [
+      slotXForKey[keyIdx] - (rackSlotWidth / 2),
+      slotYForKey(keyIdx),
+      rackHeight - slotCutHeight
+    ]
+  }
 }
 
-prototypeslot = cube([rackSlotWidth, rackSlotDepth, slotCutHeight])
+prototypeslot = cube([
+  rackSlotWidth,
+  rackSlotDepth,
+  slotCutHeight
+])
 
 slots = patternTransform(prototypeslot, instances = numKeys + 1, transform = transformSlot)
 
