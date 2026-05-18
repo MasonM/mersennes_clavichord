@@ -4,7 +4,7 @@ import * from "utils.kcl"
 
 // Brass clavichord tangents. Each key gets one vertical rectangular blade whose
 // plan position is driven by the rack slot X and the string/course Y mapping.
-tangentThicknessX = 3mm
+tangentThicknessX = 1.5mm
 tangentWidthY = 3.5mm
 tangentTopClearance = 5mm
 keyLeverHeight = naturalKeyHeight
