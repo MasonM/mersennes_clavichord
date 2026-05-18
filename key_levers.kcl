@@ -22,8 +22,7 @@ keyLeverColor = "#8b5a2b"
 rackTongueSlotWidth = rackSlotWidth
 rackTongueSideClearance = 0.35mm
 rackTongueWidth = rackTongueSlotWidth - (2 * rackTongueSideClearance)
-rackTongueInsetDepth = 7mm
-rackTongueShoulderRun = 3mm
+rackTongueInsetDepth = 10mm
 rackTongueEndClearance = 3mm
 
 // One-octave patterns keep the lever layout formula-driven across the compass.
@@ -95,10 +94,6 @@ fn rackTongueEndYForKey(@keyIdx) {
 
 fn rackTongueStartYForKey(@keyIdx) {
   return rackTongueEndYForKey(keyIdx) - rackTongueInsetDepth
-}
-
-fn rackTongueShoulderYForKey(@keyIdx) {
-  return rackTongueStartYForKey(keyIdx) - rackTongueShoulderRun
 }
 
 fn makeKeyLever(@keyIdx) {
@@ -196,7 +191,7 @@ fn makeKeyLever(@keyIdx) {
       rightStraightSide.end,
       [
         bendRightX,
-        rackTongueShoulderYForKey(keyIdx)
+        rackTongueStartYForKey(keyIdx)
       ]
     ])
     coincident([
@@ -231,7 +226,7 @@ fn makeKeyLever(@keyIdx) {
       leftTongueShoulder.end,
       [
         bendLeftX,
-        rackTongueShoulderYForKey(keyIdx)
+        rackTongueStartYForKey(keyIdx)
       ]
     ])
     coincident([
