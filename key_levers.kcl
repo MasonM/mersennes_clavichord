@@ -6,7 +6,6 @@ import * from "key_utils.kcl"
 // extrudes to naturalKeyHeight. Accidental levers start at the rear of their
 // accidental keys. Natural-key lever bases are narrowed only where adjacent
 // accidentals occupy half of the neighboring key edge.
-keyLeverHeight = naturalKeyHeight
 keyLeverZ = keyBaseZ
 keyLeverStartY = keywellWidth
 keyLeverTaperRun = 24mm
@@ -45,7 +44,7 @@ keyLeverAccidentalFlagPattern = [0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0]
 keyLeverLeftOverlapPattern = [0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1]
 keyLeverRightOverlapPattern = [1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0]
 
-fn keyLeverStartXForKey(@keyIdx) {
+export fn keyLeverStartXForKey(@keyIdx) {
   pitchClassIdx = keyIdx % 12
   octaveIdx = floor(keyIdx / 12)
   lastKeyRightOverlapSuppressor = 1 - floor(keyIdx / (numKeys - 1))
@@ -70,7 +69,7 @@ fn keyLeverTopWidthForKey(@keyIdx) {
   distanceFromLeftKey = if keyIdx == 0 {
     9999
   } else {
-    slotXForKey[keyIdx] - slotXForKey[keyIdx-1] - keyLeverBendSideClearance
+    slotXForKey[keyIdx] - slotXForKey[keyIdx - 1] - keyLeverBendSideClearance
   }
   distanceFromRightKey = if keyIdx == numKeys - 1 {
     9999
@@ -273,7 +272,7 @@ fn makeKeyLever(@keyIdx) {
       ],
       sketch = keyLeverFootprint,
     ),
-    length = keyLeverHeight,
+    length = naturalKeyHeight,
     method = NEW,
   )
     |> translate(z = keyLeverZ, global = true)

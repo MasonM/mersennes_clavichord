@@ -1,8 +1,6 @@
 import * from "params.kcl"
 import * from "utils.kcl"
-
-// TODO: Add balance pins. There should be one for each key, centered under the
-// key lever and spaced evenly along the bar.
+import keyLeverStartXForKey from "key_levers.kcl"
 
 // Balance bar under the rear of the keyboard/key levers. It spans the full
 // keywell length and butts into the lower/front side of the belly rail at the
@@ -12,8 +10,24 @@ balanceBarWidth = 30mm
 balanceBarHeight = 40mm
 balanceBarStartX = soundboardStart[0] - balanceBarLength
 balanceBarStartY = keywellWidth + wallThickness
-balanceBarStartZ = keyBaseZ - balanceBarHeight - naturalKeyHeight - 5mm
+balanceBarStartZ = keyBaseZ - balanceBarHeight
 balanceBarWoodColor = "#7a4b24"
+
+balancePinDiameter = 3mm
+balancePinHeight = naturalKeyHeight + 1mm
+balancePinY = balanceBarStartY + balanceBarWidth / 2
+balancePinBaseZ = balanceBarStartZ + balanceBarHeight
+
+fn transformBalancePin(@keyNum) {
+  keyIdx = keyNum - 1
+  return {
+    translate = [
+      keyLeverStartXForKey(keyIdx),
+      balancePinY,
+      balancePinBaseZ
+    ]
+  }
+}
 
 balanceBar = cube([
   balanceBarLength,
@@ -22,3 +36,13 @@ balanceBar = cube([
 ])
   |> translate(x = balanceBarStartX, y = balanceBarStartY, z = balanceBarStartZ)
   |> appearance(color = balanceBarWoodColor, roughness = 78, metalness = 0)
+
+prototypeBalancePin = cylinder(d = balancePinDiameter, h = balancePinHeight)
+balancePins = patternTransform(prototypeBalancePin, instances = numKeys + 1, transform = transformBalancePin)
+hiddenPrototypeBalancePin = hide([prototypeBalancePin])
+ironBalancePins = appearance(
+  balancePins,
+  color = ironColor,
+  roughness = 35,
+  metalness = 90,
+)
