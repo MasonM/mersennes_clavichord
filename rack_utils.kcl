@@ -2,35 +2,6 @@ import * from "params.kcl"
 import * from "temperament.kcl"
 import * from "string_utils.kcl"
 
-// The lower 17 notes are unfretted. From f upward, diatonic fretting with free
-// E and A continues to the top, with the final Bb2-B2-C3 sharing one course.
-export firstFrettedKeyIdx = 17
-export firstFrettedCourseIdx = 17
-export frettedKeysPerOctave = 12
-export frettedCoursesPerOctave = 7
-export frettedCoursePatternFromF = [0, 0, 1, 1, 2, 3, 3, 4, 4, 5, 5, 6]
-
-export fn courseIdxForKey(@keyIdx) {
-  return if keyIdx < firstFrettedKeyIdx {
-    keyIdx
-  } else if keyIdx == numKeys - 1 {
-    numCourses - 1
-  } else {
-    frettedKeyOffset = keyIdx - firstFrettedKeyIdx
-    frettedOctaveIdx = floor(frettedKeyOffset / frettedKeysPerOctave)
-    frettedPitchIdx = frettedKeyOffset % frettedKeysPerOctave
-    firstFrettedCourseIdx + frettedOctaveIdx * frettedCoursesPerOctave + frettedCoursePatternFromF[frettedPitchIdx]
-  }
-}
-
-export fn stringIdxForKey(@keyIdx) {
-  return courseIdxForKey(keyIdx) * 2
-}
-
-export fn bridgeXForKey(@keyIdx) {
-  return bridgeXForString(stringIdxForKey(keyIdx))
-}
-
 export rackBackY = caseWidth - wallThickness
 
 // Shared rack outline controls. rack.kcl uses these directly for the profile,
