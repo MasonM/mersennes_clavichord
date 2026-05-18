@@ -11,7 +11,7 @@ import * from "rack_utils.kcl"
 // TODO: Add the left-side bridge
 
 rackHeight = soundboardStart[2] + soundboardHeight
-slotCutHeight = 15mm
+slotCutHeight = rackHeight - keyBaseZ
 rackKeyIndices = [0..<numKeys]
 
 rackProfile = sketch(on = XY) {
