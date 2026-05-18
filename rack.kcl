@@ -11,7 +11,7 @@ import * from "rack_utils.kcl"
 // TODO: Add the left-side bridge
 
 rackHeight = soundboardStart[2] + soundboardHeight
-slotCutHeight = 50mm
+slotCutHeight = 15mm
 rackKeyIndices = [0..<numKeys]
 
 rackProfile = sketch(on = XY) {
@@ -33,7 +33,7 @@ fn transformSlot(@keyNum) {
   return {
     translate = [
       slotXForKey[keyIdx] - (rackSlotWidth / 2),
-      slotYForKey(keyIdx),
+      slotYForKey(keyIdx) - 1mm,
       rackHeight - slotCutHeight
     ]
   }
@@ -41,7 +41,7 @@ fn transformSlot(@keyNum) {
 
 prototypeslot = cube([
   rackSlotWidth,
-  rackSlotDepth,
+  rackSlotDepth + 1mm,
   slotCutHeight
 ])
 
