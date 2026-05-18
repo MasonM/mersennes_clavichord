@@ -29,3 +29,44 @@ export fn keyLeverTopWidthForKey(@keyIdx) {
   }
   return min([distanceFromLeftKey, distanceFromRightKey]) - keyLeverBendSideClearance
 }
+
+// One-octave patterns keep the lever layout formula-driven across the compass.
+// Chromatic pitch classes: C, C#, D, Eb, E, F, F#, G, G#, A, Bb, B.
+export keyLeverStartOffsetPattern = [
+  0.5,
+  1,
+  1.5,
+  2,
+  2.5,
+  3.5,
+  4,
+  4.5,
+  5,
+  5.5,
+  6,
+  6.5
+]
+export keyLeverAccidentalFlagPattern = [0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0]
+export keyLeverLeftOverlapPattern = [0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1]
+export keyLeverRightOverlapPattern = [1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0]
+
+export fn keyLeverStartXForKey(@keyIdx) {
+  pitchClassIdx = keyIdx % 12
+  octaveIdx = floor(keyIdx / 12)
+  lastKeyRightOverlapSuppressor = 1 - floor(keyIdx / (numKeys - 1))
+  leftOverlap = keyLeverLeftOverlapPattern[pitchClassIdx]
+  rightOverlap = keyLeverRightOverlapPattern[pitchClassIdx] * lastKeyRightOverlapSuppressor
+  untrimmedCenterOffset = octaveIdx * 7 + keyLeverStartOffsetPattern[pitchClassIdx]
+  baseCenterShift = (leftOverlap - rightOverlap) * accidentalKeyWidth / 4
+  return keyStartX + untrimmedCenterOffset * naturalKeyWidth + baseCenterShift
+}
+
+export fn keyLeverBottomWidthForKey(@keyIdx) {
+  pitchClassIdx = keyIdx % 12
+  lastKeyRightOverlapSuppressor = 1 - floor(keyIdx / (numKeys - 1))
+  leftOverlap = keyLeverLeftOverlapPattern[pitchClassIdx]
+  rightOverlap = keyLeverRightOverlapPattern[pitchClassIdx] * lastKeyRightOverlapSuppressor
+  accidentalFlag = keyLeverAccidentalFlagPattern[pitchClassIdx]
+  naturalLeverWidth = naturalKeyWidth - ((leftOverlap + rightOverlap) * accidentalKeyWidth / 2)
+  return naturalLeverWidth + accidentalFlag * (accidentalKeyWidth - naturalLeverWidth)
+}

@@ -1,6 +1,6 @@
 import * from "params.kcl"
 import * from "utils.kcl"
-import keyLeverStartXForKey from "key_levers.kcl"
+import * from "key_utils.kcl"
 
 // Balance bar under the rear of the keyboard/key levers. It spans the full
 // keywell length and butts into the lower/front side of the belly rail at the
