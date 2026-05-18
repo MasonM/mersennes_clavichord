@@ -6,7 +6,6 @@ import * from "utils.kcl"
 // tuning pins, with a bend about one-third of the way along from the belly
 // rail."
 
-
 soundboard = cube([
   soundboardLength,
   innerWidth,

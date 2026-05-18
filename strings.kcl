@@ -10,16 +10,15 @@ hitchPinX = wallThickness + 6mm
 hitchPinStaggerX = 3mm
 hitchPinBaseZ = soundboardStart[2] + soundboardHeight
 
-tuningPinDiameter = 3mm
+tuningPinDiameter = 2mm
 tuningPinRadius = tuningPinDiameter / 2
 tuningPinHeight = 22mm
 tuningPinRows = 4
 tuningPinFrontMargin = 4mm
 tuningPinBackMargin = 4mm
-tuningPinRowPitch = (wrestplankLength - tuningPinFrontMargin - tuningPinBackMargin) / (tuningPinRows - 1)
+tuningPinRowPitch = (wrestplankLength - wallThickness - tuningPinFrontMargin - tuningPinBackMargin) / (tuningPinRows - 1)
 tuningPinBaseX = wrestplankStart[0] + tuningPinFrontMargin
 tuningPinBaseZ = wrestplankTopZ
-prototypeStringLength = tuningPinBaseX + (tuningPinRows - 1) * tuningPinRowPitch - tuningPinRadius - hitchPinX - hitchPinRadius
 
 export fn stringY(@stringIdx) {
   courseIdx = floor(stringIdx / 2)
@@ -41,21 +40,20 @@ fn tuningPinXForString(@stringIdx) {
 
 fn transformString(@stringNum) {
   stringIdx = stringNum - 1
-  stringStartX = hitchPinXForString(stringIdx) + hitchPinRadius
+  stringStartX = hitchPinXForString(stringIdx)
   stringEndX = tuningPinXForString(stringIdx) - tuningPinRadius
   length = stringEndX - stringStartX
   return {
     scale = [length, 1, 1],
-    scale = [1, 1, 1],
     translate = [
-      hitchPinXForString(stringIdx) + hitchPinRadius,
+      stringStartX + length / 2,
       stringY(stringIdx),
       stringHeight
     ]
   }
 }
 
-prototypeString = cylinder(d = stringDiameter, h = prototypeStringLength)
+prototypeString = cylinder(d = stringDiameter, h = 1)
   |> rotate(axis = Y, angle = 90deg)
 
 strings = patternTransform(prototypeString, instances = numStrings + 1, transform = transformString)
