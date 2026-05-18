@@ -1,7 +1,7 @@
 import * from "params.kcl"
 import * from "rack_utils.kcl"
 import * from "utils.kcl"
-import stringY from "strings.kcl"
+import * from "string_utils.kcl"
 
 // Brass clavichord tangents. Each key gets one vertical rectangular blade whose
 // plan position is driven by the rack slot X and the string/course Y mapping.

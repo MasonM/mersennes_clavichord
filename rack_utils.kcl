@@ -7,17 +7,6 @@ export thirdBridgeCenterX = fourthBridgeCenterX + 100mm
 export secondBridgeCenterX = thirdBridgeCenterX + 100mm
 export firstBridgeCenterX = secondBridgeCenterX + 70mm
 
-// Fit the rack tangent layout to the existing rack: the lowest C uses the
-// deepest/bass part of the rack and c3 uses the shallow treble end. Because the
-// compass spans four octaves, c3 is 1/16 the pitch-scaled reference length of low C.
-export rackBassCutoutX = toolboxLength
-export lowCSoundingLength = firstBridgeCenterX - rackBassCutoutX
-
-// Calculate sounding length using Mersenne's laws
-export fn soundingLengthForKey(@keyIdx) {
-  return frequencyForKey(0) * lowCSoundingLength / frequencyForKey(keyIdx)
-}
-
 // Mersenne-style bridge/course layout for 70 strings in 35 paired courses.
 // String indices increase upward/backward. Each key strikes the lower-indexed
 // representative string of its two-string course.

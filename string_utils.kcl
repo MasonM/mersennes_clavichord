@@ -1,0 +1,7 @@
+import * from "params.kcl"
+
+export fn stringY(@stringIdx) {
+  courseIdx = floor(stringIdx / 2)
+  stringInCourse = stringIdx % 2
+  return firstStringY + courseIdx * coursePitch + stringInCourse * stringPairGap
+}
