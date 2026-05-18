@@ -38,17 +38,21 @@ cube([5mm, caseWidth, caseHeight])
   |> translate(x = soundboardStart[0])
 
 fn transformSlot(@keyNum) {
-    keyIdx = keyNum - 1
-    return {
-        translate =  [
-            slotXForKeysArray[keyIdx] - (rackSlotWidth / 2),
-            slotYForKey(keyIdx),
-            rackHeight - slotCutHeight,
-        ]
-    }
+  keyIdx = keyNum - 1
+  return {
+    translate = [
+      slotXForKeysArray[keyIdx] - (rackSlotWidth / 2),
+      slotYForKey(keyIdx),
+      rackHeight - slotCutHeight
+    ]
+  }
 }
 
-prototypeslot = cube([rackSlotWidth, rackSlotDepth, slotCutHeight])
+prototypeslot = cube([
+  rackSlotWidth,
+  rackSlotDepth,
+  slotCutHeight
+])
 
 patternTransform(prototypeslot, instances = numKeys, transform = transformSlot)
 

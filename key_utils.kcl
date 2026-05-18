@@ -1,4 +1,5 @@
 import * from "params.kcl"
+import * from "rack_utils.kcl"
 
 // 49-key chromatic compass C..c3, no short octave.
 // The front of the keyboard is the low-Y side of the keywell.
@@ -13,3 +14,18 @@ export accidentalBaseNaturalOffsets = [0, 1, 3, 4, 5]
 export naturalKeyWidth = keywellLength / numNaturalKeys
 export naturalKeyLength = keywellWidth
 export accidentalKeyWidth = naturalKeyWidth * 0.58
+
+export keyLeverBendSideClearance = 1mm
+export fn keyLeverTopWidthForKey(@keyIdx) {
+  distanceFromLeftKey = if keyIdx == 0 {
+    9999
+  } else {
+    slotXForKey[keyIdx] - slotXForKey[keyIdx - 1] - keyLeverBendSideClearance
+  }
+  distanceFromRightKey = if keyIdx == numKeys - 1 {
+    9999
+  } else {
+    slotXForKey[keyIdx + 1] - slotXForKey[keyIdx] - keyLeverBendSideClearance
+  }
+  return min([distanceFromLeftKey, distanceFromRightKey]) - keyLeverBendSideClearance
+}

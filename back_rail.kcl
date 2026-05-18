@@ -1,0 +1,82 @@
+import * from "params.kcl"
+import * from "rack_utils.kcl"
+
+// Back rail for the rear key-lever bearing surface.
+// Its upper face is level with keyBaseZ so the key levers rest on it before entering the rack slots.
+backRailHeight = 20mm
+backRailDepth = 14mm
+backRailBaseZ = keyBaseZ - backRailHeight
+backRailWoodColor = "#7a4b24"
+
+backRailProfile = sketch(on = XY) {
+  rearBassRun = line(start = [var 0mm, var 0mm], end = [var 280mm, var 140mm])
+  rearTrebleRun = line(start = [var 280mm, var 140mm], end = [var 680mm, var 190mm])
+  trebleEnd = line(start = [var 680mm, var 190mm], end = [var 680mm, var 176mm])
+  frontTrebleRun = line(start = [var 680mm, var 176mm], end = [var 280mm, var 126mm])
+  frontBassRun = line(start = [var 280mm, var 126mm], end = [var 0mm, var -14mm])
+  bassEnd = line(start = [var 0mm, var -14mm], end = [var 0mm, var 0mm])
+
+  coincident([rearBassRun.end, rearTrebleRun.start])
+  coincident([rearTrebleRun.end, trebleEnd.start])
+  coincident([trebleEnd.end, frontTrebleRun.start])
+  coincident([frontTrebleRun.end, frontBassRun.start])
+  coincident([frontBassRun.end, bassEnd.start])
+  coincident([bassEnd.end, rearBassRun.start])
+
+  coincident([
+    rearBassRun.start,
+    [rackFrontLowerX, rackFrontLowerY]
+  ])
+  coincident([
+    rearBassRun.end,
+    [rackFrontKinkX, rackFrontKinkY]
+  ])
+  coincident([
+    rearTrebleRun.end,
+    [rackFrontTipX, rackFrontTipY]
+  ])
+  coincident([
+    trebleEnd.end,
+    [
+      rackFrontTipX,
+      rackFrontTipY - backRailDepth
+    ]
+  ])
+  coincident([
+    frontTrebleRun.end,
+    [
+      rackFrontKinkX,
+      rackFrontKinkY - backRailDepth
+    ]
+  ])
+  coincident([
+    frontBassRun.end,
+    [
+      rackFrontLowerX,
+      rackFrontLowerY - backRailDepth
+    ]
+  ])
+
+  vertical(trebleEnd)
+  vertical(bassEnd)
+  parallel([rearBassRun, frontBassRun])
+  parallel([rearTrebleRun, frontTrebleRun])
+  distance([trebleEnd.start, trebleEnd.end]) == backRailDepth
+  distance([bassEnd.start, bassEnd.end]) == backRailDepth
+}
+
+backRail = extrude(
+  region(
+    point = [
+      rackFrontKinkX,
+      rackFrontKinkY - (backRailDepth / 2)
+    ],
+    sketch = backRailProfile,
+  ),
+  length = backRailHeight,
+  method = NEW,
+)
+  |> translate(z = backRailBaseZ, global = true)
+  |> appearance(color = backRailWoodColor, roughness = 78, metalness = 0)
+
+hiddenBackRailProfile = hide(backRailProfile)

@@ -5,13 +5,12 @@ import * from "params.kcl"
 
 // keyLeverStartY
 cube([keywellLength, 5, 5])
-  |> translate(x=toolboxLength, y=keywellWidth, z=200)
-
+  |> translate(x = toolboxLength, y = keywellWidth, z = 200)
 
 // keyLeverAllNarrowY
 cube([keywellLength, 5, 5])
-  |> translate(x=toolboxLength, y=keywellWidth+24+12, z=200)
+  |> translate(x = toolboxLength, y = keywellWidth + 24 + 12, z = 200)
 
 // keyLeverBendY
 cube([keywellLength, 5, 5])
-  |> translate(x=toolboxLength, y=keywellWidth+24+12+20, z=200)
+  |> translate(x = toolboxLength, y = keywellWidth + 24 + 12 + 20, z = 200)

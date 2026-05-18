@@ -27,6 +27,7 @@ import "toolbox.kcl" as toolbox
 import "bridges.kcl" as bridges
 import "frontboard.kcl" as frontboard
 import "balance_bar.kcl" as balanceBar
+import "back_rail.kcl" as backRail
 import "soundbox.kcl" as soundbox
 
 // The following are really slow to render. Comment them out when iterating on other modules.
