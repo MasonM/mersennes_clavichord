@@ -26,3 +26,46 @@ export fn tuningPinXForString(@stringIdx) {
   tuningPinRow = stringIdx % tuningPinRows
   return tuningPinBaseX + tuningPinRow * tuningPinRowPitch
 }
+
+export fifthBridgeCenterX = caseLength - (caseLength / 3)
+export fourthBridgeCenterX = fifthBridgeCenterX + 70mm
+export thirdBridgeCenterX = fourthBridgeCenterX + 100mm
+export secondBridgeCenterX = thirdBridgeCenterX + 100mm
+export firstBridgeCenterX = secondBridgeCenterX + 70mm
+
+// Mersenne-style bridge/course layout for 70 strings in 35 paired courses.
+// String indices increase upward/backward. Each key strikes the lower-indexed
+// representative string of its two-string course.
+export bridgeCourseCounts = [6, 9, 8, 3, 9]
+export bridgeStringCounts = [
+  bridgeCourseCounts[0] * 2,
+  bridgeCourseCounts[1] * 2,
+  bridgeCourseCounts[2] * 2,
+  bridgeCourseCounts[3] * 2,
+  bridgeCourseCounts[4] * 2
+]
+
+export firstBridgeFirstString = 0
+export firstBridgeLastString = firstBridgeFirstString + bridgeStringCounts[0] - 1
+export secondBridgeFirstString = firstBridgeLastString + 1
+export secondBridgeLastString = secondBridgeFirstString + bridgeStringCounts[1] - 1
+export thirdBridgeFirstString = secondBridgeLastString + 1
+export thirdBridgeLastString = thirdBridgeFirstString + bridgeStringCounts[2] - 1
+export fourthBridgeFirstString = thirdBridgeLastString + 1
+export fourthBridgeLastString = fourthBridgeFirstString + bridgeStringCounts[3] - 1
+export fifthBridgeFirstString = fourthBridgeLastString + 1
+export fifthBridgeLastString = numStrings - 1
+
+export fn bridgeXForString(@stringIdx) {
+  return if stringIdx < secondBridgeFirstString {
+    firstBridgeCenterX
+  } else if stringIdx < thirdBridgeFirstString {
+    secondBridgeCenterX
+  } else if stringIdx < fourthBridgeFirstString {
+    thirdBridgeCenterX
+  } else if stringIdx < fifthBridgeFirstString {
+    fourthBridgeCenterX
+  } else {
+    fifthBridgeCenterX
+  }
+}
