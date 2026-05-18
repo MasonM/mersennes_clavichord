@@ -1,5 +1,4 @@
 import * from "params.kcl"
-import * from "rack_utils.kcl"
 import * from "string_utils.kcl"
 
 // Five bridge family members for the full string-course layout.
