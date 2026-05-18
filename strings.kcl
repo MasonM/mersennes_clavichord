@@ -21,6 +21,12 @@ tuningPinBaseX = wrestplankStart[0] + tuningPinFrontMargin
 tuningPinBaseZ = wrestplankTopZ
 prototypeStringLength = tuningPinBaseX + (tuningPinRows - 1) * tuningPinRowPitch - tuningPinRadius - hitchPinX - hitchPinRadius
 
+export fn stringY(@stringIdx) {
+  courseIdx = floor(stringIdx / 2)
+  stringInCourse = stringIdx % 2
+  return firstStringY + courseIdx * coursePitch + stringInCourse * stringPairGap
+}
+
 // Return the staggered X position for the hitchpin attached to a string.
 fn hitchPinXForString(@stringIdx) {
   return hitchPinX + stringIdx % 2 * hitchPinStaggerX

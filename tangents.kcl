@@ -1,6 +1,7 @@
 import * from "params.kcl"
 import * from "rack_utils.kcl"
 import * from "utils.kcl"
+import stringY from "strings.kcl"
 
 // Brass clavichord tangents. Each key gets one vertical rectangular blade whose
 // plan position is driven by the rack slot X and the string/course Y mapping.
@@ -18,7 +19,7 @@ fn tangentXForKey(@keyIdx) {
 }
 
 fn tangentYForKey(@keyIdx) {
-  return stringY(stringIdxForKey(keyIdx)) - (tangentWidthY / 2)
+  return stringY(stringIdxForKey(keyIdx)) - (tangentWidthY / 2) + stringDiameter
 }
 
 prototypeTangent = cube([

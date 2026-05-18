@@ -67,11 +67,6 @@ export numCourses = numStrings / 2
 export firstStringY = caseWidth / 2
 export lastStringY = caseWidth - 30mm
 export coursePitch = (lastStringY - firstStringY - stringPairGap) / (numCourses - 1)
-export fn stringY(@stringIdx) {
-  courseIdx = floor(stringIdx / 2)
-  stringInCourse = stringIdx % 2
-  return firstStringY + courseIdx * coursePitch + stringInCourse * stringPairGap
-}
 
 // --- Hitchpins ---
 export hitchPinDiameter = 2mm
