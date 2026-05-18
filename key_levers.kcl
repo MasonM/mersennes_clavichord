@@ -8,7 +8,6 @@ import * from "key_utils.kcl"
 // accidentals occupy half of the neighboring key edge.
 keyLeverHeight = naturalKeyHeight
 keyLeverZ = keyBaseZ
-keyLeverClearance = 5.0mm
 keyLeverStartY = keywellWidth
 keyLeverTaperRun = 24mm
 keyLeverAllNarrowY = keyLeverStartY + keyLeverTaperRun + 12mm
