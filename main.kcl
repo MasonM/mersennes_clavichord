@@ -4,14 +4,13 @@
  * Mersenne's Clavichord" (https://www.peter-bavington.co.uk/Mersennepaper.pdf).
  *
  * Uses Mersenne's Laws to calculate the sounding length of each string,
- * and supports two different temperaments: quarter-comma meantone and equal temperment
+ * and supports two different temperaments: quarter-comma meantone and equal temperament
  * using Mersenne's proposed semitone ratio. Set "useEqualTemperament" in
- * "temperament.kcl" to switch between them. See the "tangentXForKeyFn()" function
- * in "string_utils.kcl" for the math used to calculate this.
+ * "temperament.kcl" to switch between them.
+ *
+ * Explanation of the math behind this: https://github.com/MasonM/mersennes_clavichord#how-does-this-work
  *
  * Here's what it sounds like: https://open.spotify.com/album/7y2jMKdg6wnGTF2KrCVYo6?si=OVO8V7e3RBundObkuwff6A
- *
- * Git repository: https://github.com/MasonM/mersennes_clavichord
  *
  * © 2026 by Mason Malone
  * Licensed under CC BY 4.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/4.0/

@@ -116,7 +116,7 @@ export fn tangentSpacing() {
 // The position for the lowest C key is defined as 10mm from the toolbox, and
 // subsequent tangents are calculated relative to that.
 //
-// See the README.md for an explanation of the math behind this function.
+// See https://github.com/MasonM/mersennes_clavichord#how-does-this-work for an explanation of the math behind this function.
 //
 // This function had to be refactored to avoid a stack overflow, since Zoo
 // currently has a stack limit of 50: https://github.com/KittyCAD/modeling-app/blob/d0e1eb2615aaf3af07409ce7dce1890327c0281c/rust/kcl-lib/src/execution/state.rs#L410
