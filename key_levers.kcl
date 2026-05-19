@@ -1,6 +1,7 @@
 import * from "params.kcl"
 import * from "rack_utils.kcl"
 import * from "key_utils.kcl"
+import * from "string_utils.kcl"
 
 // Key levers are all coplanar: every lever starts at the natural key base Z and
 // extrudes to naturalKeyHeight. Accidental levers start at the rear of their
@@ -32,8 +33,8 @@ fn rackTongueStartYForKey(@keyIdx) {
 }
 
 fn makeKeyLever(@keyIdx) {
-  bendLeftX = slotXForKey[keyIdx] - (keyLeverTopWidthForKey(keyIdx) / 2)
-  bendRightX = slotXForKey[keyIdx] + keyLeverTopWidthForKey(keyIdx) / 2
+  bendLeftX = tangentXForKey[keyIdx] - (keyLeverTopWidthForKey(keyIdx) / 2)
+  bendRightX = tangentXForKey[keyIdx] + keyLeverTopWidthForKey(keyIdx) / 2
 
   keyLeverFootprint = sketch(on = XY) {
     startFace = line(start = [var 0mm, var 0mm], end = [var 22mm, var 0mm])
@@ -129,28 +130,28 @@ fn makeKeyLever(@keyIdx) {
     coincident([
       rightTongueShoulder.end,
       [
-        slotXForKey[keyIdx] + rackTongueWidth / 2,
+        tangentXForKey[keyIdx] + rackTongueWidth / 2,
         rackTongueStartYForKey(keyIdx)
       ]
     ])
     coincident([
       rightTongueSide.end,
       [
-        slotXForKey[keyIdx] + rackTongueWidth / 2,
+        tangentXForKey[keyIdx] + rackTongueWidth / 2,
         rackTongueEndYForKey(keyIdx)
       ]
     ])
     coincident([
       endFace.end,
       [
-        slotXForKey[keyIdx] - (rackTongueWidth / 2),
+        tangentXForKey[keyIdx] - (rackTongueWidth / 2),
         rackTongueEndYForKey(keyIdx)
       ]
     ])
     coincident([
       leftTongueSide.end,
       [
-        slotXForKey[keyIdx] - (rackTongueWidth / 2),
+        tangentXForKey[keyIdx] - (rackTongueWidth / 2),
         rackTongueStartYForKey(keyIdx)
       ]
     ])

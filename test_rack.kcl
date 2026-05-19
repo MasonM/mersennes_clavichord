@@ -14,22 +14,22 @@ export fn slotSpacingTest() {
   }
 }
 
-export fn slotXForKeyTest2(@keyIdx) {
+export fn tangentXForKeyTest2(@keyIdx) {
   return if keyIdx == 0 {
     toolboxLength + 10mm
   } else if courseIdxForKey(keyIdx) == courseIdxForKey(keyIdx - 1) {
     bridgeXForString(stringIdxForKey(keyIdx)) - (
       frequencyForKey(keyIdx - 1) * (
-        (bridgeXForString(stringIdxForKey(keyIdx - 1)) - slotXForKeyTest2(keyIdx - 1))
+        (bridgeXForString(stringIdxForKey(keyIdx - 1)) - tangentXForKeyTest2(keyIdx - 1))
         / frequencyForKey(keyIdx)
       )
     )
   } else {
-    slotXForKeyTest2(keyIdx - 1) + slotSpacingTest()
+    tangentXForKeyTest2(keyIdx - 1) + slotSpacingTest()
   }
 }
 
-slotXForKeysArray = map([0..<numKeys], f = slotXForKeyTest2)
+tangentXForKeysArray = map([0..<numKeys], f = tangentXForKeyTest2)
 
 cube([5mm, caseWidth, caseHeight])
   |> translate(x = toolboxLength)
@@ -41,7 +41,7 @@ fn transformSlot(@keyNum) {
   keyIdx = keyNum - 1
   return {
     translate = [
-      slotXForKeysArray[keyIdx] - (rackSlotWidth / 2),
+      tangentXForKeysArray[keyIdx] - (rackSlotWidth / 2),
       slotYForKey(keyIdx),
       rackHeight - slotCutHeight
     ]

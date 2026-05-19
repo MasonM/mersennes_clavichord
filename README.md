@@ -61,23 +61,21 @@ L(x+1) &=\frac{f_0(x)L(x)}{f_0(x+1)}
 
 ## Solving for the Tangent Position
 
-Once we have the sounding length, we need to use that to determine the position of the tangents. In this clavichord, the $x$ coordinate for each tangent is equal to the $x$ coordinate of the corresponding rack slot. The rack slot is the small slot in the rack at the back of the instrument that the key lever fits into. The slot position is related to the sounding length and the $x$ coordinate of the bridge:
+Once we have the sounding length, we need to use that to determine the position of the tangents. The $x$ coordinate of the tangent is related to the sounding length and the $x$ coordinate of the bridge:
 ```math
-Slot_x(x) = Bridge_x(x) - L(x)
+Tangent_x(x) = Bridge_x(x) - L(x)
 ```
 
-where $Slot_x(x)$ is the $x$ coordinate for the slot of the key at index $x$, $Bridge_x(x)$ is the $x$ coordinate for the bridge corresponding to the string for that key, and $L(x)$ is the sounding length.
-
- Substituing the equation for $L(x+1)$ above, we end up with:
+Substituing the equation for $L(x+1)$ above, we end up with:
 ```math
 \begin{aligned}
-Slot_x(x+1) &= Bridge_x(x+1) - L(x+1) \\
+Tangent_x(x+1) &= Bridge_x(x+1) - L(x+1) \\
             &= Bridge_x(x+1) - \frac{f_0(x)L(x)}{f_0(x+1)} \\
-            &= Bridge_x(x+1) - \frac{f_0(x)(Bridge_x(x) - Slot_x(x))}{f_0(x+1)} \\
+            &= Bridge_x(x+1) - \frac{f_0(x)(Bridge_x(x) - Tangent_x(x))}{f_0(x+1)} \\
 \end{aligned}
 ```
 
-This is the final equation implemented by the `slotXForKeyFn()` function in [rack_utils.kcl](./rack_utils.kcl).
+This is the final equation implemented by the `tangentXForKeyFn()` function in [string_utils.kcl](./string_utils.kcl).
 
 # Rendering
 

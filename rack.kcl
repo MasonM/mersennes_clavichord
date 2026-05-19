@@ -1,6 +1,7 @@
 import * from "params.kcl"
 import * from "utils.kcl"
 import * from "rack_utils.kcl"
+import * from "string_utils.kcl"
 
 // The rack contains the slots where the key levers rest.
 // I can't clearly see the rack from Mersenne's description. It appears to have
@@ -32,7 +33,7 @@ fn transformSlot(@keyNum) {
   keyIdx = keyNum - 1
   return {
     translate = [
-      slotXForKey[keyIdx] - (rackSlotWidth / 2),
+      tangentXForKey[keyIdx] - (rackSlotWidth / 2),
       slotYForKey(keyIdx) - 1mm,
       rackHeight - slotCutHeight
     ]

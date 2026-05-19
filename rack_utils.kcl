@@ -1,5 +1,4 @@
 import * from "params.kcl"
-import * from "temperament.kcl"
 import * from "string_utils.kcl"
 
 export rackBackY = caseWidth - wallThickness
@@ -18,52 +17,11 @@ export rackLowerSecondSlope = (rackFrontTipY - rackFrontKinkY) / (rackFrontTipX 
 export rackSlotWidth = 3mm
 export rackSlotDepth = 11mm
 
-export fn slotSpacing() {
-  return if useEqualTemperament {
-    7mm
-  } else {
-    9mm
-  }
-}
-
-// Determine the x position of the rack slot the given key will fit into.
-//
-// This is used to determine the x position of the tangent too, which means it
-// will also determine the sounding length of the string (i.e. the distance
-// between where the tangent strikes and the bridge).
-//
-// The slot for the lowest C key is defined as 10mm from the toolbox, and
-// subsequent slots are calculated relative to that.
-//
-// See the README.md for an explanation of the math behind this function.
-//
-// This function had to be refactored to avoid a stack overflow, since Zoo
-// currently has a stack limit of 50: https://github.com/KittyCAD/modeling-app/blob/d0e1eb2615aaf3af07409ce7dce1890327c0281c/rust/kcl-lib/src/execution/state.rs#L410
-export fn slotXForKeyFn(@keyIdx) {
-  return if keyIdx == 0 {
-    // Low C has fixed position relative to the toolbox
-    toolboxLength + 10mm
-  } else if courseIdxForKey(keyIdx) == courseIdxForKey(keyIdx - 1) {
-    // Fretted key. Calculate the sounding length using Mersenne's laws.
-    bridgeXForKey(keyIdx) - (
-      frequencyForKey(keyIdx - 1) * (
-        (bridgeXForKey(keyIdx - 1) - slotXForKeyFn(keyIdx - 1))
-        / frequencyForKey(keyIdx)
-      )
-    )
-  } else {
-    // Unfretted key. Just use fixed spacing from the previous slot.
-    slotXForKeyFn(keyIdx - 1) + slotSpacing()
-  }
-}
-
-export slotXForKey = map([0..<numKeys], f = slotXForKeyFn)
-
 // Rack slot Y is the lower/front edge of the existing rack profile evaluated at
 // the sounding-length X. The rectangular slot cutter starts here and cuts inward
 // along the global +Y direction, so the slots stay straight instead of rotating.
 export fn slotYForKey(@keyIdx) {
-  slotX = slotXForKey[keyIdx]
+  slotX = tangentXForKey[keyIdx]
   return if slotX < rackFrontLowerX {
     keywellWidth
   } else if slotX < rackFrontKinkX {

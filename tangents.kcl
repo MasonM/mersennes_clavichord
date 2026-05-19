@@ -14,10 +14,6 @@ tangentBaseZ = keyLeverZ + keyLeverHeight
 tangentHeight = stringHeight - tangentBaseZ - tangentTopClearance
 tangentKeyIndices = [0..<numKeys]
 
-fn tangentXForKey(@keyIdx) {
-  return slotXForKey[keyIdx] - (tangentThicknessX / 2)
-}
-
 fn tangentYForKey(@keyIdx) {
   return stringY(stringIdxForKey(keyIdx)) - (tangentWidthY / 2) + stringDiameter
 }
@@ -31,7 +27,7 @@ prototypeTangent = cube([
 fn makeTangent(@keyIdx) {
   return clone(prototypeTangent)
     |> translate(
-         x = tangentXForKey(keyIdx),
+         x = tangentXForKey[keyIdx] - (tangentThicknessX / 2),
          y = tangentYForKey(keyIdx),
          z = tangentBaseZ,
          global = true,
