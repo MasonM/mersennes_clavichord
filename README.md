@@ -66,7 +66,7 @@ Once we have the sounding length, we need to use that to determine the position 
 Tangent_x(x) = Bridge_x(x) - L(x)
 ```
 
-Substituing the equation for $L(x+1)$ above, we end up with:
+Substituting the equation for $L(x+1)$ above, we end up with:
 ```math
 \begin{aligned}
 Tangent_x(x+1) &= Bridge_x(x+1) - L(x+1) \\
