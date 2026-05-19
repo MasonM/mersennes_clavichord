@@ -30,7 +30,7 @@ Clavichords can be divided into two groups: fretted and unfretted. A fretted cla
 
 Another disadvantage, which was of interest to Mersenne, is you can't change the [temperament](https://en.wikipedia.org/wiki/Musical_temperament) of the clavichord. In Mersenne's day, the most common temperament was [meantone temperament](https://en.wikipedia.org/wiki/Meantone_temperament). Mersenne was an early advocate of [equal temperament](https://en.wikipedia.org/wiki/Equal_temperament), which is the most common temperament used today.
 
-With an unfretted clavichord, you can change the temperament by adjusting the tension on each string so the corresponding key is in tune. But with a fretted clavichord, changing the tension on a string affects all the keys that share that string, which means you can't tune each key independently. Sometimes you can work around that by bending the tangents sideways to alter the sounding length, but that quickly ruins the key levers. To reliably change the temperament on a fretted clavichord, you need to reposition the tangents and key levers.
+With an unfretted clavichord, you can change the temperament by adjusting the tension on each string so the corresponding key is in tune. But with a fretted clavichord, changing the tension on a string affects all the keys that share that string, which means you can't tune each key independently. Sometimes you can work around that by bending the tangents sideways to alter the sounding length, but that quickly ruins the key levers. To change the temperament on a fretted clavichord without damaging it, you need to reposition the tangents and key levers.
 
 ## Solving for the Sounding Length
 
@@ -42,13 +42,20 @@ f_0(x)=\frac{1}{L(x)d}\sqrt{\frac{T(x)}{\pi\rho(x)}} \\
 \end{aligned}
 ```
 
-Now, let's calculate the sounding length for an adjacent fretted key at index $x+1$:
+Now, let's calculate the frequency for an adjacent fretted key at index $x+1$:
 ```math
 \begin{aligned}
-L(x+1) &=\frac{1}{f_0(x+1)d}\sqrt{\frac{T(x)}{\pi\rho(x)}}\\
-       &=\frac{1}{f_0(x+1)d}f_0(x)L(x)d\\
-       &=\frac{f_0(x)L(x)d}{f_0(x+1)d}\\
-       &=\frac{f_0(x)L(x)}{f_0(x+1)}
+f_0(x+1) &=\frac{1}{L(x+1)d}\sqrt{\frac{T(x)}{\pi\rho(x)}}\\
+       &=\frac{1}{L(x+1)d}f_0(x)L(x)d\\
+       &=\frac{f_0(x)L(x)d}{L(x+1)d}\\
+       &=\frac{f_0(x)L(x)}{L(x+1)}
+\end{aligned}
+```
+
+We can now easily solve for the sounding length of the key at index $x+1$:
+```math
+\begin{aligned}
+L(x+1) &=\frac{f_0(x)L(x)}{f_0(x+1)}
 \end{aligned}
 ```
 
