@@ -44,7 +44,6 @@ f_0(x)=\frac{1}{L(x)d}\sqrt{\frac{T(x)}{\pi\rho(x)}} \\
 
 Now, let's calculate the sounding length for an adjacent fretted key at index $x+1$:
 ```math
-f_0(x+1)=\frac{1}{L(x+1)d}\sqrt{\frac{T(x)}{\pi\rho(x)}} \\
 \begin{aligned}
 L(x+1) &=\frac{1}{f_0(x+1)d}\sqrt{\frac{T(x)}{\pi\rho(x)}}\\
        &=\frac{1}{f_0(x+1)d}f_0(x)L(x)d\\
