@@ -35,31 +35,7 @@ export fn slotSpacing() {
 // The slot for the lowest C key is defined as 10mm from the toolbox, and
 // subsequent slots are calculated relative to that.
 //
-// We must take into account the temperament for the slots of fretted keys (i.e.
-// keys that share a single string course). That wouldn't be necessary if this
-// were an unfretted instrument (i.e. each key has a dedicated course), since
-// changing the temperament would only require changing the string tension. We
-// can't do that for a fretted keys, since the string tension must be kept
-// constant.
-//
-// To do that, we use Mersenne's laws, which relate the sounding length of a
-// string to its pitch and tensions. The frequency f(x) for a key is:
-//   f(x) = sqrt(F(x) / μ(x)) / (2*L(x))
-// where L(x) is the sounding length, F(x) is the tension, and μ(x) is the
-// linear density of the string. For fretted strings, sqrt(F(x) / μ(x)) term
-// must be kept constant, so we can solve for it as follows:
-//   sqrt(F(x) / μ(x)) = f(x) * 2 * L(x)
-// Then, for a subsequent fretted key with frequency f(x+1), we can solve for
-// the sounding length L(x+1) that will keep the tension constant:
-//   L(x+1) = sqrt(F(x) / μ(x)) / (f(x+1) * 2)
-//   L(x+1) = (f(x) * 2 * L(x)) / (f(x+1) * 2)
-//   L(x+1) = (f(x) * L(x)) / f(x+1)
-// The sounding length is related to the slot x position and bridge x position by:
-//   L(x) = bridgeXForKey(x) - slotX(x)
-// So the final equation becomes:
-//   slotX(x+1) = bridgeXForKey(x+1) - L(x+1)
-//   slotX(x+1) = bridgeXForKey(x+1) - (f(x) * L(x)) / f(x+1)
-//   slotX(x+1) = bridgeXForKey(x+1) - (f(x) * (bridgeXForKey(x) - slotXForKeyFn(x))) / f(x+1)
+// See the README.md for an explanation of the math behind this function.
 //
 // This function had to be refactored to avoid a stack overflow, since Zoo
 // currently has a stack limit of 50: https://github.com/KittyCAD/modeling-app/blob/d0e1eb2615aaf3af07409ce7dce1890327c0281c/rust/kcl-lib/src/execution/state.rs#L410
