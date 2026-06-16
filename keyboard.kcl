@@ -7,20 +7,21 @@ accidentalKeyStartY = naturalKeyLength / 3
 accidentalKeyLength = naturalKeyLength - accidentalKeyStartY
 accidentalKeyBaseZ = keyBaseZ + naturalKeyHeight
 accidentalKeyHeight = 5mm
+adjNaturalIdxFirstOctave = [0, 1, 3, 4, 5]
 
 fn naturalKeyX(@naturalIdx) {
   return keyStartX + naturalIdx * naturalKeyWidth
 }
 
-fn accidentalBaseNaturalIdx(@accidentalIdx) {
+fn accidentalAdjNaturalIdx(@accidentalIdx) {
   octaveIdx = floor(accidentalIdx / 5)
   accidentalIdxInOctave = accidentalIdx % 5
-  return octaveIdx * 7 + accidentalBaseNaturalOffsets[accidentalIdxInOctave]
+  return octaveIdx * 7 + adjNaturalIdxFirstOctave[accidentalIdxInOctave]
 }
 
 fn accidentalKeyX(@accidentalIdx) {
-  baseNaturalIdx = accidentalBaseNaturalIdx(accidentalIdx)
-  return keyStartX + (baseNaturalIdx + 1) * naturalKeyWidth - (accidentalKeyWidth / 2)
+  baseNaturalIdx = accidentalAdjNaturalIdx(accidentalIdx)
+  return naturalKeyX(baseNaturalIdx + 1) - (accidentalKeyWidth / 2)
 }
 
 fn transformNaturalKey(@naturalIdx) {
